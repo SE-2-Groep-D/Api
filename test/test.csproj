@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <RootNamespace>AccessibilityPanelAPI.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AccessibilityPanelAPI\AccessibilityPanelAPI.csproj" />
+    <ProjectReference Include="..\api\api.csproj" />
   </ItemGroup>
 
 </Project>
