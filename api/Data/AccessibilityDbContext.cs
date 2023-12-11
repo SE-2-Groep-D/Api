@@ -1,6 +1,8 @@
-﻿namespace Api.Data
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+namespace Api.Data
 {
-    public class AccessibilityDbContext
+    public class AccessibilityDbContext: IdentityDbContext
     {
     }
 }
