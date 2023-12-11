@@ -6,7 +6,7 @@ public class Program {
     public static void Main(string[] args) {
             // configure application
             var builder = WebApplication.CreateBuilder(args);
-            SetupServices(builder.Services);
+            SetupServices(builder.Services, builder);
             
             // add middelware
             var app = builder.Build();
@@ -16,16 +16,16 @@ public class Program {
             app.Run();
     }
 
-    private static void SetupServices(IServiceCollection services) { 
+    private static void SetupServices(IServiceCollection services, WebApplicationBuilder builder) { 
         services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
         services.AddDbContext<AccessibilityDbContext>(options =>
-        options.UseSqlServer("hierconnectiestringzetten"));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
 
-        services.
+        
     }
     private static void SetupMiddleware(WebApplication app) {
         // Configure the HTTP request pipeline.
