@@ -21,13 +21,28 @@ namespace Api.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
         {
-            var gebruiker = new Gebruiker
+
+            if (registerRequestDto.Roles == null || !registerRequestDto.Roles.Any())
+            {
+                return BadRequest("Geef rol aan");
+            }
+
+            var identityGebruiker = new Gebruiker
             {
                 Voornaam = registerRequestDto.Voornaam,
                 Achternaam = registerRequestDto.Achternaam,
                 GoogleAccount = registerRequestDto.GoogleAccount,
                 Email = registerRequestDto.Email
             };
+
+            
+
+            var identityResult = await gebruikerManager.CreateAsync(identityGebruiker, registerRequestDto.Password);
+
+            if(identityResult.Succeeded)
+            {
+                identityResult = await gebruikerManager.
+            }
 
             return BadRequest("Someting went wrong!");
         }
