@@ -21,10 +21,6 @@ public class AuthController : ControllerBase
     [Route("Register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
     {
-
-
-
-
         if (registerRequestDto.Roles == null || !registerRequestDto.Roles.Any())
         {
             return BadRequest("Geef rol aan");
@@ -50,7 +46,12 @@ public class AuthController : ControllerBase
             {
                 return Ok("User was registerd! Please Login.");
             }
-        }  else { }
+        }  
+        else 
+        { 
+            await gebruikerManager.DeleteAsync(identityGebruiker);
+            return BadRequest("Ongeldige rol");
+        }
 
 
 
