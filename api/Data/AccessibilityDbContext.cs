@@ -20,7 +20,7 @@ namespace Api.Data
             builder.Entity<Ervaringsdeskundige>(entity => { entity.ToTable("Ervaringsdeskundigen"); });
             builder.Entity<Bedrijf>(entity => { entity.ToTable("Bedrijven"); });
             builder.Entity<Medewerker>(entity => { entity.ToTable("Medewerkers"); });
-            // Other table mappings
+            
         }
     }
 }
