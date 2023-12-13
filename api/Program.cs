@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Api.Repositories;
+using Api.Repositories.ITrackingRepository;
 
-namespace AccessibilityPanelAPI; 
+namespace Api; 
+
 public class Program { 
     public static void Main(string[] args) {
             // configure application
@@ -31,9 +34,9 @@ public class Program {
         services.AddDbContext<AccessibilityDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
 
-        services.AddScoped<IUserService, UserService>();
-
-
+        AddRepositories(services);
+        AddServices(services);
+        
         services.AddIdentityCore<Gebruiker>()
             .AddRoles<IdentityRole>()
             .AddTokenProvider<DataProtectorTokenProvider<Gebruiker>>("API")
@@ -70,6 +73,16 @@ public class Program {
                     Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
             });
     }
+
+    private static void AddRepositories(IServiceCollection services) {
+        services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
+    }
+
+    private static void AddServices(IServiceCollection services) {
+        services.AddScoped<IUserService, UserService>();
+    }
+    
+    
     private static void SetupMiddleware(WebApplication app) {
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment()) {
