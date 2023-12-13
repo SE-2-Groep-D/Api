@@ -1,5 +1,6 @@
 using Api.Data;
 using Api.Models.Domain;
+using Api.Services.IUserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +31,18 @@ public class Program {
         services.AddDbContext<AccessibilityDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
 
+        services.AddScoped<IUserService, UserService>();
+
 
         services.AddIdentityCore<Gebruiker>()
             .AddRoles<IdentityRole>()
             .AddTokenProvider<DataProtectorTokenProvider<Gebruiker>>("API")
+            .AddEntityFrameworkStores<AccessibilityDbContext>()
+            .AddDefaultTokenProviders();
+
+        services.AddIdentityCore<Ervaringsdeskundige>()
+            .AddRoles<IdentityRole>()
+            .AddTokenProvider<DataProtectorTokenProvider<Ervaringsdeskundige>>("API")
             .AddEntityFrameworkStores<AccessibilityDbContext>()
             .AddDefaultTokenProviders();
 
