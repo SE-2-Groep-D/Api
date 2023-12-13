@@ -1,1 +1,1 @@
-https://https://accessibility.davidout.com/swagger
+https://accessibility.davidout.com/swagger
