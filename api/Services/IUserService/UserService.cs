@@ -43,15 +43,5 @@ namespace Api.Services.IUserService
 
             
         }
-
-        public Task<string> Register(Ervaringsdeskundige ervaringsdeskundige)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<string> RegisterErvaringsdeskundige(Ervaringsdeskundige ervaringsdeskundige)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

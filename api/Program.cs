@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Api.Repositories;
-using Api.Repositories.ITrackingRepository;
+using Api.Services.ITokenService;
+//using Api.Repositories.ITrackingRepository;
 
 namespace Api; 
 
@@ -36,16 +37,33 @@ public class Program {
 
         AddRepositories(services);
         AddServices(services);
+
         
+        //Usermanager voor Gebruiker instellen
         services.AddIdentityCore<Gebruiker>()
             .AddRoles<IdentityRole>()
             .AddTokenProvider<DataProtectorTokenProvider<Gebruiker>>("API")
             .AddEntityFrameworkStores<AccessibilityDbContext>()
             .AddDefaultTokenProviders();
 
+        //Usermanager voor Ervaringsdeskundige instellen
         services.AddIdentityCore<Ervaringsdeskundige>()
             .AddRoles<IdentityRole>()
             .AddTokenProvider<DataProtectorTokenProvider<Ervaringsdeskundige>>("API")
+            .AddEntityFrameworkStores<AccessibilityDbContext>()
+            .AddDefaultTokenProviders();
+
+        //Usermanager voor Bedrijf instellen
+        services.AddIdentityCore<Bedrijf>()
+            .AddRoles<IdentityRole>()
+            .AddTokenProvider<DataProtectorTokenProvider<Bedrijf>>("API")
+            .AddEntityFrameworkStores<AccessibilityDbContext>()
+            .AddDefaultTokenProviders();
+
+        //Usermanager voor Medewerker instellen
+        services.AddIdentityCore<Medewerker>()
+            .AddRoles<IdentityRole>()
+            .AddTokenProvider<DataProtectorTokenProvider<Medewerker>>("API")
             .AddEntityFrameworkStores<AccessibilityDbContext>()
             .AddDefaultTokenProviders();
 
@@ -80,6 +98,7 @@ public class Program {
 
     private static void AddServices(IServiceCollection services) {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ITokenService,  TokenService>();
     }
     
     
