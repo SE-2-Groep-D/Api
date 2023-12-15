@@ -1,4 +1,4 @@
-namespace AccessibilityPanelAPI.Tests;
+namespace Api.Tests;
 
 public class UnitTest1
 {

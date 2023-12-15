@@ -1,46 +1,35 @@
 ﻿using Api.Models.Domain;
-using Api.Models.DTO;
 using Microsoft.AspNetCore.Identity;
 
 namespace Api.Services.IUserService;
 
-public class UserService : IUserService
-{
-    private readonly UserManager<Gebruiker> gebruikerManager;
 
-    public UserService(UserManager<Gebruiker> gebruikerManager)
-    {
-        this.gebruikerManager = gebruikerManager;
-    }
+public class UserService : IUserService {
+    
+        private readonly UserManager<Gebruiker> gebruikerManager;
 
-    public async Task<string> Register(Gebruiker gebruiker, string password, string[] roles)
-    {
-        if (roles == null || !roles.Any())
-        {
-            return "Geef rol aan";
+        public UserService(UserManager<Gebruiker> gebruikerManager) {
+            this.gebruikerManager = gebruikerManager;
         }
 
-        var identityResult = await gebruikerManager.CreateAsync(gebruiker, password);
+        public async Task<string> Register(Gebruiker gebruiker, string password, string[] roles) {
+            if (!roles.Any()) {
+                return "Geef rol aan";
+            }
 
-        if (identityResult.Succeeded)
-        {
+            var identityResult = await gebruikerManager.CreateAsync(gebruiker, password);
+            if (!identityResult.Succeeded) {
+                return "Er ging iets mis!";
+            }
+            
             identityResult = await gebruikerManager.AddToRolesAsync(gebruiker, roles);
-        }
-        else
-        {
-            return "Er ging iets mis!";
-        }
-
-        if (identityResult.Succeeded)
-        {
+            if (!identityResult.Succeeded) {
+                await gebruikerManager.DeleteAsync(gebruiker);
+                return "Ongeldige rol";
+            }
+            
             return "OK: User was registerd! Please Login.";
         }
-        else
-        {
-            await gebruikerManager.DeleteAsync(gebruiker);
-            return "Ongeldige rol";
-        }
 
-        
-    }
 }
+

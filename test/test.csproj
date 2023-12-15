@@ -7,7 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <RootNamespace>AccessibilityPanelAPI.Tests</RootNamespace>
+    <RootNamespace>Api.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

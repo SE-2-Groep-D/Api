@@ -9,6 +9,8 @@ using System.Text;
 using Api.Repositories;
 using Api.Services.ITokenService;
 using Api.Mappings;
+using Api.Repositories.ITrackingRepository;
+
 //using Api.Repositories.ITrackingRepository;
 
 namespace Api; 
@@ -96,6 +98,7 @@ public class Program {
 
     private static void AddRepositories(IServiceCollection services) {
         services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
+        services.AddScoped<ITrackingRepository, TrackingRepository>();
     }
 
     private static void AddServices(IServiceCollection services) {
@@ -111,11 +114,11 @@ public class Program {
             app.UseSwaggerUI();
         }
 
+        // configure HTTPS
         app.UseHttpsRedirection();
-
+        
         app.UseAuthentication();
         app.UseAuthorization();
-        
         app.MapControllers();
     }
 }

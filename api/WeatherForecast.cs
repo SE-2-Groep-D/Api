@@ -1,4 +1,4 @@
-namespace AccessibilityPanelAPI
+namespace Api
 {
     public class WeatherForecast
     {
