@@ -4,6 +4,6 @@
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<Ervaringsdeskundige> Ervaringsdeskundigen { get; set; }
+        public List<Ervaringsdeskundige> Ervaringsdeskundigen { get; } = new();
     }
 }

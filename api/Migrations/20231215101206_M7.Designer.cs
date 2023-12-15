@@ -4,6 +4,7 @@ using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AccessibilityDbContext))]
-    partial class AccessibilityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231215101206_M7")]
+    partial class M7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,29 +241,29 @@ namespace Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "40de5fb2-052b-43df-8f1d-f14e40d4e663",
-                            ConcurrencyStamp = "40de5fb2-052b-43df-8f1d-f14e40d4e663",
+                            Id = "a8cf2a9d-3b76-40d5-8142-62d2110017d4",
+                            ConcurrencyStamp = "a8cf2a9d-3b76-40d5-8142-62d2110017d4",
                             Name = "Beheerder",
                             NormalizedName = "BEHEERDER"
                         },
                         new
                         {
-                            Id = "ab6b8e6f-ca39-4d40-b330-e5898a785899",
-                            ConcurrencyStamp = "ab6b8e6f-ca39-4d40-b330-e5898a785899",
+                            Id = "e5414b41-0ce4-4d2c-889f-9594a8285fe5",
+                            ConcurrencyStamp = "e5414b41-0ce4-4d2c-889f-9594a8285fe5",
                             Name = "Ervaringsdeskundige",
                             NormalizedName = "ERVARINGSDESKUNDIGE"
                         },
                         new
                         {
-                            Id = "7f13d193-aa0b-4e0f-905a-fddc7ba1e8ef",
-                            ConcurrencyStamp = "7f13d193-aa0b-4e0f-905a-fddc7ba1e8ef",
+                            Id = "b3184982-8537-46de-b065-bc59441c6b85",
+                            ConcurrencyStamp = "b3184982-8537-46de-b065-bc59441c6b85",
                             Name = "Bedrijf",
                             NormalizedName = "BEDRIJF"
                         },
                         new
                         {
-                            Id = "bb649c16-7c95-4319-9f00-9e1f7beade43",
-                            ConcurrencyStamp = "bb649c16-7c95-4319-9f00-9e1f7beade43",
+                            Id = "42c9bc45-9f69-4fc6-b0f8-b107fd5d6ae7",
+                            ConcurrencyStamp = "42c9bc45-9f69-4fc6-b0f8-b107fd5d6ae7",
                             Name = "Medewerker",
                             NormalizedName = "MEDEWERKER"
                         });
