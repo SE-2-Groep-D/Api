@@ -1,8 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using Api.Models.Domain;
+﻿using Api.Models.Domain;
 using API.Models.DTO.Gebruiker;
-using API.Models.DTO.Gebruiker.response;
-using Api.Repositories;
+using Api.Services.IUserService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +13,11 @@ namespace Api.Controllers;
 public class GebruikerController : ControllerBase {
 
     private UserManager<Gebruiker> _userManager;
-    private readonly IMapper mapper;
+    private readonly IUserService _userService;
 
-    public GebruikerController(UserManager<Gebruiker> manager, IMapper mapper) {
-        this._userManager = manager;
-        this.mapper = mapper;
+    public GebruikerController(UserManager<Gebruiker> manager, IUserService service) {
+        _userManager = manager;
+        _userService = service;
     }
     
     [HttpGet]
@@ -37,32 +35,19 @@ public class GebruikerController : ControllerBase {
     [HttpGet]
     [Route("{id}")]
     public async Task<IActionResult> GetUser([FromRoute] string id) {
-        string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-        Regex regex = new Regex(emailPattern);
-        
-        Gebruiker? user = (regex.IsMatch(id))
-            ? await _userManager.FindByEmailAsync(id)
-            : await _userManager.FindByIdAsync(id);
-        
-        if (user == null) {
-            return NotFound("Gebruiker niet gevonden.");
-        }
-
-        GebruikerDetailsResponseDto? response = null;
-        
-        
-        
-        return Ok(response);
+        Gebruiker? user = await _userService.GetUserByIdentification(id);
+        if(user == null) return NotFound("Gebruiker niet gevonden.");
+        return Ok(_userService.GetUserDetails(user));
     }
     
 
     [HttpPut]
     [Route("update/{id}")]
     public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateGebruikerRequestDto request) {
-        Gebruiker? user = await _userManager.FindByIdAsync(id);
-
+        Gebruiker? user = await _userService.GetUserByIdentification(id);
+        
         if (user == null) {
-            return NotFound("Gebruiker niet gevonden om te updaten.");
+            return NotFound("Gebruiker niet gevonden.");
         }
 
         //Voorbeeld van mapper
@@ -90,12 +75,12 @@ public class GebruikerController : ControllerBase {
     [Route("delete/{id}")]
     public async Task<IActionResult> Delete([FromRoute] string id) {
         Gebruiker? user = await _userManager.FindByIdAsync(id);
-
-        if (user != null) {
-            var result = await _userManager.DeleteAsync(user);
-            return BadRequest("Kon gebruiker niet verwijderen.");
+        
+        if (user == null) {
+            return NotFound("Gebruiker niet gevonden.");
         }
-       
+        
+        await _userManager.DeleteAsync(user);
         return Ok("Gebruiker succesvol verwijderd.");
     }
 }

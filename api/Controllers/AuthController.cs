@@ -15,15 +15,13 @@ namespace Api.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class AuthController : ControllerBase
-{
+public class AuthController : ControllerBase {
     private readonly UserManager<Gebruiker> gebruikerManager;
     private readonly IUserService userService;
     private readonly ITokenService tokenService;
     private readonly IMapper mapper;
 
-    public AuthController(UserManager<Gebruiker> gebruikerManager, IUserService userService, ITokenService tokenService, IMapper mapper)
-    {
+    public AuthController(UserManager<Gebruiker> gebruikerManager, IUserService userService, ITokenService tokenService, IMapper mapper) {
         this.gebruikerManager = gebruikerManager;
         this.userService = userService;
         this.tokenService = tokenService;
@@ -33,11 +31,8 @@ public class AuthController : ControllerBase
     [HttpPost]
     [Route("Register")]
     [Authorize(Roles = "Beheerder")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
-    {
-        
-        var gebruiker = new Gebruiker
-        {
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto) {
+        var gebruiker = new Gebruiker {
             Voornaam = registerRequestDto.Voornaam,
             Achternaam = registerRequestDto.Achternaam,
             GoogleAccount = registerRequestDto.GoogleAccount ?? false,
@@ -47,15 +42,12 @@ public class AuthController : ControllerBase
 
         string result = await userService.Register(gebruiker, registerRequestDto.Password, registerRequestDto.Roles);
         return result.StartsWith("OK")? Ok(result) : BadRequest(result);
-        
-        
     }
 
     
     [HttpPost]
     [Route("RegisterErvaringsdeskundige")]
-    public async Task<IActionResult> RegisterErvaringsdeskundige([FromBody] RegisterErvaringsdeskundigeRequestDto registerErvaringsdeskundigeRequestDto)
-    {
+    public async Task<IActionResult> RegisterErvaringsdeskundige([FromBody] RegisterErvaringsdeskundigeRequestDto registerErvaringsdeskundigeRequestDto) {
         var gebruiker = mapper.Map<Ervaringsdeskundige>(registerErvaringsdeskundigeRequestDto);
 
         //var gebruiker = new Ervaringsdeskundige
@@ -71,18 +63,15 @@ public class AuthController : ControllerBase
         //};
 
         string[] Roles = { "Ervaringsdeskundige" };
-             
-
+        
         string result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
         return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
     }
 
     [HttpPost]
     [Route("RegisterBedrijf")]
-    public async Task<IActionResult> RegisterBedrijf([FromBody] RegisterBedrijfRequestDto registerBedrijfRequestDto)
-    {
-        var gebruiker = new Bedrijf
-        {
+    public async Task<IActionResult> RegisterBedrijf([FromBody] RegisterBedrijfRequestDto registerBedrijfRequestDto) {
+        var gebruiker = new Bedrijf {
             Voornaam = registerBedrijfRequestDto.Voornaam,
             Achternaam = registerBedrijfRequestDto.Achternaam,
             GoogleAccount = registerBedrijfRequestDto.GoogleAccount ?? false,
@@ -104,10 +93,8 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("RegisterMedwerker")]
-    public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto)
-    {
-        var gebruiker = new Medewerker
-        {
+    public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto) {
+        var gebruiker = new Medewerker {
             Voornaam = registerMedewerkerRequestDto.Voornaam,
             Achternaam = registerMedewerkerRequestDto.Achternaam,
             GoogleAccount = registerMedewerkerRequestDto.GoogleAccount ?? false,
@@ -124,8 +111,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("Login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
-    {
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto) {
 
         var gebruiker = await gebruikerManager.FindByEmailAsync(loginRequestDto.Email);
         if (gebruiker == null) { return BadRequest("Ongeldig wachtwoord of emailadres."); }
@@ -144,8 +130,7 @@ public class AuthController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> test()
-    {
+    public async Task<IActionResult> test() {
         var userName = User?.FindFirstValue(ClaimTypes.Email);
 
         return Ok(userName);
