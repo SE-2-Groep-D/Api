@@ -35,15 +35,7 @@ public class AuthController : ControllerBase
     [Authorize(Roles = "Beheerder")]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
     {
-        
-        var gebruiker = new Gebruiker
-        {
-            Voornaam = registerRequestDto.Voornaam,
-            Achternaam = registerRequestDto.Achternaam,
-            GoogleAccount = registerRequestDto.GoogleAccount ?? false,
-            Email = registerRequestDto.Email,
-            UserName = registerRequestDto.Email
-        };
+        var gebruiker = mapper.Map<Gebruiker>(registerRequestDto);
 
         string result = await userService.Register(gebruiker, registerRequestDto.Password, registerRequestDto.Roles);
         return result.StartsWith("OK")? Ok(result) : BadRequest(result);
@@ -58,21 +50,8 @@ public class AuthController : ControllerBase
     {
         var gebruiker = mapper.Map<Ervaringsdeskundige>(registerErvaringsdeskundigeRequestDto);
 
-        //var gebruiker = new Ervaringsdeskundige
-        //{
-        //    Voornaam = registerErvaringsdeskundigeRequestDto.Voornaam,
-        //    Achternaam = registerErvaringsdeskundigeRequestDto.Achternaam,
-        //    GoogleAccount = registerErvaringsdeskundigeRequestDto.GoogleAccount ?? false,
-        //    Email = registerErvaringsdeskundigeRequestDto.Email,
-        //    UserName = registerErvaringsdeskundigeRequestDto.Email,
-        //    Postcode = registerErvaringsdeskundigeRequestDto.Postcode,
-        //    ToestemmingBenadering = registerErvaringsdeskundigeRequestDto.ToestemmingBenadering,
-        //    Leeftijdscategorie = registerErvaringsdeskundigeRequestDto.Leeftijdscategorie
-        //};
-
         string[] Roles = { "Ervaringsdeskundige" };
              
-
         string result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
         return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
     }
@@ -81,20 +60,9 @@ public class AuthController : ControllerBase
     [Route("RegisterBedrijf")]
     public async Task<IActionResult> RegisterBedrijf([FromBody] RegisterBedrijfRequestDto registerBedrijfRequestDto)
     {
-        var gebruiker = new Bedrijf
-        {
-            Voornaam = registerBedrijfRequestDto.Voornaam,
-            Achternaam = registerBedrijfRequestDto.Achternaam,
-            GoogleAccount = registerBedrijfRequestDto.GoogleAccount ?? false,
-            Email = registerBedrijfRequestDto.Email,
-            UserName = registerBedrijfRequestDto.Email,
-            Postcode = registerBedrijfRequestDto.Postcode,
-            NaamBedrijf = registerBedrijfRequestDto.NaamBedrijf,
-            Plaats = registerBedrijfRequestDto.Plaats,
-            Nummer = registerBedrijfRequestDto.Nummer,
-            WebsiteUrl = registerBedrijfRequestDto.WebsiteUrl,
-            Omschrijving = registerBedrijfRequestDto.Omschrijving
-        };
+
+        var gebruiker = mapper.Map<Bedrijf>(registerBedrijfRequestDto);
+
 
         string[] Roles = { "Bedrijf" };
 
@@ -106,15 +74,7 @@ public class AuthController : ControllerBase
     [Route("RegisterMedwerker")]
     public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto)
     {
-        var gebruiker = new Medewerker
-        {
-            Voornaam = registerMedewerkerRequestDto.Voornaam,
-            Achternaam = registerMedewerkerRequestDto.Achternaam,
-            GoogleAccount = registerMedewerkerRequestDto.GoogleAccount ?? false,
-            Email = registerMedewerkerRequestDto.Email,
-            UserName = registerMedewerkerRequestDto.Email,
-            Functie = registerMedewerkerRequestDto.Functie
-        };
+        var gebruiker = mapper.Map<Medewerker>(registerMedewerkerRequestDto);
 
         string[] Roles = { "Medewerker" };
 
@@ -138,7 +98,15 @@ public class AuthController : ControllerBase
         if (roles == null) { return BadRequest("Ongeldig wachtwoord of emailadres."); }
 
         var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
-        return Ok(jwtToken);
+        var response = new LoginResponseDto
+        {
+            UserId = gebruiker.Id,
+            Voornaam = gebruiker.Voornaam,
+            Achternaam = gebruiker.Achternaam,
+            JwtToken = jwtToken
+        };
+
+        return Ok(response);
     }
 
 
