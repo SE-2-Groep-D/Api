@@ -1,4 +1,6 @@
 ﻿using Api.Models.Domain;
+using Api.Models.DTO;
+using Api.Models.DTO.Auth;
 using API.Models.DTO.Gebruiker;
 using AutoMapper;
 
@@ -13,6 +15,9 @@ namespace Api.Mappings
                 .ForMember(dest => dest.Voornaam, opt => opt.Condition(src => src.Voornaam != null))
                 .ForMember(dest => dest.Achternaam, opt => opt.Condition(src => src.Achternaam != null))
                 .AfterMap((src, dest) => { if (src.Email != null) dest.UserName = src.Email; });
+
+            CreateMap<RegisterErvaringsdeskundigeRequestDto, Ervaringsdeskundige>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
 
         }

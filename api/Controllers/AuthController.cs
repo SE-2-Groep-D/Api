@@ -3,6 +3,7 @@ using Api.Models.DTO;
 using Api.Models.DTO.Auth;
 using Api.Services.ITokenService;
 using Api.Services.IUserService;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -19,12 +20,14 @@ public class AuthController : ControllerBase
     private readonly UserManager<Gebruiker> gebruikerManager;
     private readonly IUserService userService;
     private readonly ITokenService tokenService;
+    private readonly IMapper mapper;
 
-    public AuthController(UserManager<Gebruiker> gebruikerManager, IUserService userService, ITokenService tokenService)
+    public AuthController(UserManager<Gebruiker> gebruikerManager, IUserService userService, ITokenService tokenService, IMapper mapper)
     {
         this.gebruikerManager = gebruikerManager;
         this.userService = userService;
         this.tokenService = tokenService;
+        this.mapper = mapper;
     }
 
     [HttpPost]
@@ -53,17 +56,19 @@ public class AuthController : ControllerBase
     [Route("RegisterErvaringsdeskundige")]
     public async Task<IActionResult> RegisterErvaringsdeskundige([FromBody] RegisterErvaringsdeskundigeRequestDto registerErvaringsdeskundigeRequestDto)
     {
-        var gebruiker = new Ervaringsdeskundige
-        {
-            Voornaam = registerErvaringsdeskundigeRequestDto.Voornaam,
-            Achternaam = registerErvaringsdeskundigeRequestDto.Achternaam,
-            GoogleAccount = registerErvaringsdeskundigeRequestDto.GoogleAccount ?? false,
-            Email = registerErvaringsdeskundigeRequestDto.Email,
-            UserName = registerErvaringsdeskundigeRequestDto.Email,
-            Postcode = registerErvaringsdeskundigeRequestDto.Postcode,
-            ToestemmingBenadering = registerErvaringsdeskundigeRequestDto.ToestemmingBenadering,
-            Leeftijdscategorie = registerErvaringsdeskundigeRequestDto.Leeftijdscategorie
-        };
+        var gebruiker = mapper.Map<Ervaringsdeskundige>(registerErvaringsdeskundigeRequestDto);
+
+        //var gebruiker = new Ervaringsdeskundige
+        //{
+        //    Voornaam = registerErvaringsdeskundigeRequestDto.Voornaam,
+        //    Achternaam = registerErvaringsdeskundigeRequestDto.Achternaam,
+        //    GoogleAccount = registerErvaringsdeskundigeRequestDto.GoogleAccount ?? false,
+        //    Email = registerErvaringsdeskundigeRequestDto.Email,
+        //    UserName = registerErvaringsdeskundigeRequestDto.Email,
+        //    Postcode = registerErvaringsdeskundigeRequestDto.Postcode,
+        //    ToestemmingBenadering = registerErvaringsdeskundigeRequestDto.ToestemmingBenadering,
+        //    Leeftijdscategorie = registerErvaringsdeskundigeRequestDto.Leeftijdscategorie
+        //};
 
         string[] Roles = { "Ervaringsdeskundige" };
              
