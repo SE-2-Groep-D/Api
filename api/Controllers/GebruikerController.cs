@@ -4,6 +4,7 @@ using Api.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace Api.Controllers; 
 
@@ -12,9 +13,11 @@ namespace Api.Controllers;
 public class GebruikerController : ControllerBase {
 
     private UserManager<Gebruiker> _userManager;
-    
-    public GebruikerController(UserManager<Gebruiker> manager) {
+    private readonly IMapper mapper;
+
+    public GebruikerController(UserManager<Gebruiker> manager, IMapper mapper) {
         this._userManager = manager;
+        this.mapper = mapper;
     }
     
     [HttpGet]
@@ -63,10 +66,14 @@ public class GebruikerController : ControllerBase {
             return NotFound("Gebruiker niet gevonden om te updaten.");
         }
 
+        //Voorbeeld van mapper
+        //user = mapper.Map(request, user);
+
         user.Email = request.Email ?? user.Email;
+        user.UserName = request.Email ?? user.UserName;
         user.Voornaam = request.Voornaam ?? user.Voornaam;
         user.Achternaam = request.Achternaam ?? user.Achternaam;
-        
+
         var result = await _userManager.UpdateAsync(user);
         if(!result.Succeeded) return BadRequest("Kon gebruiker niet updaten.");
 

@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Api.Repositories;
 using Api.Services.ITokenService;
+using Api.Mappings;
 //using Api.Repositories.ITrackingRepository;
 
 namespace Api; 
@@ -38,6 +39,7 @@ public class Program {
         AddRepositories(services);
         AddServices(services);
 
+        services.AddAutoMapper(typeof(AutoMapperProfiles));
         
         //Usermanager voor Gebruiker instellen
         services.AddIdentityCore<Gebruiker>()
