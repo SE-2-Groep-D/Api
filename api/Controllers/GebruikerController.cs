@@ -1,5 +1,7 @@
-﻿using Api.Models.Domain;
+﻿using System.Text.RegularExpressions;
+using Api.Models.Domain;
 using API.Models.DTO.Gebruiker;
+using API.Models.DTO.Gebruiker.response;
 using Api.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,32 +35,29 @@ public class GebruikerController : ControllerBase {
     }
     
     [HttpGet]
-    [Route("{email}/email")]
-    public async Task<IActionResult> GetByEmail([FromRoute] string email) {
-        Gebruiker? user = await _userManager.FindByEmailAsync(email);
-
+    [Route("{id}")]
+    public async Task<IActionResult> GetUser([FromRoute] string id) {
+        string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+        Regex regex = new Regex(emailPattern);
+        
+        Gebruiker? user = (regex.IsMatch(id))
+            ? await _userManager.FindByEmailAsync(id)
+            : await _userManager.FindByIdAsync(id);
+        
         if (user == null) {
             return NotFound("Gebruiker niet gevonden.");
         }
+
+        GebruikerDetailsResponseDto? response = null;
         
-        return Ok(user);
+        
+        
+        return Ok(response);
     }
     
-    [HttpGet]
-    [Route("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] string id) {
-        Gebruiker? user = await _userManager.FindByIdAsync(id);
-
-        if (user == null) {
-            return NotFound("Gebruiker niet gevonden.");
-        }
-        
-        return Ok(user);
-    }
-
 
     [HttpPut]
-    [Route("{id}/update")]
+    [Route("update/{id}")]
     public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateGebruikerRequestDto request) {
         Gebruiker? user = await _userManager.FindByIdAsync(id);
 
@@ -88,7 +87,7 @@ public class GebruikerController : ControllerBase {
     }
 
     [HttpDelete]
-    [Route("{id}/delete")]
+    [Route("delete/{id}")]
     public async Task<IActionResult> Delete([FromRoute] string id) {
         Gebruiker? user = await _userManager.FindByIdAsync(id);
 
