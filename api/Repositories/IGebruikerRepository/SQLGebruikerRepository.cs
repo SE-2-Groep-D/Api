@@ -13,7 +13,7 @@ public class SQLGebruikerRepository : IGebruikerRepository {
     }
 
 
-    public Task<List<Gebruiker>> GetAllAsync() {
+    public Task<List<Gebruiker>> GetAllAsync() {       
         return _context.Gebruikers.ToListAsync();
     }
 }

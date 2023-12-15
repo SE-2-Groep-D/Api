@@ -33,7 +33,7 @@ public class GebruikerController : ControllerBase {
     }
     
     [HttpGet]
-    [Route("{email}")]
+    [Route("{email}/email")]
     public async Task<IActionResult> GetByEmail([FromRoute] string email) {
         Gebruiker? user = await _userManager.FindByEmailAsync(email);
 

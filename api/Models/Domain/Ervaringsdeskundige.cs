@@ -13,6 +13,8 @@
         public Guid? VoogdId { get; set; }
         public Voogd? Voogd { get; set; }
 
+        public ICollection<Beschikbaarheid> Beschikbaarheden { get; } = new List<Beschikbaarheid>();
+
 
     }
 }

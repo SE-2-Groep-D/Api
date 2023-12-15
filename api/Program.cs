@@ -43,28 +43,28 @@ public class Program {
         
         //Usermanager voor Gebruiker instellen
         services.AddIdentityCore<Gebruiker>()
-            .AddRoles<IdentityRole>()
+            .AddRoles<IdentityRole<Guid>>()
             .AddTokenProvider<DataProtectorTokenProvider<Gebruiker>>("API")
             .AddEntityFrameworkStores<AccessibilityDbContext>()
             .AddDefaultTokenProviders();
 
         //Usermanager voor Ervaringsdeskundige instellen
         services.AddIdentityCore<Ervaringsdeskundige>()
-            .AddRoles<IdentityRole>()
+            .AddRoles<IdentityRole<Guid>>()
             .AddTokenProvider<DataProtectorTokenProvider<Ervaringsdeskundige>>("API")
             .AddEntityFrameworkStores<AccessibilityDbContext>()
             .AddDefaultTokenProviders();
 
         //Usermanager voor Bedrijf instellen
         services.AddIdentityCore<Bedrijf>()
-            .AddRoles<IdentityRole>()
+            .AddRoles<IdentityRole<Guid>>()
             .AddTokenProvider<DataProtectorTokenProvider<Bedrijf>>("API")
             .AddEntityFrameworkStores<AccessibilityDbContext>()
             .AddDefaultTokenProviders();
 
         //Usermanager voor Medewerker instellen
         services.AddIdentityCore<Medewerker>()
-            .AddRoles<IdentityRole>()
+            .AddRoles<IdentityRole<Guid>>()
             .AddTokenProvider<DataProtectorTokenProvider<Medewerker>>("API")
             .AddEntityFrameworkStores<AccessibilityDbContext>()
             .AddDefaultTokenProviders();

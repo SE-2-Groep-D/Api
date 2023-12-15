@@ -2,7 +2,7 @@
 
 namespace Api.Models.Domain
 {
-    public class Gebruiker: IdentityUser
+    public class Gebruiker: IdentityUser<Guid>
     {
         public string Voornaam { get; set; }
         public string Achternaam { get; set; }

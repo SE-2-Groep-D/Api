@@ -22,10 +22,33 @@ namespace Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Api.Models.Domain.Beschikbaarheid", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("BeginDatumTijd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EindDatumTijd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ErvaringsdeskundigeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ErvaringsdeskundigeId");
+
+                    b.ToTable("Beschikbaarheden");
+                });
+
             modelBuilder.Entity("Api.Models.Domain.Gebruiker", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -112,7 +135,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Hulpmiddel");
+                    b.ToTable("Hulpmiddelen");
                 });
 
             modelBuilder.Entity("Api.Models.Domain.TypeBeperking", b =>
@@ -127,7 +150,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeBeperking");
+                    b.ToTable("TypeBeperkingen");
                 });
 
             modelBuilder.Entity("Api.Models.Domain.Voogd", b =>
@@ -146,7 +169,7 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Voogd");
+                    b.ToTable("Voogden");
                 });
 
             modelBuilder.Entity("Api.Models.Domain.Voorkeurbenadering", b =>
@@ -161,13 +184,13 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Voorkeurbenadering");
+                    b.ToTable("Voorkeurbenaderingen");
                 });
 
             modelBuilder.Entity("ErvaringsdeskundigeHulpmiddel", b =>
                 {
-                    b.Property<string>("ErvaringsdeskundigenId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ErvaringsdeskundigenId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("HulpmiddelenId")
                         .HasColumnType("uniqueidentifier");
@@ -181,8 +204,8 @@ namespace Api.Migrations
 
             modelBuilder.Entity("ErvaringsdeskundigeTypeBeperking", b =>
                 {
-                    b.Property<string>("ErvaringsdeskundigenId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ErvaringsdeskundigenId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TypeBeperkingenId")
                         .HasColumnType("uniqueidentifier");
@@ -196,8 +219,8 @@ namespace Api.Migrations
 
             modelBuilder.Entity("ErvaringsdeskundigeVoorkeurbenadering", b =>
                 {
-                    b.Property<string>("ErvaringsdeskundigenId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ErvaringsdeskundigenId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("VoorkeurbenaderingenId")
                         .HasColumnType("uniqueidentifier");
@@ -209,10 +232,11 @@ namespace Api.Migrations
                     b.ToTable("ErvaringsdeskundigeVoorkeurbenadering");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -238,35 +262,35 @@ namespace Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "40de5fb2-052b-43df-8f1d-f14e40d4e663",
+                            Id = new Guid("40de5fb2-052b-43df-8f1d-f14e40d4e663"),
                             ConcurrencyStamp = "40de5fb2-052b-43df-8f1d-f14e40d4e663",
                             Name = "Beheerder",
                             NormalizedName = "BEHEERDER"
                         },
                         new
                         {
-                            Id = "ab6b8e6f-ca39-4d40-b330-e5898a785899",
+                            Id = new Guid("ab6b8e6f-ca39-4d40-b330-e5898a785899"),
                             ConcurrencyStamp = "ab6b8e6f-ca39-4d40-b330-e5898a785899",
                             Name = "Ervaringsdeskundige",
                             NormalizedName = "ERVARINGSDESKUNDIGE"
                         },
                         new
                         {
-                            Id = "7f13d193-aa0b-4e0f-905a-fddc7ba1e8ef",
+                            Id = new Guid("7f13d193-aa0b-4e0f-905a-fddc7ba1e8ef"),
                             ConcurrencyStamp = "7f13d193-aa0b-4e0f-905a-fddc7ba1e8ef",
                             Name = "Bedrijf",
                             NormalizedName = "BEDRIJF"
                         },
                         new
                         {
-                            Id = "bb649c16-7c95-4319-9f00-9e1f7beade43",
+                            Id = new Guid("bb649c16-7c95-4319-9f00-9e1f7beade43"),
                             ConcurrencyStamp = "bb649c16-7c95-4319-9f00-9e1f7beade43",
                             Name = "Medewerker",
                             NormalizedName = "MEDEWERKER"
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -280,9 +304,8 @@ namespace Api.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -291,7 +314,7 @@ namespace Api.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -305,9 +328,8 @@ namespace Api.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -316,7 +338,7 @@ namespace Api.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -327,9 +349,8 @@ namespace Api.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -338,13 +359,13 @@ namespace Api.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -353,10 +374,10 @@ namespace Api.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -437,6 +458,17 @@ namespace Api.Migrations
                     b.ToTable("Medewerkers", (string)null);
                 });
 
+            modelBuilder.Entity("Api.Models.Domain.Beschikbaarheid", b =>
+                {
+                    b.HasOne("Api.Models.Domain.Ervaringsdeskundige", "Ervaringsdeskundige")
+                        .WithMany("Beschikbaarheden")
+                        .HasForeignKey("ErvaringsdeskundigeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ervaringsdeskundige");
+                });
+
             modelBuilder.Entity("ErvaringsdeskundigeHulpmiddel", b =>
                 {
                     b.HasOne("Api.Models.Domain.Ervaringsdeskundige", null)
@@ -482,16 +514,16 @@ namespace Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("Api.Models.Domain.Gebruiker", null)
                         .WithMany()
@@ -500,7 +532,7 @@ namespace Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("Api.Models.Domain.Gebruiker", null)
                         .WithMany()
@@ -509,9 +541,9 @@ namespace Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -524,7 +556,7 @@ namespace Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("Api.Models.Domain.Gebruiker", null)
                         .WithMany()
@@ -569,6 +601,11 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Models.Domain.Voogd", b =>
                 {
                     b.Navigation("Ervaringsdeskundigen");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Ervaringsdeskundige", b =>
+                {
+                    b.Navigation("Beschikbaarheden");
                 });
 #pragma warning restore 612, 618
         }
