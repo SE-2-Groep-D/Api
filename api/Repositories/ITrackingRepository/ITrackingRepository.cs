@@ -4,5 +4,5 @@ namespace Api.Repositories.ITrackingRepository;
 
 public interface ITrackingRepository {
 
-    public Task<bool> SubmitResults(SubmitTrackingResultsDto results);
+  public Task<bool> SubmitResults(SubmitTrackingResultsDto results);
 }

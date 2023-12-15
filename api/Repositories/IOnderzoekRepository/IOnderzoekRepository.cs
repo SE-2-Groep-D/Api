@@ -1,6 +1,4 @@
-﻿namespace Api.Repositories
-{
-    public interface IOnderzoekRepository
-    {
-    }
+﻿namespace Api.Repositories {
+  public interface IOnderzoekRepository {
+  }
 }

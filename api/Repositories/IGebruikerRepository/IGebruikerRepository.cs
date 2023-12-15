@@ -1,8 +1,7 @@
-﻿using Api.Models.Domain;
+﻿using Api.Models.Domain.User;
 
-namespace Api.Repositories; 
+namespace Api.Repositories.IGebruikerRepository;
 
 public interface IGebruikerRepository {
-
-    public Task<List<Gebruiker>> GetAllAsync();
+  public Task<List<Gebruiker>> GetAllAsync();
 }
