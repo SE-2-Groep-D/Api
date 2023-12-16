@@ -91,7 +91,12 @@ public class Program {
           ValidAudience = builder.Configuration["Jwt:Audience"],
           IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        });
+        })
+      .AddGoogle(googleOptions =>
+      {
+        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+      });
   }
 
   private static void AddRepositories(IServiceCollection services) {
