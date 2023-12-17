@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AccessibilityDbContext))]
-    [Migration("20231215113034_M1")]
-    partial class M1
+    [Migration("20231217114501_nieuwmigration")]
+    partial class nieuwmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,7 +47,158 @@ namespace Api.Migrations
                     b.ToTable("Beschikbaarheden");
                 });
 
-            modelBuilder.Entity("Api.Models.Domain.Gebruiker", b =>
+            modelBuilder.Entity("Api.Models.Domain.Hulpmiddel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Naam")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Hulpmiddelen");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.OnderzoekErvaringsdekundige", b =>
+                {
+                    b.Property<Guid>("OnderzoekId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ErvaringsdeskundigeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("datum")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("OnderzoekId", "ErvaringsdeskundigeId");
+
+                    b.ToTable("OnderzoekErvaringsdekundigen");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Antwoord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Tekst")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("VraagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VraagtId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VraagId");
+
+                    b.ToTable("Antwoorden");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Onderzoek", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BedrijfId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Locatie")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Omschrijving")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDatum")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Vergoeding")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BedrijfId");
+
+                    b.ToTable("Onderzoeken");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Vraag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Onderwerp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("VragenlijstId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VragenlijstId");
+
+                    b.ToTable("Vragen");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Vragenlijst", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OnderzoekId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Samenvatting")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OnderzoekId");
+
+                    b.ToTable("Vragenlijsten");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.TypeBeperking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TypeBeperkingen");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.User.Gebruiker", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -124,36 +275,6 @@ namespace Api.Migrations
                     b.ToTable("Gebruikers", (string)null);
 
                     b.UseTptMappingStrategy();
-                });
-
-            modelBuilder.Entity("Api.Models.Domain.Hulpmiddel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Naam")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Hulpmiddelen");
-                });
-
-            modelBuilder.Entity("Api.Models.Domain.TypeBeperking", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TypeBeperkingen");
                 });
 
             modelBuilder.Entity("Api.Models.Domain.Voogd", b =>
@@ -396,9 +517,9 @@ namespace Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Api.Models.Domain.Bedrijf", b =>
+            modelBuilder.Entity("Api.Models.Domain.User.Bedrijf", b =>
                 {
-                    b.HasBaseType("Api.Models.Domain.Gebruiker");
+                    b.HasBaseType("Api.Models.Domain.User.Gebruiker");
 
                     b.Property<string>("NaamBedrijf")
                         .IsRequired()
@@ -427,13 +548,16 @@ namespace Api.Migrations
                     b.ToTable("Bedrijven", (string)null);
                 });
 
-            modelBuilder.Entity("Api.Models.Domain.Ervaringsdeskundige", b =>
+            modelBuilder.Entity("Api.Models.Domain.User.Ervaringsdeskundige", b =>
                 {
-                    b.HasBaseType("Api.Models.Domain.Gebruiker");
+                    b.HasBaseType("Api.Models.Domain.User.Gebruiker");
 
                     b.Property<string>("Leeftijdscategorie")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OnderzoekId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Postcode")
                         .IsRequired()
@@ -445,14 +569,16 @@ namespace Api.Migrations
                     b.Property<Guid?>("VoogdId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.HasIndex("OnderzoekId");
+
                     b.HasIndex("VoogdId");
 
                     b.ToTable("Ervaringsdeskundigen", (string)null);
                 });
 
-            modelBuilder.Entity("Api.Models.Domain.Medewerker", b =>
+            modelBuilder.Entity("Api.Models.Domain.User.Medewerker", b =>
                 {
-                    b.HasBaseType("Api.Models.Domain.Gebruiker");
+                    b.HasBaseType("Api.Models.Domain.User.Gebruiker");
 
                     b.Property<string>("Functie")
                         .IsRequired()
@@ -463,7 +589,7 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Domain.Beschikbaarheid", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Ervaringsdeskundige", "Ervaringsdeskundige")
+                    b.HasOne("Api.Models.Domain.User.Ervaringsdeskundige", "Ervaringsdeskundige")
                         .WithMany("Beschikbaarheden")
                         .HasForeignKey("ErvaringsdeskundigeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -472,9 +598,62 @@ namespace Api.Migrations
                     b.Navigation("Ervaringsdeskundige");
                 });
 
+            modelBuilder.Entity("Api.Models.Domain.OnderzoekErvaringsdekundige", b =>
+                {
+                    b.HasOne("Api.Models.Domain.Research.Onderzoek", null)
+                        .WithMany("OnderzoekErvaringsdekundigen")
+                        .HasForeignKey("OnderzoekId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Antwoord", b =>
+                {
+                    b.HasOne("Api.Models.Domain.Research.Vraag", "Vraag")
+                        .WithMany("Antwoorden")
+                        .HasForeignKey("VraagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vraag");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Onderzoek", b =>
+                {
+                    b.HasOne("Api.Models.Domain.User.Bedrijf", "Bedrijf")
+                        .WithMany()
+                        .HasForeignKey("BedrijfId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bedrijf");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Vraag", b =>
+                {
+                    b.HasOne("Api.Models.Domain.Research.Vragenlijst", "Vragenlijst")
+                        .WithMany("Vragen")
+                        .HasForeignKey("VragenlijstId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vragenlijst");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Vragenlijst", b =>
+                {
+                    b.HasOne("Api.Models.Domain.Research.Onderzoek", "Onderzoek")
+                        .WithMany("Vragenlijst")
+                        .HasForeignKey("OnderzoekId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Onderzoek");
+                });
+
             modelBuilder.Entity("ErvaringsdeskundigeHulpmiddel", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Ervaringsdeskundige", null)
+                    b.HasOne("Api.Models.Domain.User.Ervaringsdeskundige", null)
                         .WithMany()
                         .HasForeignKey("ErvaringsdeskundigenId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -489,7 +668,7 @@ namespace Api.Migrations
 
             modelBuilder.Entity("ErvaringsdeskundigeTypeBeperking", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Ervaringsdeskundige", null)
+                    b.HasOne("Api.Models.Domain.User.Ervaringsdeskundige", null)
                         .WithMany()
                         .HasForeignKey("ErvaringsdeskundigenId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -504,7 +683,7 @@ namespace Api.Migrations
 
             modelBuilder.Entity("ErvaringsdeskundigeVoorkeurbenadering", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Ervaringsdeskundige", null)
+                    b.HasOne("Api.Models.Domain.User.Ervaringsdeskundige", null)
                         .WithMany()
                         .HasForeignKey("ErvaringsdeskundigenId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -528,7 +707,7 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Gebruiker", null)
+                    b.HasOne("Api.Models.Domain.User.Gebruiker", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -537,7 +716,7 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Gebruiker", null)
+                    b.HasOne("Api.Models.Domain.User.Gebruiker", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -552,7 +731,7 @@ namespace Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Models.Domain.Gebruiker", null)
+                    b.HasOne("Api.Models.Domain.User.Gebruiker", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -561,29 +740,33 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Gebruiker", null)
+                    b.HasOne("Api.Models.Domain.User.Gebruiker", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Api.Models.Domain.Bedrijf", b =>
+            modelBuilder.Entity("Api.Models.Domain.User.Bedrijf", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Gebruiker", null)
+                    b.HasOne("Api.Models.Domain.User.Gebruiker", null)
                         .WithOne()
-                        .HasForeignKey("Api.Models.Domain.Bedrijf", "Id")
+                        .HasForeignKey("Api.Models.Domain.User.Bedrijf", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Api.Models.Domain.Ervaringsdeskundige", b =>
+            modelBuilder.Entity("Api.Models.Domain.User.Ervaringsdeskundige", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Gebruiker", null)
+                    b.HasOne("Api.Models.Domain.User.Gebruiker", null)
                         .WithOne()
-                        .HasForeignKey("Api.Models.Domain.Ervaringsdeskundige", "Id")
+                        .HasForeignKey("Api.Models.Domain.User.Ervaringsdeskundige", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Api.Models.Domain.Research.Onderzoek", null)
+                        .WithMany("Ervaringsdeskundigen")
+                        .HasForeignKey("OnderzoekId");
 
                     b.HasOne("Api.Models.Domain.Voogd", "Voogd")
                         .WithMany("Ervaringsdeskundigen")
@@ -592,13 +775,32 @@ namespace Api.Migrations
                     b.Navigation("Voogd");
                 });
 
-            modelBuilder.Entity("Api.Models.Domain.Medewerker", b =>
+            modelBuilder.Entity("Api.Models.Domain.User.Medewerker", b =>
                 {
-                    b.HasOne("Api.Models.Domain.Gebruiker", null)
+                    b.HasOne("Api.Models.Domain.User.Gebruiker", null)
                         .WithOne()
-                        .HasForeignKey("Api.Models.Domain.Medewerker", "Id")
+                        .HasForeignKey("Api.Models.Domain.User.Medewerker", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Onderzoek", b =>
+                {
+                    b.Navigation("Ervaringsdeskundigen");
+
+                    b.Navigation("OnderzoekErvaringsdekundigen");
+
+                    b.Navigation("Vragenlijst");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Vraag", b =>
+                {
+                    b.Navigation("Antwoorden");
+                });
+
+            modelBuilder.Entity("Api.Models.Domain.Research.Vragenlijst", b =>
+                {
+                    b.Navigation("Vragen");
                 });
 
             modelBuilder.Entity("Api.Models.Domain.Voogd", b =>
@@ -606,7 +808,7 @@ namespace Api.Migrations
                     b.Navigation("Ervaringsdeskundigen");
                 });
 
-            modelBuilder.Entity("Api.Models.Domain.Ervaringsdeskundige", b =>
+            modelBuilder.Entity("Api.Models.Domain.User.Ervaringsdeskundige", b =>
                 {
                     b.Navigation("Beschikbaarheden");
                 });
