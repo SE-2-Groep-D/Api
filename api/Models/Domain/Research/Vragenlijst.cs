@@ -6,7 +6,7 @@ public class Vragenlijst {
   public string Samenvatting { get; set; }
 
   public Guid OnderzoekId { get; set; }
-  public Onderzoek Onderzoek { get; set; }
+  public Onderzoek Onderzoek { get; set; } = null!;
   public ICollection<Vraag> Vragen { get; } = new List<Vraag>();
 
 

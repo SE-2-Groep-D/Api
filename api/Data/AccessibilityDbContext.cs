@@ -1,4 +1,5 @@
 ﻿using Api.Models.Domain;
+using Api.Models.Domain.Research;
 using Api.Models.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -22,14 +23,25 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
   public DbSet<Bedrijf> Bedrijven { get; set; }
   public DbSet<Medewerker> Medewerkers { get; set; }
 
-
+  //Voor het onderzoeken
+  public DbSet<Antwoord> Antwoorden{ get; set; }
+  public DbSet<Vraag> Vragen{ get; set; }
+  public DbSet<Vragenlijst> Vragenlijsten{ get; set; }
+  //Paginatrack mag hier komen
+  //resulaat mag hier komen
+  public DbSet<Onderzoek> Onderzoeken{ get; set; }
+  public DbSet<OnderzoekErvaringsdekundige>  OnderzoekErvaringsdekundigen {get; set; }
+  
   protected override void OnModelCreating(ModelBuilder builder) {
     base.OnModelCreating(builder);
     builder.Entity<Gebruiker>(entity => { entity.ToTable("Gebruikers"); });
     builder.Entity<Ervaringsdeskundige>(entity => { entity.ToTable("Ervaringsdeskundigen"); });
     builder.Entity<Bedrijf>(entity => { entity.ToTable("Bedrijven"); });
     builder.Entity<Medewerker>(entity => { entity.ToTable("Medewerkers"); });
-
+    //Id worden hier samengesteld voor de veel op veel relatie
+    builder.Entity<OnderzoekErvaringsdekundige>()
+      .HasKey(o => new { o.OnderzoekId, o.ErvaringsdeskundigeId });
+    
 
     var beheerderRoleId = "40de5fb2-052b-43df-8f1d-f14e40d4e663";
     var ervaringsdeskundigeRoleId = "ab6b8e6f-ca39-4d40-b330-e5898a785899";
