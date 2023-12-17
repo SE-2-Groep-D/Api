@@ -21,6 +21,11 @@ namespace Api.Migrations {
           constraints: table => {
             table.PrimaryKey("PK_AspNetRoles", x => x.Id);
           });
+      migrationBuilder.AddColumn<Guid>(
+        name: "OnderzoekId",
+        table: "Ervaringsdeskundigen",
+        type: "uniqueidentifier",
+        nullable: true);
 
       migrationBuilder.CreateTable(
           name: "Gebruikers",
@@ -67,6 +72,28 @@ namespace Api.Migrations {
           constraints: table => {
             table.PrimaryKey("PK_TypeBeperkingen", x => x.Id);
           });
+      migrationBuilder.CreateTable(
+        name: "Onderzoeken",
+        columns: table => new
+        {
+          Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+          StartDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
+          Omschrijving = table.Column<string>(type: "nvarchar(max)", nullable: false),
+          Vergoeding = table.Column<double>(type: "float", nullable: false),
+          Locatie = table.Column<string>(type: "nvarchar(max)", nullable: false),
+          Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+          BedrijfId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+        },
+        constraints: table =>
+        {
+          table.PrimaryKey("PK_Onderzoeken", x => x.Id);
+          table.ForeignKey(
+            name: "FK_Onderzoeken_Bedrijven_BedrijfId",
+            column: x => x.BedrijfId,
+            principalTable: "Bedrijven",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+        });
 
       migrationBuilder.CreateTable(
           name: "Voogden",
@@ -88,7 +115,43 @@ namespace Api.Migrations {
           constraints: table => {
             table.PrimaryKey("PK_Voorkeurbenaderingen", x => x.Id);
           });
-
+      migrationBuilder.CreateTable(
+        name: "OnderzoekErvaringsdekundigen",
+        columns: table => new
+        {
+          OnderzoekId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+          ErvaringsdeskundigeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+          datum = table.Column<DateTime>(type: "datetime2", nullable: false)
+        },
+        constraints: table =>
+        {
+          table.PrimaryKey("PK_OnderzoekErvaringsdekundigen", x => new { x.OnderzoekId, x.ErvaringsdeskundigeId });
+          table.ForeignKey(
+            name: "FK_OnderzoekErvaringsdekundigen_Onderzoeken_OnderzoekId",
+            column: x => x.OnderzoekId,
+            principalTable: "Onderzoeken",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+        });
+      migrationBuilder.CreateTable(
+        name: "Vragenlijsten",
+        columns: table => new
+        {
+          Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+          Titel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+          Samenvatting = table.Column<string>(type: "nvarchar(max)", nullable: false),
+          OnderzoekId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+        },
+        constraints: table =>
+        {
+          table.PrimaryKey("PK_Vragenlijsten", x => x.Id);
+          table.ForeignKey(
+            name: "FK_Vragenlijsten_Onderzoeken_OnderzoekId",
+            column: x => x.OnderzoekId,
+            principalTable: "Onderzoeken",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+        });
       migrationBuilder.CreateTable(
           name: "AspNetRoleClaims",
           columns: table => new {
@@ -107,6 +170,44 @@ namespace Api.Migrations {
                       principalColumn: "Id",
                       onDelete: ReferentialAction.Cascade);
           });
+      migrationBuilder.CreateTable(
+        name: "Vragen",
+        columns: table => new
+        {
+          Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+          Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+          Onderwerp = table.Column<string>(type: "nvarchar(max)", nullable: false),
+          VragenlijstId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+        },
+        constraints: table =>
+        {
+          table.PrimaryKey("PK_Vragen", x => x.Id);
+          table.ForeignKey(
+            name: "FK_Vragen_Vragenlijsten_VragenlijstId",
+            column: x => x.VragenlijstId,
+            principalTable: "Vragenlijsten",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+        });
+      migrationBuilder.CreateTable(
+        name: "Antwoorden",
+        columns: table => new
+        {
+          Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+          Tekst = table.Column<string>(type: "nvarchar(max)", nullable: false),
+          VraagtId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+          VraagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+        },
+        constraints: table =>
+        {
+          table.PrimaryKey("PK_Antwoorden", x => x.Id);
+          table.ForeignKey(
+            name: "FK_Antwoorden_Vragen_VraagId",
+            column: x => x.VraagId,
+            principalTable: "Vragen",
+            principalColumn: "Id",
+            onDelete: ReferentialAction.Cascade);
+        });
 
       migrationBuilder.CreateTable(
           name: "AspNetUserClaims",
@@ -404,6 +505,38 @@ namespace Api.Migrations {
           column: "NormalizedUserName",
           unique: true,
           filter: "[NormalizedUserName] IS NOT NULL");
+      
+      migrationBuilder.CreateIndex(
+        name: "IX_Ervaringsdeskundigen_OnderzoekId",
+        table: "Ervaringsdeskundigen",
+        column: "OnderzoekId");
+
+      migrationBuilder.CreateIndex(
+        name: "IX_Antwoorden_VraagId",
+        table: "Antwoorden",
+        column: "VraagId");
+
+      migrationBuilder.CreateIndex(
+        name: "IX_Onderzoeken_BedrijfId",
+        table: "Onderzoeken",
+        column: "BedrijfId");
+
+      migrationBuilder.CreateIndex(
+        name: "IX_Vragen_VragenlijstId",
+        table: "Vragen",
+        column: "VragenlijstId");
+
+      migrationBuilder.CreateIndex(
+        name: "IX_Vragenlijsten_OnderzoekId",
+        table: "Vragenlijsten",
+        column: "OnderzoekId");
+
+      migrationBuilder.AddForeignKey(
+        name: "FK_Ervaringsdeskundigen_Onderzoeken_OnderzoekId",
+        table: "Ervaringsdeskundigen",
+        column: "OnderzoekId",
+        principalTable: "Onderzoeken",
+        principalColumn: "Id");
     }
 
     /// <inheritdoc />
@@ -461,6 +594,33 @@ namespace Api.Migrations {
 
       migrationBuilder.DropTable(
           name: "Voogden");
+      
+      migrationBuilder.DropForeignKey(
+        name: "FK_Ervaringsdeskundigen_Onderzoeken_OnderzoekId",
+        table: "Ervaringsdeskundigen");
+
+      migrationBuilder.DropTable(
+        name: "Antwoorden");
+
+      migrationBuilder.DropTable(
+        name: "OnderzoekErvaringsdekundigen");
+
+      migrationBuilder.DropTable(
+        name: "Vragen");
+
+      migrationBuilder.DropTable(
+        name: "Vragenlijsten");
+
+      migrationBuilder.DropTable(
+        name: "Onderzoeken");
+
+      migrationBuilder.DropIndex(
+        name: "IX_Ervaringsdeskundigen_OnderzoekId",
+        table: "Ervaringsdeskundigen");
+
+      migrationBuilder.DropColumn(
+        name: "OnderzoekId",
+        table: "Ervaringsdeskundigen");
     }
   }
 }
