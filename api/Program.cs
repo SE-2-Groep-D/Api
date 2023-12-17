@@ -36,30 +36,8 @@ public class Program {
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
-    
-    var connectionString = builder.Configuration.GetConnectionString("APIDbConnectionString");
-    var dbType = builder.Configuration["DatabaseType"];
-    
-    try {
-        services.AddDbContext<AccessibilityDbContext>(options => {
-          switch (dbType) {
-            case "sqlserver":
-              options.UseSqlServer(connectionString);
-              break;
-            default:
-              options.UseMySql(connectionString, new MySqlServerVersion(new Version(10, 6, 12)));
-              break;
-          }
-        });
-        
-        Console.WriteLine("Succesfully connected to the database.");
-    } catch (Exception e) {
-      Console.WriteLine($"Could not connect to database: ConnectionString: {connectionString} DatabaseType: {dbType}");
-      Console.WriteLine(e);
-      throw;
-    }
 
-
+    ConnectToDatabase(services, builder);
     AddRepositories(services);
     AddServices(services);
 
@@ -93,27 +71,7 @@ public class Program {
       .AddEntityFrameworkStores<AccessibilityDbContext>()
       .AddDefaultTokenProviders();
 
-    services.Configure<IdentityOptions>(options => {
-      options.Password.RequireDigit = false;
-      options.Password.RequireLowercase = false;
-      options.Password.RequireUppercase = false;
-      options.Password.RequireNonAlphanumeric = false;
-      options.Password.RequiredLength = 6;
-      options.Password.RequiredUniqueChars = 1;
-    });
-
-    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-      .AddJwtBearer(options =>
-        options.TokenValidationParameters = new TokenValidationParameters {
-          ValidateIssuer = true,
-          ValidateAudience = true,
-          ValidateLifetime = true,
-          ValidateIssuerSigningKey = true,
-          ValidIssuer = builder.Configuration["Jwt:Issuer"],
-          ValidAudience = builder.Configuration["Jwt:Audience"],
-          IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        });
+    AddAuthentication(services, builder);
   }
 
   private static void AddRepositories(IServiceCollection services) {
@@ -140,6 +98,55 @@ public class Program {
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+  }
+
+
+  private static void ConnectToDatabase(IServiceCollection services, WebApplicationBuilder builder) {
+    var connectionString = builder.Configuration.GetConnectionString("APIDbConnectionString");
+    var dbType = builder.Configuration["DatabaseType"];
+
+    try {
+      services.AddDbContext<AccessibilityDbContext>(options => {
+        switch (dbType) {
+          case "sqlserver":
+            options.UseSqlServer(connectionString);
+            break;
+          default:
+            options.UseMySql(connectionString, new MySqlServerVersion(new Version(10, 6, 12)));
+            break;
+        }
+      });
+
+      Console.WriteLine("Succesfully connected to the database.");
+    } catch (Exception e) {
+      Console.WriteLine($"Could not connect to database: ConnectionString: {connectionString} DatabaseType: {dbType}");
+      Console.WriteLine(e);
+      throw;
+    }
+  }
+
+  private static void AddAuthentication(IServiceCollection services, WebApplicationBuilder builder) {
+    services.Configure<IdentityOptions>(options => {
+      options.Password.RequireDigit = false;
+      options.Password.RequireLowercase = false;
+      options.Password.RequireUppercase = false;
+      options.Password.RequireNonAlphanumeric = false;
+      options.Password.RequiredLength = 6;
+      options.Password.RequiredUniqueChars = 1;
+    });
+
+    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+      .AddJwtBearer(options =>
+        options.TokenValidationParameters = new TokenValidationParameters {
+          ValidateIssuer = true,
+          ValidateAudience = true,
+          ValidateLifetime = true,
+          ValidateIssuerSigningKey = true,
+          ValidIssuer = builder.Configuration["Jwt:Issuer"],
+          ValidAudience = builder.Configuration["Jwt:Audience"],
+          IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        });
   }
 
 }
