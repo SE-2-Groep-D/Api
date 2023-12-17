@@ -1,3 +1,4 @@
+using System.Configuration;
 using Api.Data;
 using Api.Services.IUserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,6 +10,7 @@ using Api.Services.ITokenService;
 using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories.IGebruikerRepository;
+
 //using Api.Repositories.ITrackingRepository;
 
 //using Api.Repositories.ITrackingRepository;
@@ -34,9 +36,29 @@ public class Program {
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
+    
+    var connectionString = builder.Configuration.GetConnectionString("APIDbConnectionString");
+    var dbType = builder.Configuration["DatabaseType"];
+    
+    try {
+        services.AddDbContext<AccessibilityDbContext>(options => {
+          switch (dbType) {
+            case "sqlserver":
+              options.UseSqlServer(connectionString);
+              break;
+            default:
+              options.UseMySql(connectionString, new MySqlServerVersion(new Version(10, 6, 12)));
+              break;
+          }
+        });
+        
+        Console.WriteLine("Succesfully connected to the database.");
+    } catch (Exception e) {
+      Console.WriteLine($"Could not connect to database: ConnectionString: {connectionString} DatabaseType: {dbType}");
+      Console.WriteLine(e);
+      throw;
+    }
 
-    services.AddDbContext<AccessibilityDbContext>(options =>
-      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
 
     AddRepositories(services);
     AddServices(services);
