@@ -8,6 +8,7 @@ using System.Text;
 using Api.Services.ITokenService;
 using Api.Mappings;
 using Api.Models.Domain.User;
+using Api.Repositories;
 using Api.Repositories.IGebruikerRepository;
 //using Api.Repositories.ITrackingRepository;
 
@@ -97,6 +98,8 @@ public class Program {
   private static void AddRepositories(IServiceCollection services) {
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
     //services.AddScoped<ITrackingRepository, TrackingRepository>();
+    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
+    
   }
 
   private static void AddServices(IServiceCollection services) {
