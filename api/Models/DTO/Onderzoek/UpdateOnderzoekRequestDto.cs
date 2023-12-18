@@ -8,6 +8,6 @@ public class UpdateOnderzoekRequestDto {
   public double? Vergoeding { get; set; }
   public string? Locatie { get; set; }
   public string? Status { get; set; }
-  public Guid? BedrijfId { get; set; }
+
 
 }
