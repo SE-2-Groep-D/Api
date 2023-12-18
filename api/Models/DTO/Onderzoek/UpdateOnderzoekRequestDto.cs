@@ -1,7 +1,7 @@
 ﻿namespace Api.Models.DTO.Onderzoek;
 public class UpdateOnderzoekRequestDto {
 
-  public Guid Id { get; set; }
+
   //duur
   public DateTime StartDatum { get; set; }
   public string? Omschrijving  { get; set; }

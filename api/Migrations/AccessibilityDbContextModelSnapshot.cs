@@ -61,18 +61,18 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Api.Models.Domain.OnderzoekErvaringsdekundige", b =>
                 {
-                    b.Property<Guid>("OnderzoekId")
+                    b.Property<Guid>("ErvaringsdeskundigeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ErvaringsdeskundigeId")
+                    b.Property<Guid>("OnderzoekId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("datum")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("OnderzoekId", "ErvaringsdeskundigeId");
+                    b.HasKey("ErvaringsdeskundigeId", "OnderzoekId");
 
-                    b.HasIndex("ErvaringsdeskundigeId");
+                    b.HasIndex("OnderzoekId");
 
                     b.ToTable("OnderzoekErvaringsdekundigen");
                 });
@@ -323,21 +323,6 @@ namespace Api.Migrations
                     b.HasIndex("HulpmiddelenId");
 
                     b.ToTable("ErvaringsdeskundigeHulpmiddel");
-                });
-
-            modelBuilder.Entity("ErvaringsdeskundigeOnderzoek", b =>
-                {
-                    b.Property<Guid>("ErvaringsdeskundigenId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("OnderzoekenId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ErvaringsdeskundigenId", "OnderzoekenId");
-
-                    b.HasIndex("OnderzoekenId");
-
-                    b.ToTable("ErvaringsdeskundigeOnderzoek");
                 });
 
             modelBuilder.Entity("ErvaringsdeskundigeTypeBeperking", b =>
@@ -612,11 +597,13 @@ namespace Api.Migrations
                     b.HasOne("Api.Models.Domain.User.Ervaringsdeskundige", "Ervaringsdeskundige")
                         .WithMany("OnderzoekErvaringsdekundigen")
                         .HasForeignKey("ErvaringsdeskundigeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Api.Models.Domain.Research.Onderzoek", "Onderzoek")
                         .WithMany("OnderzoekErvaringsdekundigen")
                         .HasForeignKey("OnderzoekId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Ervaringsdeskundige");
@@ -679,21 +666,6 @@ namespace Api.Migrations
                     b.HasOne("Api.Models.Domain.Hulpmiddel", null)
                         .WithMany()
                         .HasForeignKey("HulpmiddelenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ErvaringsdeskundigeOnderzoek", b =>
-                {
-                    b.HasOne("Api.Models.Domain.User.Ervaringsdeskundige", null)
-                        .WithMany()
-                        .HasForeignKey("ErvaringsdeskundigenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Api.Models.Domain.Research.Onderzoek", null)
-                        .WithMany()
-                        .HasForeignKey("OnderzoekenId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

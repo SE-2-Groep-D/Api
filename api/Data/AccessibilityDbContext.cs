@@ -40,24 +40,22 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
     builder.Entity<Medewerker>(entity => { entity.ToTable("Medewerkers"); });
     
     
-  /* Wat ik heb gemaakt maar werkt het niet
-   builder.Entity<OnderzoekErvaringsdekundige>()
-      .HasKey(oe => new { oe.OnderzoekId, oe.ErvaringsdeskundigeId });
+  builder.Entity<Onderzoek>()
+    .HasMany(e => e.Ervaringsdeskundigen)
+    .WithMany(e => e.Onderzoeken)
+    .UsingEntity<OnderzoekErvaringsdekundige>(
+      j => j
+        .HasOne(pt => pt.Ervaringsdeskundige)
+        .WithMany(t => t.OnderzoekErvaringsdekundigen)
+        .HasForeignKey(pt => pt.ErvaringsdeskundigeId)
+        .OnDelete(DeleteBehavior.NoAction),
+      j => j
+        .HasOne(pt => pt.Onderzoek)
+        .WithMany(p => p.OnderzoekErvaringsdekundigen)
+        .HasForeignKey(pt => pt.OnderzoekId)
+        .OnDelete(DeleteBehavior.NoAction));
 
-    builder.Entity<OnderzoekErvaringsdekundige>()
-      .HasOne(oe => oe.Onderzoek)
-      .WithMany(o => o.OnderzoekErvaringsdekundigen)
-      .HasForeignKey(oe => oe.OnderzoekId)
-      .OnDelete(DeleteBehavior.ClientSetNull); // Voorkomt cascade delete
 
-    builder.Entity<OnderzoekErvaringsdekundige>()
-      .HasOne(oe => oe.Ervaringsdeskundige)
-      .WithMany(e => e.OnderzoekErvaringsdekundigen)
-      .HasForeignKey(oe => oe.ErvaringsdeskundigeId)
-      .OnDelete(DeleteBehavior.ClientSetNull); // Voorkomt cascade delete
-    
-    */
-  
   
   /*Van Jason
    

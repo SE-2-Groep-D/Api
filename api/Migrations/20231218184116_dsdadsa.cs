@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Api.Migrations
 {
     /// <inheritdoc />
-    public partial class bursaso : Migration
+    public partial class dsdadsa : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -393,30 +393,6 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ErvaringsdeskundigeOnderzoek",
-                columns: table => new
-                {
-                    ErvaringsdeskundigenId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OnderzoekenId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ErvaringsdeskundigeOnderzoek", x => new { x.ErvaringsdeskundigenId, x.OnderzoekenId });
-                    table.ForeignKey(
-                        name: "FK_ErvaringsdeskundigeOnderzoek_Ervaringsdeskundigen_ErvaringsdeskundigenId",
-                        column: x => x.ErvaringsdeskundigenId,
-                        principalTable: "Ervaringsdeskundigen",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ErvaringsdeskundigeOnderzoek_Onderzoeken_OnderzoekenId",
-                        column: x => x.OnderzoekenId,
-                        principalTable: "Onderzoeken",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OnderzoekErvaringsdekundigen",
                 columns: table => new
                 {
@@ -426,7 +402,7 @@ namespace Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OnderzoekErvaringsdekundigen", x => new { x.OnderzoekId, x.ErvaringsdeskundigeId });
+                    table.PrimaryKey("PK_OnderzoekErvaringsdekundigen", x => new { x.ErvaringsdeskundigeId, x.OnderzoekId });
                     table.ForeignKey(
                         name: "FK_OnderzoekErvaringsdekundigen_Ervaringsdeskundigen_ErvaringsdeskundigeId",
                         column: x => x.ErvaringsdeskundigeId,
@@ -558,11 +534,6 @@ namespace Api.Migrations
                 column: "VoogdId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ErvaringsdeskundigeOnderzoek_OnderzoekenId",
-                table: "ErvaringsdeskundigeOnderzoek",
-                column: "OnderzoekenId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ErvaringsdeskundigeTypeBeperking_TypeBeperkingenId",
                 table: "ErvaringsdeskundigeTypeBeperking",
                 column: "TypeBeperkingenId");
@@ -590,9 +561,9 @@ namespace Api.Migrations
                 column: "BedrijfId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OnderzoekErvaringsdekundigen_ErvaringsdeskundigeId",
+                name: "IX_OnderzoekErvaringsdekundigen_OnderzoekId",
                 table: "OnderzoekErvaringsdekundigen",
-                column: "ErvaringsdeskundigeId");
+                column: "OnderzoekId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vragen_VragenlijstId",
@@ -631,9 +602,6 @@ namespace Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "ErvaringsdeskundigeHulpmiddel");
-
-            migrationBuilder.DropTable(
-                name: "ErvaringsdeskundigeOnderzoek");
 
             migrationBuilder.DropTable(
                 name: "ErvaringsdeskundigeTypeBeperking");

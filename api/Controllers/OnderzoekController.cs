@@ -79,8 +79,11 @@ public class OnderzoekController : ControllerBase {
     }
     catch (Exception ex)
     {
-      // Log de exception hier, indien nodig
-      return StatusCode(StatusCodes.Status500InternalServerError, $"Interne serverfout: {ex.Message}");
+      var errorMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+      // Log de volledige fout, inclusief inner exceptions
+      // Bijvoorbeeld: _logger.LogError($"Update fout: {errorMsg}");
+
+      return StatusCode(StatusCodes.Status500InternalServerError, $"Interne serverfout: {errorMsg}");
     }
   }
 
