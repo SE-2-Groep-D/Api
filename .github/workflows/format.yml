@@ -15,10 +15,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.100-preview.7  # Adjust to your preferred .NET version
+          dotnet-version: 7.0.o  # Adjust to your preferred .NET version
 
       - name: Install dotnet-format
-        run: dotnet tool install -g dotnet-format --version 7.0.0-beta.24423.1
+        run: dotnet tool install -g dotnet-format --version 7.0.o
 
       - name: Run dotnet-format
         run: dotnet format --check --fix --folder .  # You can adjust the folder if needed
