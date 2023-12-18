@@ -38,9 +38,39 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
     builder.Entity<Ervaringsdeskundige>(entity => { entity.ToTable("Ervaringsdeskundigen"); });
     builder.Entity<Bedrijf>(entity => { entity.ToTable("Bedrijven"); });
     builder.Entity<Medewerker>(entity => { entity.ToTable("Medewerkers"); });
-    //Id worden hier samengesteld voor de veel op veel relatie
+    
+    
+  /* Wat ik heb gemaakt maar werkt het niet
+   builder.Entity<OnderzoekErvaringsdekundige>()
+      .HasKey(oe => new { oe.OnderzoekId, oe.ErvaringsdeskundigeId });
+
     builder.Entity<OnderzoekErvaringsdekundige>()
-      .HasKey(o => new { o.OnderzoekId, o.ErvaringsdeskundigeId });
+      .HasOne(oe => oe.Onderzoek)
+      .WithMany(o => o.OnderzoekErvaringsdekundigen)
+      .HasForeignKey(oe => oe.OnderzoekId)
+      .OnDelete(DeleteBehavior.ClientSetNull); // Voorkomt cascade delete
+
+    builder.Entity<OnderzoekErvaringsdekundige>()
+      .HasOne(oe => oe.Ervaringsdeskundige)
+      .WithMany(e => e.OnderzoekErvaringsdekundigen)
+      .HasForeignKey(oe => oe.ErvaringsdeskundigeId)
+      .OnDelete(DeleteBehavior.ClientSetNull); // Voorkomt cascade delete
+    
+    */
+  
+  
+  /*Van Jason
+   
+   builder.Entity<Onderzoek>()
+      .HasMany(e => e.Ervaringsdeskundigen)
+      .WithMany(e => e.Onderzoeken)
+      .UsingEntity<OnderzoekErvaringsdekundige>(
+          l=> l.HasOne<Ervaringsdeskundige>().WithMany(
+            e=>e.OnderzoekErvaringsdekundigen),
+          l=> l.HasOne<Onderzoek>().WithMany(
+            e=>e.OnderzoekErvaringsdekundigen));*/
+
+
     
 
     var beheerderRoleId = "40de5fb2-052b-43df-8f1d-f14e40d4e663";

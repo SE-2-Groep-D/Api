@@ -15,8 +15,8 @@ public class Onderzoek {
 
   public ICollection<Vragenlijst> Vragenlijst { get; } = new List<Vragenlijst>();
   //resultaat
-  public List<Ervaringsdeskundige>Ervaringsdeskundigen { get; } = new();
-  public List<OnderzoekErvaringsdekundige>OnderzoekErvaringsdekundigen { get; } = new();
+  public List<Ervaringsdeskundige> Ervaringsdeskundigen { get; } = new();
+  public List<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; } = new();
   public Guid BedrijfId { get; set; }
   public Bedrijf Bedrijf { get; set; } = null!;
   

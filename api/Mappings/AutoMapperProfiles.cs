@@ -36,8 +36,16 @@ public class AutoMapperProfiles : Profile {
     CreateMap<Ervaringsdeskundige, ErvaringsdeskundigeDto>();
     CreateMap<Bedrijf, BedrijfDto>();
 
+    //Voor het onderzoek
     CreateMap<AddOnderzoekRequestDto, Onderzoek>().ReverseMap();
     CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
+
+    CreateMap<UpdateOnderzoekRequestDto, Onderzoek>()
+      .ForMember(dest => dest.StartDatum, opt => opt.Condition(src => src.StartDatum != null))
+      .ForMember(dest => dest.Omschrijving, opt => opt.Condition(src => src.Omschrijving != null))
+      .ForMember(dest => dest.Vergoeding, opt => opt.Condition(src => src.Vergoeding != null))
+      .ForMember(dest => dest.Locatie, opt => opt.Condition(src => src.Locatie != null))
+      .ForMember(dest => dest.Status, opt => opt.Condition(src => src.Status != null));
 
   }
 

@@ -37,7 +37,8 @@ public class Program {
     services.AddSwaggerGen();
 
     services.AddDbContext<AccessibilityDbContext>(options =>
-      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
+      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")).LogTo(Console.WriteLine, LogLevel.Information));
+    
 
     AddRepositories(services);
     AddServices(services);

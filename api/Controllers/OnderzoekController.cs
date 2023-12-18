@@ -20,7 +20,7 @@ public class OnderzoekController : ControllerBase {
 
   }
   [HttpGet]
-  [Route("getAll")]
+  [Route("list")]
   public async Task<ActionResult<IEnumerable<OnderzoekDto>>> GetAll(string status) {
     var onderzoeken = await _onderzoekRepository.GetAllAsync(status);
     var onderzoekDtos = _mapper.Map<IEnumerable<OnderzoekDto>>(onderzoeken);
@@ -55,24 +55,34 @@ public class OnderzoekController : ControllerBase {
  
   [HttpPut]
   [Route("update/{id}")]
-  public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOnderzoekRequestDto updateDto)
+  public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOnderzoekRequestDto request)
   {
-    if (id != updateDto.Id)
+    try
     {
-      return BadRequest();
+      Onderzoek? bestaandOnderzoek = await _onderzoekRepository.GetByIdAsync(id);
+
+      if (bestaandOnderzoek == null)
+      {
+        return NotFound($"Onderzoek met ID {id} is niet gevonden.");
+      }
+
+      _mapper.Map(request, bestaandOnderzoek);
+
+      Onderzoek? isUpdated = await _onderzoekRepository.UpdateAsync(id,bestaandOnderzoek);
+
+      if (isUpdated==null)
+      {
+        return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
+      }
+
+      return NoContent();
     }
-
-    var onderzoek = _mapper.Map<Onderzoek>(updateDto);
-    var bijgewerktOnderzoek = await _onderzoekRepository.UpdateAsync(id, onderzoek);
-
-    if (bijgewerktOnderzoek == null)
+    catch (Exception ex)
     {
-      return NotFound();
+      // Log de exception hier, indien nodig
+      return StatusCode(StatusCodes.Status500InternalServerError, $"Interne serverfout: {ex.Message}");
     }
-
-    return NoContent();
   }
-
 
   [HttpDelete]
   [Route("delete/{id}")]
