@@ -3,7 +3,7 @@ using Api.Models.Domain.User;
 using Api.Models.DTO;
 using Api.Models.DTO.Auth;
 using API.Models.DTO.Gebruiker;
-using API.Models.DTO.Gebruiker.request.UpdateGebruikerRequestDto;
+using Api.Models.DTO.Gebruiker.request;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using AutoMapper;
 
@@ -12,7 +12,7 @@ public class AutoMapperProfiles : Profile {
 
   public AutoMapperProfiles() {
     
-    CreateMap<UpdateGebruikerRequestDto, Gebruiker>()
+    CreateMap<InsertGebruikersInfoDto, Gebruiker>()
       .ForMember(dest => dest.Email, opt => opt.Condition(src => src.Email != null))
       .ForMember(dest => dest.Voornaam, opt => opt.Condition(src => src.Voornaam != null))
       .ForMember(dest => dest.Achternaam, opt => opt.Condition(src => src.Achternaam != null))
@@ -28,10 +28,12 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
     CreateMap<RegisterMedewerkerRequestDto, Medewerker>()
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
-    CreateMap<Gebruiker, GebruikerDetailsResponseDto>();
-    CreateMap<Medewerker, MedewerkerDto>();
-    CreateMap<Ervaringsdeskundige, ErvaringsdeskundigeDto>();
-    CreateMap<Bedrijf, BedrijfDto>();
+   
+    
+    CreateMap<Gebruiker, GebruikerDetails>().ReverseMap();
+    CreateMap<Medewerker, MedewerkerDetails>().ReverseMap();
+    CreateMap<Ervaringsdeskundige, ErvaringsDeskundigeDetails>().ReverseMap();
+    CreateMap<Bedrijf, BedrijfsDetails>().ReverseMap();
     
   }
 

@@ -1,13 +1,12 @@
 ﻿using System.Text.RegularExpressions;
 using Api.Models.Domain.User;
 using API.Models.DTO.Gebruiker;
-using API.Models.DTO.Gebruiker.request.UpdateGebruikerRequestDto;
+using Api.Models.DTO.Gebruiker.request;
+using Api.Models.DTO.Gebruiker.response;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using BedrijfDto = API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto.BedrijfDto;
-using ErvaringsdeskundigeDto = API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto.ErvaringsdeskundigeDto;
-using MedewerkerDto = API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto.MedewerkerDto;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services.IUserService;
 public class UserService : IUserService {
@@ -52,47 +51,70 @@ public class UserService : IUserService {
   }
 
 
-  public GebruikerDetailsResponseDto GetUserDetails(Gebruiker gebruiker) {
+  public GebruikerDetails GetUserDetails(Gebruiker gebruiker) {
     if (gebruiker is Medewerker) {
-      return _mapper.Map<MedewerkerDto>(gebruiker);
+      return _mapper.Map<MedewerkerDetails>(gebruiker);
     }
 
     if (gebruiker is Ervaringsdeskundige) {
-      return _mapper.Map<ErvaringsdeskundigeDto>(gebruiker);
+      return _mapper.Map<ErvaringsDeskundigeDetails>(gebruiker);
     }
 
     if (gebruiker is Bedrijf) {
-      return _mapper.Map<BedrijfDto>(gebruiker);
+      return _mapper.Map<BedrijfsDetails>(gebruiker);
     }
 
-    return _mapper.Map<GebruikerDetailsResponseDto>(gebruiker);
+    return _mapper.Map<GebruikerDetails>(gebruiker);
   }
 
-  public async Task<bool> UpdateUser(Gebruiker user, UpdateGebruikerRequestDto request) {
-    var dtoProperties = request.GetType().GetProperties();
-    var userProperties = user.GetType().GetProperties();
-    
-    
-    foreach (var dtoProp in dtoProperties) {
-      var userProp = userProperties.FirstOrDefault(p => p.Name == dtoProp.Name);
-      if (userProp == null) continue;
-      var dtoValue = dtoProp.GetValue(request);
-      if(dtoValue == null) continue;
-      userProp.SetValue(user, dtoValue);
+  public async Task<List<Object>> GetUsersAsync() {
+    var users = await _gebruikerManager.Users.ToListAsync();
+    if (users.Count == 0) return new List<Object>();
+    List<Object> returned = new List<Object>();
+
+    foreach (var gebruiker in users) {
+      var userDetails = GetUserDetails(gebruiker);
+      returned.Add(userDetails);
     }
 
-    if (user is Ervaringsdeskundige ervaringsdeskundige && request is UpdateErvaringsdeskundigeDto updateDto) {
-      await UpdateErvaringsDeskundige(ervaringsdeskundige, updateDto);
+    return returned;
+  }
+
+  public async Task<UpdateGebruikerResponse> UpdateUser(Gebruiker user, InsertGebruikersInfoDto request) {
+    var newUser = UpdateProperties(user, request, null);
+    var updated = await _gebruikerManager.UpdateAsync(newUser);
+    if (!updated.Succeeded) return new UpdateGebruikerResponse(false, "Could not update user.");
+    return new UpdateGebruikerResponse(false, "Succesfully updated the user.");
+  }
+
+  public async Task<UpdateGebruikerResponse> UpdateUserProperties(Gebruiker gebruiker, InsertGebruikersInfoDto request, Dictionary<string, Action> properties) {
+    var newUser = UpdateProperties(gebruiker, request, properties);
+    var updated = await _gebruikerManager.UpdateAsync(newUser);
+    if (!updated.Succeeded) return new UpdateGebruikerResponse(false, "Could not update user.");
+    return new UpdateGebruikerResponse(false, "Succesfully updated the user.");
+  }
+
+
+  private Gebruiker UpdateProperties(Gebruiker gebruiker, Object request, Dictionary<string, Action> properties) {
+    var props = request.GetType().GetProperties();
+    var userProps = gebruiker.GetType().GetProperties();
+    
+    foreach (var cp in props) {
+      if(cp.GetValue(request) == null) continue;
+      
+      if (properties.TryGetValue(cp.Name, out var action)) {
+        action();
+        continue;
+      }
+      
+      var userProp = userProps.FirstOrDefault(p => p.Name.Equals(cp.Name));
+      var newValue = cp.GetValue(request);
+      if (userProp == null || cp.GetValue(request) == null) continue;
+      userProp.SetValue(gebruiker, newValue);
     }
-    
-    
-    var result = await _gebruikerManager.UpdateAsync(user);
-    if (!result.Succeeded) return false;
-    return true;
-  }
 
-  private async Task<bool> UpdateErvaringsDeskundige(Ervaringsdeskundige ervaringsdeskundige, UpdateErvaringsdeskundigeDto dto) {
-    return false;
+    return gebruiker;
   }
-
+  
+  
 }

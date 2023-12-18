@@ -1,8 +1,8 @@
 ﻿using Api.Models.Domain;
 
-namespace API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
+namespace API.Models.DTO.Gebruiker;
 
-public class ErvaringsdeskundigeDto : GebruikerDetailsResponseDto {
+public class ErvaringsDeskundigeDetails : GebruikerDetails {
   
   public string Postcode { get; set; }
   public bool ToestemmingBenadering { get; set; }

@@ -163,6 +163,10 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Phonenumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.ToTable("Voogden");
@@ -388,11 +392,7 @@ namespace Api.Migrations
                 {
                     b.HasBaseType("Api.Models.Domain.User.Gebruiker");
 
-                    b.Property<string>("NaamBedrijf")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Nummer")
+                    b.Property<string>("Bedrijfsnaam")
                         .IsRequired()
                         .HasColumnType("longtext");
 

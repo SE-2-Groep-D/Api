@@ -1,15 +1,11 @@
-﻿
-using Api.Models.Domain.User;
-using API.Models.DTO.Gebruiker;
-using API.Models.DTO.Gebruiker.request.UpdateGebruikerRequestDto;
+﻿using Api.Models.Domain.User;
+using Api.Models.DTO.Gebruiker;
+using Api.Models.DTO.Gebruiker.request;
 using Api.Services.IUserService;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers;
-
 [Route("[controller]")]
 [ApiController]
 public class GebruikerController : ControllerBase {
@@ -25,13 +21,13 @@ public class GebruikerController : ControllerBase {
   [HttpGet]
   [Route("list")]
   public async Task<IActionResult> GetAll() {
-    var users = await _userManager.Users.ToListAsync();
+    var lessDetailUsers = await _userService.GetUsersAsync();
 
-    if (users.Count == 0) {
-      return NotFound("Geen gebruikers gevonden.");
+    foreach (var lessDetailUser in lessDetailUsers) {
+      Console.WriteLine(lessDetailUser.GetType());
     }
 
-    return Ok(users);
+    return Ok(lessDetailUsers);
   }
 
   [HttpGet]
@@ -44,19 +40,37 @@ public class GebruikerController : ControllerBase {
 
 
   [HttpPut]
-  [Route("update/{id}")]
-  public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateGebruikerRequestDto request) {
+  [Route("{id}/update")]
+  public async Task<IActionResult> Update([FromRoute] string id, [FromBody] InsertGebruikersInfoDto request) {
     Gebruiker? user = await _userService.GetUserByIdentification(id);
-
     if (user == null) return NotFound("Gebruiker niet gevonden.");
-    var succeeded = await _userService.UpdateUser(user, request);
     
-    if (!succeeded) return BadRequest("Kon gebruiker niet updaten.");
-    return Ok("Gebruiker succesvol geupdate.");
+    Dictionary<string, Action> functionDictionary = new Dictionary<string, Action>();
+    functionDictionary.Add("Roles",
+      () => {
+        if(request.Roles == null) return;
+        _userManager.AddToRolesAsync(user, request.Roles);
+      });
+    
+    
+    var response = await _userService.UpdateUserProperties(user, request, functionDictionary);
+    if (!response.Succeeded) return BadRequest(response);
+    return Ok(response);
   }
 
+  [HttpPut]
+  [Route("{id}/change-password")]
+  public async Task<IActionResult> ResetPassword([FromRoute] string id, [FromBody] ChangePasswordDto request) {
+    Gebruiker? user = await _userService.GetUserByIdentification(id);
+    if (user == null) return NotFound("Gebruiker niet gevonden.");
+    var result = _userManager.ChangePasswordAsync(user, request.password, request.NewPassword);
+    if (!result.IsCompletedSuccessfully) return BadRequest("Could not change password.");
+    return Ok("Successfully changed the password.");
+  }
+  
+  
   [HttpDelete]
-  [Route("delete/{id}")]
+  [Route("{id}/delete")]
   public async Task<IActionResult> Delete([FromRoute] string id) {
     Gebruiker? user = await _userManager.FindByIdAsync(id);
 
@@ -67,4 +81,5 @@ public class GebruikerController : ControllerBase {
     await _userManager.DeleteAsync(user);
     return Ok("Gebruiker succesvol verwijderd.");
   }
+
 }
