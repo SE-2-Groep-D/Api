@@ -1,4 +1,5 @@
 ﻿using Api.Models.Domain;
+using Api.Models.Domain.News;
 using Api.Models.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -21,6 +22,8 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
 
   public DbSet<Bedrijf> Bedrijven { get; set; }
   public DbSet<Medewerker> Medewerkers { get; set; }
+
+  public DbSet<Nieuwsbrief> Nieuws { get; set; }
 
 
   protected override void OnModelCreating(ModelBuilder builder) {
@@ -64,6 +67,11 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
     };
 
     builder.Entity<IdentityRole<Guid>>().HasData(roles);
+    
+    builder.Entity<Nieuwsbrief>()
+      .HasOne(n => n.Medewerker)
+      .WithMany()
+      .HasForeignKey(n => n.MedewerkerId);
   }
 
 }

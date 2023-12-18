@@ -1,9 +1,11 @@
 ﻿using Api.Models.Domain;
+using Api.Models.Domain.News;
 using Api.Models.Domain.User;
 using Api.Models.DTO;
 using Api.Models.DTO.Auth;
 using API.Models.DTO.Gebruiker;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
+using Api.Models.DTO.Nieuwsbrief;
 using AutoMapper;
 
 namespace Api.Mappings;
@@ -34,6 +36,7 @@ public class AutoMapperProfiles : Profile {
     CreateMap<Ervaringsdeskundige, ErvaringsdeskundigeDto>();
     CreateMap<Bedrijf, BedrijfDto>();
 
+    CreateMap<CreateNiewsbriefDto, Nieuwsbrief>();
   }
 
 }
