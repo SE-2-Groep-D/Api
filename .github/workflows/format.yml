@@ -21,4 +21,4 @@ jobs:
         run: dotnet tool install -g dotnet-format --version 7.0.0-beta.24423.1
 
       - name: Run dotnet-format
-        run: dotnet format --check --fix --folder .  # You can adjust the folder if needed
+        run: dotnet format .\api\api.csproj --check --fix --folder .  # You can adjust the folder if needed
