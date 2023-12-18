@@ -1,6 +1,4 @@
-﻿namespace Api.CustomActionFilters
-{
-    public class ValidateModelAttribute
-    {
-    }
+﻿namespace Api.CustomActionFilters {
+  public class ValidateModelAttribute {
+  }
 }
