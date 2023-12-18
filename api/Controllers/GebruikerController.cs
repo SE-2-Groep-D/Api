@@ -1,7 +1,9 @@
 ﻿
 using Api.Models.Domain.User;
 using API.Models.DTO.Gebruiker;
+using API.Models.DTO.Gebruiker.request.UpdateGebruikerRequestDto;
 using Api.Services.IUserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,28 +48,10 @@ public class GebruikerController : ControllerBase {
   public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateGebruikerRequestDto request) {
     Gebruiker? user = await _userService.GetUserByIdentification(id);
 
-    if (user == null) {
-      return NotFound("Gebruiker niet gevonden.");
-    }
-
-    //Voorbeeld van mapper
-    //user = mapper.Map(request, user);
-
-    user.Email = request.Email ?? user.Email;
-    user.UserName = request.Email ?? user.UserName;
-    user.Voornaam = request.Voornaam ?? user.Voornaam;
-    user.Achternaam = request.Achternaam ?? user.Achternaam;
-
-    var result = await _userManager.UpdateAsync(user);
-    if (!result.Succeeded) return BadRequest("Kon gebruiker niet updaten.");
-
-    if (request.Roles != null) {
-      var identityResult = await _userManager.AddToRolesAsync(user, request.Roles);
-      if (!identityResult.Succeeded) {
-        return BadRequest("Kon rollen niet toevoegen.");
-      }
-    }
-
+    if (user == null) return NotFound("Gebruiker niet gevonden.");
+    var succeeded = await _userService.UpdateUser(user, request);
+    
+    if (!succeeded) return BadRequest("Kon gebruiker niet updaten.");
     return Ok("Gebruiker succesvol geupdate.");
   }
 
