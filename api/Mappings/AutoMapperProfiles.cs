@@ -28,7 +28,7 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
     CreateMap<RegisterMedewerkerRequestDto, Medewerker>()
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
-    CreateMap<RegisterErvaringsdeskundigeRequestDto, Ervaringsdeskundige>()
+    CreateMap<RegisterErvaringsdeskundigeRequestDto, Ervaringsdeskundige>() 
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
     CreateMap<Gebruiker, GebruikerDetailsResponseDto>();
@@ -36,7 +36,8 @@ public class AutoMapperProfiles : Profile {
     CreateMap<Ervaringsdeskundige, ErvaringsdeskundigeDto>();
     CreateMap<Bedrijf, BedrijfDto>();
 
-    CreateMap<AddOnderzoekRequestDto, Onderzoek>();
+    CreateMap<AddOnderzoekRequestDto, Onderzoek>().ReverseMap();
+    CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
 
   }
 
