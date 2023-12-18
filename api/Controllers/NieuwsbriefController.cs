@@ -23,8 +23,13 @@ public class NieuwsbriefController : ControllerBase {
   
   [HttpGet]
   public async Task<IActionResult> GetAll() {
-    var nieuws = await _dbContext.Nieuws.ToListAsync();
-    return Ok(nieuws);
+    var last30Days = DateTime.UtcNow.AddDays(-30);
+
+    var newsArticles = await _dbContext.Nieuws
+      .Where(n => n.Datum >= last30Days)
+      .ToListAsync();
+
+    return Ok(newsArticles);
   }
 
   [HttpPost]
@@ -34,10 +39,12 @@ public class NieuwsbriefController : ControllerBase {
     var brief = _mapper.Map<Nieuwsbrief>(request);
     await _dbContext.Nieuws.AddAsync(brief);
     var result = await _dbContext.SaveChangesAsync();
+    if (result != 1) return Problem("Could not create news article");
     return Ok("Succesfully created the news message.");
   }
   
   [HttpDelete]
+  [Authorize(Roles = "Medewerker")]
   public async Task<IActionResult> DeleteNieuwsbrief([FromBody] Guid id) {
     var bericht = await _dbContext.Nieuws.FindAsync(id);
     if (bericht == null) return NotFound();

@@ -5,7 +5,7 @@ namespace Api.Models.Domain.News;
 public class Nieuwsbrief {
 
   public Guid Id { get; set; }
-  public DateTime datum { get; set; }
+  public DateTime Datum { get; set; }
   public string Titel { get; set; }
   public string Inhoud { get; set; }
   
