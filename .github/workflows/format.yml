@@ -1,26 +1,19 @@
-name: Format Code
-
-on:
-  push:
-    branches:
-      - '*'
-
+name: Format check on pull request
+on: pull_request
 jobs:
-  format:
+  dotnet-format:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+      - name: Add dotnet-format problem matcher
+        uses: xt0rted/dotnet-format-problem-matcher@v1
+
+      - name: Restore dotnet tools
+        uses: xt0rted/dotnet-tool-restore@v1
+
+      - name: Run dotnet format
+        uses: xt0rted/dotnet-format@v1
         with:
-          dotnet-version: 7.1.0
-          # Update this to a supported version, such as 7.1.0 or 8.0.0
-
-      - name: Install dotnet-format
-        run: dotnet tool install -g dotnet-format --version 7.1.0
-          # Update this to the correct version of dotnet-format
-
-      - name: Run dotnet-format
-        run: dotnet format --check --fix --folder 
+          only-changed-files: "true"
