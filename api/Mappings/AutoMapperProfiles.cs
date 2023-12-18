@@ -37,6 +37,8 @@ public class AutoMapperProfiles : Profile {
     CreateMap<Bedrijf, BedrijfDto>();
 
     CreateMap<CreateNiewsbriefDto, Nieuwsbrief>();
+    CreateMap<UpdateNieuwsbriefDto, Nieuwsbrief>();
+    
   }
 
 }

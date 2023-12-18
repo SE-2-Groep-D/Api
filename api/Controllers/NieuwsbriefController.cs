@@ -1,6 +1,5 @@
 ﻿using Api.Data;
 using Api.Models.Domain.News;
-using Api.Models.Domain.User;
 using Api.Models.DTO.Nieuwsbrief;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -43,9 +42,22 @@ public class NieuwsbriefController : ControllerBase {
     return Ok("Succesfully created the news message.");
   }
   
-  [HttpDelete]
   [Authorize(Roles = "Medewerker")]
-  public async Task<IActionResult> DeleteNieuwsbrief([FromBody] Guid id) {
+  [HttpPut("update/{id}")]
+  public async Task<IActionResult> UpdateNieuwsbrief([FromRoute]  Guid id, [FromBody] UpdateNieuwsbriefDto request) {
+    var nieuwsbrief = await _dbContext.Nieuws.FindAsync(id);
+    if (nieuwsbrief == null) {
+      return NotFound();
+    }
+
+    _mapper.Map(request, nieuwsbrief);
+    await _dbContext.SaveChangesAsync();
+    return Ok(nieuwsbrief);
+  }
+  
+  [HttpDelete("delete/{id}")]
+  [Authorize(Roles = "Medewerker")]
+  public async Task<IActionResult> DeleteNieuwsbrief([FromRoute]  Guid id) {
     var bericht = await _dbContext.Nieuws.FindAsync(id);
     if (bericht == null) return NotFound();
      _dbContext.Nieuws.Remove(bericht);

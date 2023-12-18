@@ -20,8 +20,7 @@ public class GebruikerController : ControllerBase {
     _userService = service;
   }
 
-  [HttpGet]
-  [Route("list")]
+  [HttpGet("list")]
   public async Task<IActionResult> GetAll() {
     var users = await _userManager.Users.ToListAsync();
 
@@ -32,8 +31,7 @@ public class GebruikerController : ControllerBase {
     return Ok(users);
   }
 
-  [HttpGet]
-  [Route("{id}")]
+  [HttpGet("{id}")]
   public async Task<IActionResult> GetUser([FromRoute] string id) {
     Gebruiker? user = await _userService.GetUserByIdentification(id);
     if (user == null) return NotFound("Gebruiker niet gevonden.");
@@ -41,8 +39,7 @@ public class GebruikerController : ControllerBase {
   }
 
 
-  [HttpPut]
-  [Route("update/{id}")]
+  [HttpPut("update/{id}")]
   public async Task<IActionResult> Update([FromRoute] string id, [FromBody] UpdateGebruikerRequestDto request) {
     Gebruiker? user = await _userService.GetUserByIdentification(id);
 
@@ -71,8 +68,7 @@ public class GebruikerController : ControllerBase {
     return Ok("Gebruiker succesvol geupdate.");
   }
 
-  [HttpDelete]
-  [Route("delete/{id}")]
+  [HttpDelete("delete/{id}")]
   public async Task<IActionResult> Delete([FromRoute] string id) {
     Gebruiker? user = await _userManager.FindByIdAsync(id);
 
