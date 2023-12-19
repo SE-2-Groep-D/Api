@@ -24,6 +24,8 @@ public class Program {
     var builder = WebApplication.CreateBuilder(args);
     SetupServices(builder.Services, builder);
 
+    
+ 
     // add middelware
     var app = builder.Build();
     SetupMiddleware(app);
@@ -38,12 +40,22 @@ public class Program {
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
+    if (builder.Environment.IsDevelopment()) {
+      services.AddCors(options =>
+      {
+        options.AddPolicy("AllowAny",
+          b => b.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+      });
+      
+      
+    }
+
 
     services.AddDbContext<AccessibilityDbContext>(options =>
-      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString"));
+      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
     
-
-
     ConnectToDatabase(services, builder);
 
     AddRepositories(services);
@@ -100,8 +112,15 @@ public class Program {
     if (app.Environment.IsDevelopment()) {
       app.UseSwagger();
       app.UseSwaggerUI();
+      app.UseCors(builder => {
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+          Console.WriteLine("Setup cors");
+      });
+
     }
 
+    app.UseStaticFiles();
+    
     // configure HTTPS
     app.UseHttpsRedirection();
 
