@@ -47,6 +47,15 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Locatie, opt => opt.Condition(src => src.Locatie != null))
       .ForMember(dest => dest.Status, opt => opt.Condition(src => src.Status != null));
 
+
+    CreateMap<UpdateVragenlijstRequestDto, Vragenlijst>()
+      .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
+      .ForMember(dest => dest.Samenvatting, opt => opt.Condition(src => src.Samenvatting != null));
+
+    
+    //voor vragenlijst
+    CreateMap<VragenlijstDto, Vragenlijst>().ReverseMap();
+    CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
   }
 
 }

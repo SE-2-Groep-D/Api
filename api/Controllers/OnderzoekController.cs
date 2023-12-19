@@ -43,7 +43,7 @@ public class OnderzoekController : ControllerBase {
   }
 
   [HttpPost]
-  [Route("/create")]
+  [Route("/onderzoek/create")]
   public async Task<ActionResult<OnderzoekDto>> Create([FromBody] AddOnderzoekRequestDto addDto) 
   {
     var onderzoek = _mapper.Map<Onderzoek>(addDto);
