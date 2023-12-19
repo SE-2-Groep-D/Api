@@ -1,4 +1,4 @@
-﻿namespace API.Models.DTO.Gebruiker; 
+﻿namespace API.Models.DTO.Gebruiker;
 
 public class UpdateGebruikerRequestDto {
 
