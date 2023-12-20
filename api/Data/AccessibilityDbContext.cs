@@ -1,8 +1,10 @@
 ﻿using Api.Models.Domain;
 using Api.Models.Domain.User;
+using Api.Models.Domain.Bericht;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Api.Data;
 public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<Guid>, Guid> {
@@ -17,6 +19,7 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
   public DbSet<TypeBeperking> TypeBeperkingen { get; set; }
   public DbSet<Hulpmiddel> Hulpmiddelen { get; set; }
   public DbSet<Beschikbaarheid> Beschikbaarheden { get; set; }
+  public DbSet<Bericht> Berichten { get; set; }
 
 
   public DbSet<Bedrijf> Bedrijven { get; set; }
@@ -29,6 +32,18 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
     builder.Entity<Ervaringsdeskundige>(entity => { entity.ToTable("Ervaringsdeskundigen"); });
     builder.Entity<Bedrijf>(entity => { entity.ToTable("Bedrijven"); });
     builder.Entity<Medewerker>(entity => { entity.ToTable("Medewerkers"); });
+
+
+    builder.Entity<Gebruiker>()
+        .HasMany(e => e.VerzondenBerichten)
+        .WithOne(e => e.Verzender)
+        .HasForeignKey(e => e.VerzenderId)
+        .IsRequired();
+    builder.Entity<Gebruiker>()
+            .HasMany(e => e.OntvangenBerichten)
+            .WithOne(e => e.Ontvanger)
+            .HasForeignKey(e => e.OntvangerId)
+            .IsRequired();
 
 
     var beheerderRoleId = "40de5fb2-052b-43df-8f1d-f14e40d4e663";

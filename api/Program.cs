@@ -10,6 +10,7 @@ using Api.Services.ITokenService;
 using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories.IGebruikerRepository;
+using Api.Repositories.IBerichtRepository;
 
 //using Api.Repositories.ITrackingRepository;
 
@@ -75,6 +76,7 @@ public class Program {
   }
 
   private static void AddRepositories(IServiceCollection services) {
+    services.AddScoped<IBerichtRepository, SQLBerichtRepository>();
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
     //services.AddScoped<ITrackingRepository, TrackingRepository>();
   }
