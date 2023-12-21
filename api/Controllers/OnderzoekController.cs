@@ -2,6 +2,7 @@
 using Api.Models.DTO.Onderzoek;
 using Api.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -21,7 +22,7 @@ public class OnderzoekController : ControllerBase {
   }
   [HttpGet]
   [Route("list")]
-  public async Task<ActionResult<IEnumerable<OnderzoekDto>>> GetAll(string status) {
+  public async Task<ActionResult> GetAll(string status) {
     var onderzoeken = await _onderzoekRepository.GetAllAsync(status);
     var onderzoekDtos = _mapper.Map<IEnumerable<OnderzoekDto>>(onderzoeken);
     return Ok(onderzoekDtos);
@@ -31,7 +32,7 @@ public class OnderzoekController : ControllerBase {
   
   [HttpGet]
   [Route("{id}")] 
-  public async Task<ActionResult<OnderzoekDto>> GetById(Guid id)
+  public async Task<ActionResult> GetById(Guid id)
   {
     var onderzoek = await _onderzoekRepository.GetByIdAsync(id);
     if (onderzoek == null)
@@ -43,7 +44,7 @@ public class OnderzoekController : ControllerBase {
   }
 
   [HttpPost]
-  [Route("/create")]
+  [Route("create")]
   public async Task<ActionResult<OnderzoekDto>> Create([FromBody] AddOnderzoekRequestDto addDto) 
   {
     var onderzoek = _mapper.Map<Onderzoek>(addDto);
@@ -75,14 +76,11 @@ public class OnderzoekController : ControllerBase {
         return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
       }
 
-      return NoContent();
+      return Ok("Onderzoek succesvol geupdate.");
     }
     catch (Exception ex)
     {
       var errorMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-      // Log de volledige fout, inclusief inner exceptions
-      // Bijvoorbeeld: _logger.LogError($"Update fout: {errorMsg}");
-
       return StatusCode(StatusCodes.Status500InternalServerError, $"Interne serverfout: {errorMsg}");
     }
   }
@@ -96,7 +94,7 @@ public class OnderzoekController : ControllerBase {
     {
       return NotFound();
     }
-    return NoContent();
+    return Ok("Onderzoek is verwijderd.");
   }
 
 

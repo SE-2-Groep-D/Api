@@ -11,6 +11,7 @@ using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories;
 using Api.Repositories.IGebruikerRepository;
+using Api.Repositories.VragenlijstRepository;
 
 //using Api.Repositories.ITrackingRepository;
 
@@ -40,7 +41,7 @@ public class Program {
 
 
     services.AddDbContext<AccessibilityDbContext>(options =>
-      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString"));
+      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
     
 
 
@@ -86,6 +87,8 @@ public class Program {
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
     //services.AddScoped<ITrackingRepository, TrackingRepository>();
     services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
+    services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
+
     
   }
 
