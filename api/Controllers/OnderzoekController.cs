@@ -22,7 +22,7 @@ public class OnderzoekController : ControllerBase {
   }
   [HttpGet]
   [Route("list")]
-  public async Task<ActionResult<IEnumerable<OnderzoekDto>>> GetAll(string status) {
+  public async Task<ActionResult> GetAll(string status) {
     var onderzoeken = await _onderzoekRepository.GetAllAsync(status);
     var onderzoekDtos = _mapper.Map<IEnumerable<OnderzoekDto>>(onderzoeken);
     return Ok(onderzoekDtos);
@@ -32,7 +32,7 @@ public class OnderzoekController : ControllerBase {
   
   [HttpGet]
   [Route("{id}")] 
-  public async Task<ActionResult<OnderzoekDto>> GetById(Guid id)
+  public async Task<ActionResult> GetById(Guid id)
   {
     var onderzoek = await _onderzoekRepository.GetByIdAsync(id);
     if (onderzoek == null)
