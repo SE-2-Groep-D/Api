@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AccessibilityDbContext))]
-    [Migration("20231218184116_dsdadsa")]
-    partial class dsdadsa
+    [Migration("20231221173611_jkb")]
+    partial class jkb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
