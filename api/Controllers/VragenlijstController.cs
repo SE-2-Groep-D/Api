@@ -23,7 +23,7 @@ public class VragenlijstController : ControllerBase  {
   
   [HttpGet]
   [Route("list")]
-  public async Task<ActionResult<List<VragenlijstDto>>> GetAll(Guid OnderzoekId) {
+  public async Task<ActionResult> GetAll(Guid OnderzoekId) {
     var vragenlijsten = await _vragenlijstRepository.GetAllAsync(OnderzoekId);
     var vragenlijstenDtos = _mapper.Map<IEnumerable<VragenlijstDto>>(vragenlijsten);
     return Ok(vragenlijstenDtos);
@@ -32,7 +32,7 @@ public class VragenlijstController : ControllerBase  {
   
   [HttpGet]
   [Route("{id}")] 
-  public async Task<ActionResult<VragenlijstDto>> GetById(Guid id)
+  public async Task<ActionResult> GetById(Guid id)
   {
     var vragenlijsten = await _vragenlijstRepository.GetByIdAsync(id);
     if (vragenlijsten == null)
@@ -44,7 +44,7 @@ public class VragenlijstController : ControllerBase  {
   }
   
   [HttpPost]
-  [Route("vragenlijst/create")]
+  [Route("create")]
   public async Task<ActionResult<VragenlijstDto>> Create([FromBody] AddVragenlijstRequestDto addDto) 
   {
     var vragenlijsten = _mapper.Map<Vragenlijst>(addDto);
@@ -75,7 +75,7 @@ public class VragenlijstController : ControllerBase  {
         return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
       }
 
-      return NoContent();
+      return Ok(isUpdated);
     }
     catch (Exception ex)
     {
@@ -94,7 +94,7 @@ public class VragenlijstController : ControllerBase  {
     {
       return NotFound();
     }
-    return NoContent();
+     return Ok("Vragenlijst is succsesvol updated");
   }
 
   

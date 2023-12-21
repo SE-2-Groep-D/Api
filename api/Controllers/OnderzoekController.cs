@@ -2,6 +2,7 @@
 using Api.Models.DTO.Onderzoek;
 using Api.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -43,7 +44,7 @@ public class OnderzoekController : ControllerBase {
   }
 
   [HttpPost]
-  [Route("/onderzoek/create")]
+  [Route("create")]
   public async Task<ActionResult<OnderzoekDto>> Create([FromBody] AddOnderzoekRequestDto addDto) 
   {
     var onderzoek = _mapper.Map<Onderzoek>(addDto);
@@ -75,14 +76,11 @@ public class OnderzoekController : ControllerBase {
         return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
       }
 
-      return NoContent();
+      return Ok("Onderzoek succesvol geupdate.");
     }
     catch (Exception ex)
     {
       var errorMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-      // Log de volledige fout, inclusief inner exceptions
-      // Bijvoorbeeld: _logger.LogError($"Update fout: {errorMsg}");
-
       return StatusCode(StatusCodes.Status500InternalServerError, $"Interne serverfout: {errorMsg}");
     }
   }
@@ -96,7 +94,7 @@ public class OnderzoekController : ControllerBase {
     {
       return NotFound();
     }
-    return NoContent();
+    return Ok("Onderzoek is verwijderd.");
   }
 
 
