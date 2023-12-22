@@ -9,6 +9,7 @@ using Api.Services.ITokenService;
 using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories.IGebruikerRepository;
+using Microsoft.AspNetCore.Authentication.Google;
 //using Api.Repositories.ITrackingRepository;
 
 //using Api.Repositories.ITrackingRepository;
@@ -80,7 +81,12 @@ public class Program {
       options.Password.RequiredUniqueChars = 1;
     });
 
-    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+      services.AddAuthentication( options => {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //options.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+        //options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+      })
       .AddJwtBearer(options =>
         options.TokenValidationParameters = new TokenValidationParameters {
           ValidateIssuer = true,
@@ -92,11 +98,14 @@ public class Program {
           IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         })
-      .AddGoogle(googleOptions =>
-      {
-        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-      });
+      //.AddGoogle(googleOptions =>
+      //{
+      //  googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+      //  googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+      //  //googleOptions.CallbackPath = "https://panel-eight-beta.vercel.app/";
+        
+      //})
+      ;
   }
 
   private static void AddRepositories(IServiceCollection services) {
@@ -119,6 +128,13 @@ public class Program {
 
     // configure HTTPS
     app.UseHttpsRedirection();
+
+    app.UseCors(builder =>
+    {
+      builder.WithOrigins("http://localhost:5173"); // Replace with your React app's URL
+      builder.AllowAnyHeader();
+      builder.AllowAnyMethod();
+    });
 
     app.UseAuthentication();
     app.UseAuthorization();

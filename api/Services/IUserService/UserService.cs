@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Api.Models.Domain.User;
+using Api.Models.DTO.Auth;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -10,9 +11,21 @@ public class UserService : IUserService {
   private readonly UserManager<Gebruiker> _gebruikerManager;
   private readonly IMapper _mapper;
 
-  public UserService(UserManager<Gebruiker> gebruikerManager, IMapper mapper) {
+  public UserService(UserManager<Gebruiker> gebruikerManager, IMapper mapper ) {
     _gebruikerManager = gebruikerManager;
     _mapper = mapper;
+  }
+
+  public LoginResponseDto CreateLoginResponse (Gebruiker gebruiker, string jwtToken) {
+  
+    var response = new LoginResponseDto {
+      UserId = gebruiker.Id,
+      Voornaam = gebruiker.Voornaam,
+      Achternaam = gebruiker.Achternaam,
+      JwtToken = jwtToken
+    };
+
+    return response;
   }
 
   public async Task<string> Register(Gebruiker gebruiker, string password, string[] roles) {
