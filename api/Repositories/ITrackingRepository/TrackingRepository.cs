@@ -17,7 +17,7 @@ public class TrackingRepository : ITrackingRepository {
     _mapper = mapper;
   }
 
-  public async Task<bool> CreateTrackingReasearch(CreateTrackingResearchDto request) {
+  public async Task<bool> CreateTrackingResearch(CreateTrackingResearchDto request) {
     var trackingOnderzoek = _mapper.Map<TrackingOnderzoek>(request);
     if (trackingOnderzoek == null) return false;
     var onderzoek = await _onderzoekRepository.GetByIdAsync(trackingOnderzoek.OnderzoekId);
@@ -47,11 +47,24 @@ public class TrackingRepository : ITrackingRepository {
     return await _context.TrackingOnderzoeken
       .Include(o => o.TrackingResultaten).FirstOrDefaultAsync(trackingOnderzoek => trackingOnderzoek.OnderzoekId == onderzoekId);;
   }
+  
 
-  public async Task<bool> DeleteAsync(Guid onderzoekId) {
+  public async Task<bool> DeleteTrackingResearch(Guid onderzoekId) {
     var result = await GetById(onderzoekId);
     if (result == null) return true;
     _context.Remove(result);
+    await _context.SaveChangesAsync();
+    return true;
+  }
+
+  public async Task<bool> UpdateTrackingResearch(UpdateTrackingResearchDto request) {
+    var onderzoek = await GetById(request.OnderzoekId);
+    if (onderzoek == null) return false;
+    var map = _mapper.Map(request, onderzoek);
+    var result = await _context.TrackingOnderzoeken.FindAsync(map.Id);
+    if (result == null) return false;
+    
+    _context.Entry(result).CurrentValues.SetValues(map);
     await _context.SaveChangesAsync();
     return true;
   }

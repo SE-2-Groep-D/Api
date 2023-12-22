@@ -49,13 +49,19 @@ public class TrackingController : ControllerBase {
   [HttpPost("create")]
   // [Authorize(Roles = "Bedrijf")]
   public async Task<IActionResult> CreateTrackingResearch([FromBody] CreateTrackingResearchDto request) {
-    bool created = await _repository.CreateTrackingReasearch(request);
+    bool created = await _repository.CreateTrackingResearch(request);
     if (!created) return NotFound();
     return Ok();
   }
 
-  [HttpGet("{id}")] public async Task<IActionResult> DeleteResults(Guid id) {
-    var resultaat = await _repository.DeleteAsync(id);
+  [HttpGet("{id}")] public async Task<IActionResult> DeleteResearch(Guid id) {
+    var resultaat = await _repository.DeleteTrackingResearch(id);
+    if (!resultaat) return BadRequest();
+    return Ok(resultaat);
+  }
+  
+  [HttpPut("{id}")] public async Task<IActionResult> UpdateResearch(UpdateTrackingResearchDto request) {
+    var resultaat = await _repository.UpdateTrackingResearch(request);
     if (!resultaat) return BadRequest();
     return Ok(resultaat);
   }

@@ -63,8 +63,11 @@ public class AutoMapperProfiles : Profile {
     CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
 
     CreateMap<CreateTrackingResearchDto, TrackingOnderzoek>();
+    CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>();
     CreateMap<SubmitTrackingResultsDto, TrackingResultaten>();
     CreateMap<ClickedItemDto, ClickedItem>();
+    
+ 
   }
 
 }
