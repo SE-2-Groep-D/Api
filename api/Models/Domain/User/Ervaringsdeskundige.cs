@@ -1,4 +1,6 @@
-﻿namespace Api.Models.Domain.User;
+﻿using Api.Models.Domain.Research;
+
+namespace Api.Models.Domain.User;
 
 public class Ervaringsdeskundige : Gebruiker {
   public string Postcode { get; set; }
@@ -13,6 +15,8 @@ public class Ervaringsdeskundige : Gebruiker {
   public Voogd? Voogd { get; set; }
 
   public ICollection<Beschikbaarheid> Beschikbaarheden { get; } = new List<Beschikbaarheid>();
+  public List<Onderzoek> Onderzoeken { get; } = new();
+  public List<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; } = new();
 
 
 }
