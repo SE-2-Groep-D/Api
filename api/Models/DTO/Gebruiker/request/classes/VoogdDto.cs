@@ -1,5 +1,5 @@
 ﻿namespace API.Models.DTO.Gebruiker.request.classes; 
-public class Voogd {
+public class VoogdDto {
 
   public string? Name { get; set; }
   public string? Email { get; set; }
