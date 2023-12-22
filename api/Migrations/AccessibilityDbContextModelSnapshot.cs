@@ -90,9 +90,6 @@ namespace Api.Migrations
                     b.Property<Guid>("VraagId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("VraagtId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("VraagId");

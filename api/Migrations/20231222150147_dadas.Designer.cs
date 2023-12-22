@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Migrations
 {
     [DbContext(typeof(AccessibilityDbContext))]
-    [Migration("20231221173611_jkb")]
-    partial class jkb
+    [Migration("20231222150147_dadas")]
+    partial class dadas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,9 +91,6 @@ namespace Api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("VraagId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("VraagtId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");

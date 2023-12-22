@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
 using Api.Models.Domain.User;
 
 namespace Api.Models.Domain.Research; 

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Api.Migrations
 {
     /// <inheritdoc />
-    public partial class jkb : Migration
+    public partial class dadas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -461,7 +461,6 @@ namespace Api.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Tekst = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    VraagtId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VraagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

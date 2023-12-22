@@ -10,6 +10,7 @@ using Api.Services.ITokenService;
 using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories;
+using Api.Repositories.AntwoordRepository;
 using Api.Repositories.IGebruikerRepository;
 using Api.Repositories.VragenlijstRepository;
 using Api.Repositories.VragenRepository;
@@ -90,6 +91,7 @@ public class Program {
     services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
     services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
     services.AddScoped<IVraagRepository, SQLVraagRepository>();
+    services.AddScoped<IAntwoordRepository, SQLAntwoordRepository>();
 
     
   }

@@ -28,7 +28,7 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
     CreateMap<RegisterMedewerkerRequestDto, Medewerker>()
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
-    CreateMap<RegisterErvaringsdeskundigeRequestDto, Ervaringsdeskundige>() 
+    CreateMap<RegisterErvaringsdeskundigeRequestDto, Ervaringsdeskundige>()
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
     CreateMap<Gebruiker, GebruikerDetailsResponseDto>();
@@ -52,21 +52,36 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
       .ForMember(dest => dest.Samenvatting, opt => opt.Condition(src => src.Samenvatting != null));
 
-    
+
     //voor vragenlijst
     CreateMap<VragenlijstDto, Vragenlijst>().ReverseMap();
     CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
-    
+
     //Voor vraag
-    
+
     CreateMap<UpdateVraagRequestDto, Vraag>()
       .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null))
       .ForMember(dest => dest.Onderwerp, opt => opt.Condition(src => src.Onderwerp != null));
 
-    
-    
+
     CreateMap<VraagDto, Vraag>().ReverseMap();
     CreateMap<AddVraagRequestDto, Vraag>().ReverseMap();
+
+    //Voor antwoord
+
+  
+    CreateMap<UpdateAntwoordRequestDto, Antwoord>()
+      .ForMember(dest => dest.Tekst, opt => opt.Condition(src => src.Tekst != null));
+
+
+    CreateMap<AntwoordDto, Antwoord>()
+      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
+      .ReverseMap();
+
+
+    CreateMap<AddAntwoordRequestDto, Antwoord>()
+      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
+      .ReverseMap();
   }
 
 }
