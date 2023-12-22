@@ -8,5 +8,4 @@ public class Bedrijf : Gebruiker {
   public string WebsiteUrl { get; set; }
   public string Omschrijving { get; set; }
 
-  }
 }

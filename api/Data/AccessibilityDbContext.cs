@@ -1,4 +1,5 @@
 ﻿using Api.Models.Domain;
+using Api.Models.Domain.Research;
 using Api.Models.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -23,16 +24,13 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
   public DbSet<Medewerker> Medewerkers { get; set; }
 
   public DbSet<Nieuwsbrief> Nieuws { get; set; }
-
-
-  //Voor het onderzoeken
+  
+  public DbSet<Onderzoek> Onderzoeken{ get; set; }
+  public DbSet<OnderzoekErvaringsdekundige>  OnderzoekErvaringsdekundigen {get; set; }
+  
   public DbSet<Antwoord> Antwoorden{ get; set; }
   public DbSet<Vraag> Vragen{ get; set; }
   public DbSet<Vragenlijst> Vragenlijsten{ get; set; }
-  //Paginatrack mag hier komen
-  //resulaat mag hier komen
-  public DbSet<Onderzoek> Onderzoeken{ get; set; }
-  public DbSet<OnderzoekErvaringsdekundige>  OnderzoekErvaringsdekundigen {get; set; }
   
   protected override void OnModelCreating(ModelBuilder builder) {
     base.OnModelCreating(builder);

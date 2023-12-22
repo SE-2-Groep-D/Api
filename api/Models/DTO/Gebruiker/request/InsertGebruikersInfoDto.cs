@@ -22,9 +22,9 @@ public class InsertGebruikersInfoDto {
   public List<string>? Benaderingen { get; set; }
   public List<string>? Hulpmiddelen { get; set; }
   public List<string>? TypeBeperkingen { get; set; }
-  public Voogd? Voogd { get; set; }
+  public VoogdDto? Voogd { get; set; }
   
-  public ICollection<Beschikbaarheid>? Beschikbaarheden { get; set; }
+  public ICollection<BeschikbaarheidDto>? Beschikbaarheden { get; set; }
   
   // Bedrijf
   public string? Bedrijfsnaam { get; set; }

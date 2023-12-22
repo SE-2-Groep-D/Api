@@ -22,11 +22,6 @@ public class GebruikerController : ControllerBase {
   [Route("list")]
   public async Task<IActionResult> GetAll() {
     var lessDetailUsers = await _userService.GetUsersAsync();
-
-    foreach (var lessDetailUser in lessDetailUsers) {
-      Console.WriteLine(lessDetailUser.GetType());
-    }
-
     return Ok(lessDetailUsers);
   }
 
@@ -44,15 +39,15 @@ public class GebruikerController : ControllerBase {
   public async Task<IActionResult> Update([FromRoute] string id, [FromBody] InsertGebruikersInfoDto request) {
     Gebruiker? user = await _userService.GetUserByIdentification(id);
     if (user == null) return NotFound("Gebruiker niet gevonden.");
-    
+
     Dictionary<string, Action> functionDictionary = new Dictionary<string, Action>();
     functionDictionary.Add("Roles",
       () => {
-        if(request.Roles == null) return;
+        if (request.Roles == null) return;
         _userManager.AddToRolesAsync(user, request.Roles);
       });
-    
-    
+
+
     var response = await _userService.UpdateUserProperties(user, request, functionDictionary);
     if (!response.Succeeded) return BadRequest(response);
     return Ok(response);
@@ -67,8 +62,8 @@ public class GebruikerController : ControllerBase {
     if (!result.IsCompletedSuccessfully) return BadRequest("Could not change password.");
     return Ok("Successfully changed the password.");
   }
-  
-  
+
+
   [HttpDelete]
   [Route("{id}/delete")]
   public async Task<IActionResult> Delete([FromRoute] string id) {

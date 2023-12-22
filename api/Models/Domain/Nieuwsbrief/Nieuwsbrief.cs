@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using Api.Models.Domain.User;
 
-namespace Api.Models.Domain.News; 
 public class Nieuwsbrief {
 
   public Guid Id { get; set; }

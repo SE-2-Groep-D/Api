@@ -39,12 +39,6 @@ public class Program {
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
-
-    services.AddDbContext<AccessibilityDbContext>(options =>
-      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
-    
-
-
     ConnectToDatabase(services, builder);
 
     AddRepositories(services);
@@ -89,7 +83,7 @@ public class Program {
     services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
     services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
 
-    
+
   }
 
   private static void AddServices(IServiceCollection services) {
