@@ -34,7 +34,7 @@ public class TrackingController : ControllerBase {
 
   [HttpGet("{id}")]
   public async Task<IActionResult> GetResults(Guid id) {
-    var resultaat = await _repository.GetTrackingResults(id);
+    var resultaat = await _repository.GetById(id);
     if (resultaat == null) return NotFound();
     return Ok(resultaat);
   }
@@ -52,5 +52,11 @@ public class TrackingController : ControllerBase {
     bool created = await _repository.CreateTrackingReasearch(request);
     if (!created) return NotFound();
     return Ok();
+  }
+
+  [HttpGet("{id}")] public async Task<IActionResult> DeleteResults(Guid id) {
+    var resultaat = await _repository.DeleteAsync(id);
+    if (!resultaat) return BadRequest();
+    return Ok(resultaat);
   }
 }

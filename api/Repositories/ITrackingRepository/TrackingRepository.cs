@@ -43,9 +43,17 @@ public class TrackingRepository : ITrackingRepository {
     ;
   }
 
-  public async Task<TrackingOnderzoek?> GetTrackingResults(Guid onderzoekId) {
+  public async Task<TrackingOnderzoek?> GetById(Guid onderzoekId) {
     return await _context.TrackingOnderzoeken
       .Include(o => o.TrackingResultaten).FirstOrDefaultAsync(trackingOnderzoek => trackingOnderzoek.OnderzoekId == onderzoekId);;
+  }
+
+  public async Task<bool> DeleteAsync(Guid onderzoekId) {
+    var result = await GetById(onderzoekId);
+    if (result == null) return true;
+    _context.Remove(result);
+    await _context.SaveChangesAsync();
+    return true;
   }
 
 }
