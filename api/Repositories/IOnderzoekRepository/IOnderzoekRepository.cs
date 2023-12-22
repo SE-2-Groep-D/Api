@@ -3,7 +3,7 @@
 namespace Api.Repositories {
   public interface IOnderzoekRepository {
 
-    Task<List<Onderzoek?>> GetAllAsync(string status);
+    Task<List<Onderzoek?>> GetAllAsync(string? status);
     Task<Onderzoek> GetByIdAsync(Guid id);
 
     Task<Onderzoek> CreateAsync(Onderzoek onderzoek);

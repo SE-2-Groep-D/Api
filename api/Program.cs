@@ -24,8 +24,6 @@ public class Program {
     var builder = WebApplication.CreateBuilder(args);
     SetupServices(builder.Services, builder);
 
-    
- 
     // add middelware
     var app = builder.Build();
     SetupMiddleware(app);

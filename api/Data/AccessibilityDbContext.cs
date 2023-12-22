@@ -23,14 +23,14 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
   public DbSet<Bedrijf> Bedrijven { get; set; }
   public DbSet<Medewerker> Medewerkers { get; set; }
 
-  //Voor het onderzoeken
+  public DbSet<Nieuwsbrief> Nieuws { get; set; }
+  
+  public DbSet<Onderzoek> Onderzoeken{ get; set; }
+  public DbSet<OnderzoekErvaringsdekundige>  OnderzoekErvaringsdekundigen {get; set; }
+  
   public DbSet<Antwoord> Antwoorden{ get; set; }
   public DbSet<Vraag> Vragen{ get; set; }
   public DbSet<Vragenlijst> Vragenlijsten{ get; set; }
-  //Paginatrack mag hier komen
-  //resulaat mag hier komen
-  public DbSet<Onderzoek> Onderzoeken{ get; set; }
-  public DbSet<OnderzoekErvaringsdekundige>  OnderzoekErvaringsdekundigen {get; set; }
   
   protected override void OnModelCreating(ModelBuilder builder) {
     base.OnModelCreating(builder);
@@ -104,6 +104,11 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
     };
 
     builder.Entity<IdentityRole<Guid>>().HasData(roles);
+    
+    builder.Entity<Nieuwsbrief>()
+      .HasOne(n => n.Medewerker)
+      .WithMany()
+      .HasForeignKey(n => n.MedewerkerId);
   }
 
 }
