@@ -1,4 +1,4 @@
-﻿namespace Api.Models.Domain.Research; 
+﻿namespace Api.Models.Domain.Research;
 public class Vragenlijst {
 
   public Guid Id { get; set; }

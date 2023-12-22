@@ -1,20 +1,22 @@
-﻿namespace Api.Models.DTO.Onderzoek.tracking;
-public class SubmitTrackingResultsDto {
+﻿namespace Api.Models.Domain.Research.Tracking;
+public class TrackingResultaten {
 
-  public string Domain { get; set; }
+  public Guid Id { get; set; }
   public string Page { get; set; }
   public string PagePercentage { get; set; }
   public string Browser { get; set; }
   public int TimeInSeconds { get; set; }
   public int TimeTillAction { get; set; }
-  public List<ClickedItemDto> ClickedItems { get; set; }
+ public ICollection<ClickedItem> ClickedItems { get; set; } = new List<ClickedItem>();
 }
 
-public class ClickedItemDto {
+public class ClickedItem {
   public string? Id { get; set; }
   public string itemType { get; set; }
   public int TimeInSeconds { get; set; }
   public string Text { get; set; }
   public string? Href { get; set; }
 }
+
+
 

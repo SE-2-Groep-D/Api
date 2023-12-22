@@ -1,4 +1,8 @@
-﻿using Api.Models.DTO.Onderzoek.tracking;
+﻿using Api.Models.Domain.Research.Tracking;
+using Api.Models.DTO.Onderzoek.tracking;
+using Api.Repositories.ITrackingRepository;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Ocsp;
 
@@ -6,6 +10,14 @@ namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
 public class TrackingController : ControllerBase {
+
+  private readonly IMapper _mapper;
+  private readonly ITrackingRepository _repository;
+  
+  public TrackingController(IMapper mapper, ITrackingRepository repository) {
+    _mapper = mapper;
+    _repository = repository;
+  }
 
   [HttpGet]
   public IActionResult GetJavaScriptFile() {
@@ -20,10 +32,25 @@ public class TrackingController : ControllerBase {
     return Ok(scriptTag);
   }
 
+  [HttpGet("{id}")]
+  public async Task<IActionResult> GetResults(Guid id) {
+    var resultaat = await _repository.GetTrackingResults(id);
+    if (resultaat == null) return NotFound();
+    return Ok(resultaat);
+  }
+
   [HttpPost]
   public async Task<IActionResult> SubmitResults([FromBody] SubmitTrackingResultsDto request) {
-    
-    
+    bool submitted = await _repository.SubmitResults(request);
+    if (!submitted) return BadRequest();
     return Ok(request);
+  }
+
+  [HttpPost("create")]
+  // [Authorize(Roles = "Bedrijf")]
+  public async Task<IActionResult> CreateTrackingResearch([FromBody] CreateTrackingResearchDto request) {
+    bool created = await _repository.CreateTrackingReasearch(request);
+    if (!created) return NotFound();
+    return Ok();
   }
 }

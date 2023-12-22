@@ -1,4 +1,4 @@
-﻿namespace Api.Models.DTO.Nieuwsbrief; 
+﻿namespace Api.Models.DTO.Nieuwsbrief;
 public class CreateNiewsbriefDto {
 
   public DateTime Datum { get; set; }

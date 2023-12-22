@@ -3,7 +3,7 @@
 namespace Api.Models.DTO.Onderzoek;
 public class UpdateVragenlijstRequestDto {
 
-   
+
   public string? Titel { get; set; }
   public string? Samenvatting { get; set; }
 
