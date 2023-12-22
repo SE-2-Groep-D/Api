@@ -105,8 +105,8 @@ public class AuthController : ControllerBase {
   [Authorize]
   public async Task<IActionResult> test() {
     var userName = User?.FindFirstValue(ClaimTypes.Email);
-
-    return Ok(userName);
+    var claim = User?.FindAll(ClaimTypes.Role);
+    return Ok(new { userName, claim });
   }
 
 }
