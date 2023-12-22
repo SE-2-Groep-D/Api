@@ -1,11 +1,9 @@
 ﻿using Api.Models.Domain;
-using Api.Models.Domain.News;
 using Api.Models.Domain.User;
 using Api.Models.DTO;
 using Api.Models.DTO.Auth;
 using API.Models.DTO.Gebruiker;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
-using Api.Models.DTO.Nieuwsbrief;
 using AutoMapper;
 
 namespace Api.Mappings;
@@ -39,6 +37,22 @@ public class AutoMapperProfiles : Profile {
     CreateMap<CreateNiewsbriefDto, Nieuwsbrief>();
     CreateMap<UpdateNieuwsbriefDto, Nieuwsbrief>();
     
+    CreateMap<UpdateOnderzoekRequestDto, Onderzoek>()
+      .ForMember(dest => dest.StartDatum, opt => opt.Condition(src => src.StartDatum != null))
+      .ForMember(dest => dest.Omschrijving, opt => opt.Condition(src => src.Omschrijving != null))
+      .ForMember(dest => dest.Vergoeding, opt => opt.Condition(src => src.Locatie != null))
+      .ForMember(dest => dest.Locatie, opt => opt.Condition(src => src.Locatie != null))
+      .ForMember(dest => dest.Status, opt => opt.Condition(src => src.Status != null));
+
+
+    CreateMap<UpdateVragenlijstRequestDto, Vragenlijst>()
+      .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
+      .ForMember(dest => dest.Samenvatting, opt => opt.Condition(src => src.Samenvatting != null));
+
+    
+    //voor vragenlijst
+    CreateMap<VragenlijstDto, Vragenlijst>().ReverseMap();
+    CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
   }
 
 }

@@ -9,7 +9,9 @@ using System.Text;
 using Api.Services.ITokenService;
 using Api.Mappings;
 using Api.Models.Domain.User;
+using Api.Repositories;
 using Api.Repositories.IGebruikerRepository;
+using Api.Repositories.VragenlijstRepository;
 
 //using Api.Repositories.ITrackingRepository;
 
@@ -37,7 +39,14 @@ public class Program {
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
+
+    services.AddDbContext<AccessibilityDbContext>(options =>
+      options.UseSqlServer(builder.Configuration.GetConnectionString("APIDbConnectionString")));
+    
+
+
     ConnectToDatabase(services, builder);
+
     AddRepositories(services);
     AddServices(services);
 
@@ -77,6 +86,10 @@ public class Program {
   private static void AddRepositories(IServiceCollection services) {
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
     //services.AddScoped<ITrackingRepository, TrackingRepository>();
+    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
+    services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
+
+    
   }
 
   private static void AddServices(IServiceCollection services) {
