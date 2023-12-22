@@ -13,14 +13,16 @@ public class OnderzoekController : ControllerBase {
   private IOnderzoekRepository _onderzoekRepository;
   private IMapper _mapper;
 
-  public OnderzoekController(IMapper _mapper, IOnderzoekRepository _onderzoekRepository) {
-    this._mapper = _mapper;
-    this._onderzoekRepository = _onderzoekRepository;
+
+  public OnderzoekController(IMapper mapper, IOnderzoekRepository onderzoekRepository) {
+    this._mapper = mapper;
+    this._onderzoekRepository = onderzoekRepository;
+
   }
 
   [HttpGet]
   [Route("list")]
-  public async Task<ActionResult> GetAll(string status) {
+  public async Task<ActionResult> GetAll(string? status) {
     var onderzoeken = await _onderzoekRepository.GetAllAsync(status);
     var onderzoekDtos = _mapper.Map<IEnumerable<OnderzoekDto>>(onderzoeken);
     return Ok(onderzoekDtos);
@@ -64,8 +66,9 @@ public class OnderzoekController : ControllerBase {
       Onderzoek? isUpdated = await _onderzoekRepository.UpdateAsync(id, bestaandOnderzoek);
 
       if (isUpdated == null) {
-        return StatusCode(StatusCodes.Status500InternalServerError,
-          "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
+
+        return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
+
       }
 
       return Ok("Onderzoek succesvol geupdate.");
