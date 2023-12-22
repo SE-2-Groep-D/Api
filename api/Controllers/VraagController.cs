@@ -23,8 +23,8 @@ public class VraagController : ControllerBase  {
   
   [HttpGet]
   [Route("list")]
-  public async Task<ActionResult> GetAllVragen(Guid VragenLijtId) {
-    var vragenlijst = await _vraagRepository.GetAllAsync(VragenLijtId);
+  public async Task<ActionResult> GetAllVragen(Guid VragenLijstId) {
+    var vragenlijst = await _vraagRepository.GetAllAsync(VragenLijstId);
     var vragenlijstDtos = _mapper.Map<IEnumerable<VraagDto>>(vragenlijst);
     return Ok(vragenlijstDtos);
 
@@ -37,7 +37,7 @@ public class VraagController : ControllerBase  {
     var vraag = await _vraagRepository.GetByIdAsync(id);
     if (vraag == null)
     {
-      return NotFound("vraag is niet gevonde met de "+id);
+      return NotFound("vraag is niet gevonden met de "+id);
     }
     var vraagDto = _mapper.Map<VraagDto>(vraag);
     return Ok(vraagDto);
@@ -45,7 +45,7 @@ public class VraagController : ControllerBase  {
   
   [HttpPost]
   [Route("create")]
-  public async Task<ActionResult<VraagDto>> Create([FromBody] VraagDto addDto) 
+  public async Task<ActionResult<VraagDto>> Create([FromBody] AddVraagRequestDto addDto) 
   {
     var vraag = _mapper.Map<Vraag>(addDto);
     var nieuwVraag = await _vraagRepository.CreateAsync(vraag);
@@ -94,7 +94,7 @@ public class VraagController : ControllerBase  {
     {
       return NotFound();
     }
-    return Ok("Vraag is succsesvol updated");
+    return Ok("Vraag is succsesvol verwijderd");
   }
 
   
