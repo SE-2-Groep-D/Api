@@ -54,7 +54,7 @@ public class TrackingController : ControllerBase {
     return Ok();
   }
 
-  [HttpGet("{id}")] public async Task<IActionResult> DeleteResearch(Guid id) {
+  [HttpDelete("{id}")] public async Task<IActionResult> DeleteResearch(Guid id) {
     var resultaat = await _repository.DeleteTrackingResearch(id);
     if (!resultaat) return BadRequest();
     return Ok(resultaat);
