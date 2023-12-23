@@ -4,11 +4,11 @@ namespace Api.Repositories {
   public interface IOnderzoekRepository {
 
     Task<List<Onderzoek?>> GetAllAsync(string? status);
-    Task<Onderzoek> GetByIdAsync(Guid id);
+    Task<Onderzoek?> GetByIdAsync(Guid id);
 
-    Task<Onderzoek> CreateAsync(Onderzoek onderzoek);
+    Task<Onderzoek?> CreateAsync(Onderzoek onderzoek);
 
-    
+
     Task<Onderzoek?> UpdateAsync(Guid id, Onderzoek onderzoek);
 
     Task<bool> DeleteAsync(Guid id);

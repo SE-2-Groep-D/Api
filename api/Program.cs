@@ -11,7 +11,7 @@ using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories;
 using Api.Repositories.IGebruikerRepository;
-using Api.Repositories.VragenlijstRepository;
+using Api.Repositories.ITrackingRepository;
 
 //using Api.Repositories.ITrackingRepository;
 
@@ -39,6 +39,17 @@ public class Program {
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
+    if (builder.Environment.IsDevelopment()) {
+      services.AddCors(options => {
+        options.AddPolicy("AllowAny",
+          b => b.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+      });
+
+
+    }
+    
     ConnectToDatabase(services, builder);
 
     AddRepositories(services);
@@ -47,28 +58,44 @@ public class Program {
     services.AddAutoMapper(typeof(AutoMapperProfiles));
 
     //Usermanager voor Gebruiker instellen
-    services.AddIdentityCore<Gebruiker>()
+    services.AddIdentityCore<Gebruiker>(options => {
+        options.Password.RequireDigit = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 5;
+      })
       .AddRoles<IdentityRole<Guid>>()
       .AddTokenProvider<DataProtectorTokenProvider<Gebruiker>>("API")
       .AddEntityFrameworkStores<AccessibilityDbContext>()
       .AddDefaultTokenProviders();
 
     //Usermanager voor Ervaringsdeskundige instellen
-    services.AddIdentityCore<Ervaringsdeskundige>()
+    services.AddIdentityCore<Ervaringsdeskundige>(options => {
+        options.Password.RequireDigit = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 5;
+      })
       .AddRoles<IdentityRole<Guid>>()
       .AddTokenProvider<DataProtectorTokenProvider<Ervaringsdeskundige>>("API")
       .AddEntityFrameworkStores<AccessibilityDbContext>()
       .AddDefaultTokenProviders();
 
     //Usermanager voor Bedrijf instellen
-    services.AddIdentityCore<Bedrijf>()
+    services.AddIdentityCore<Bedrijf>(options => {
+        options.Password.RequireDigit = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 5;
+      })
       .AddRoles<IdentityRole<Guid>>()
       .AddTokenProvider<DataProtectorTokenProvider<Bedrijf>>("API")
       .AddEntityFrameworkStores<AccessibilityDbContext>()
       .AddDefaultTokenProviders();
 
     //Usermanager voor Medewerker instellen
-    services.AddIdentityCore<Medewerker>()
+    services.AddIdentityCore<Medewerker>(options => {
+        options.Password.RequireDigit = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 5;
+      })
       .AddRoles<IdentityRole<Guid>>()
       .AddTokenProvider<DataProtectorTokenProvider<Medewerker>>("API")
       .AddEntityFrameworkStores<AccessibilityDbContext>()
@@ -79,11 +106,8 @@ public class Program {
 
   private static void AddRepositories(IServiceCollection services) {
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
-    //services.AddScoped<ITrackingRepository, TrackingRepository>();
-    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
-    services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
-
-
+    services.AddScoped<ITrackingRepository, TrackingRepository>();
+    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>(); 
   }
 
   private static void AddServices(IServiceCollection services) {
@@ -97,7 +121,14 @@ public class Program {
     if (app.Environment.IsDevelopment()) {
       app.UseSwagger();
       app.UseSwaggerUI();
+      app.UseCors(builder => {
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        Console.WriteLine("Setup cors");
+      });
+
     }
+
+    app.UseStaticFiles();
 
     // configure HTTPS
     app.UseHttpsRedirection();
@@ -112,6 +143,8 @@ public class Program {
     var connectionString = builder.Configuration.GetConnectionString("APIDbConnectionString");
     var dbType = builder.Configuration["DatabaseType"];
 
+    Console.WriteLine(connectionString);
+    
     try {
       services.AddDbContext<AccessibilityDbContext>(options => {
         switch (dbType) {

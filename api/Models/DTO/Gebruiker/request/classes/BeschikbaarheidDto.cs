@@ -1,4 +1,4 @@
-﻿namespace API.Models.DTO.Gebruiker.request.classes; 
+﻿namespace API.Models.DTO.Gebruiker.request.classes;
 public class BeschikbaarheidDto {
 
   public DateTime BeginDatumTijd { get; set; }

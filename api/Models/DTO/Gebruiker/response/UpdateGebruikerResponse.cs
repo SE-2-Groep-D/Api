@@ -1,4 +1,4 @@
-﻿namespace Api.Models.DTO.Gebruiker.response; 
+﻿namespace Api.Models.DTO.Gebruiker.response;
 public class UpdateGebruikerResponse {
 
   public UpdateGebruikerResponse(bool succeeded, string? message) {
