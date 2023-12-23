@@ -55,31 +55,48 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
       .ForMember(dest => dest.Samenvatting, opt => opt.Condition(src => src.Samenvatting != null));
 
+
     CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
     CreateMap<AddOnderzoekRequestDto, Onderzoek>();
+
 
     //voor vragenlijst
     CreateMap<VragenlijstDto, Vragenlijst>().ReverseMap();
     CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
 
-    
+
     //Voor vraag
-    
+
     CreateMap<UpdateVraagRequestDto, Vraag>()
       .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null))
       .ForMember(dest => dest.Onderwerp, opt => opt.Condition(src => src.Onderwerp != null));
 
-    
-    
+
     CreateMap<VraagDto, Vraag>().ReverseMap();
     CreateMap<AddVraagRequestDto, Vraag>().ReverseMap();
 
+    //Voor antwoord
+
+  
+    CreateMap<UpdateAntwoordRequestDto, Antwoord>()
+      .ForMember(dest => dest.Tekst, opt => opt.Condition(src => src.Tekst != null));
+
+
+    CreateMap<AntwoordDto, Antwoord>()
+      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
+      .ReverseMap();
+
+
+    CreateMap<AddAntwoordRequestDto, Antwoord>()
+      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
+      .ReverseMap();
     CreateMap<CreateTrackingResearchDto, TrackingOnderzoek>();
     CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>();
     CreateMap<SubmitTrackingResultsDto, TrackingResultaten>();
     CreateMap<ClickedItemDto, ClickedItem>();
     
  
+
 
   }
 
