@@ -45,6 +45,9 @@ public class AutoMapperProfiles : Profile {
 
     CreateMap<UpdateOnderzoekRequestDto, Onderzoek>()
       .ForMember(dest => dest.StartDatum, opt => opt.Condition(src => src.StartDatum != null))
+      .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
+      .ForMember(dest => dest.AantalParticipanten, opt => opt.Condition(src => src.AantalParticipanten != null))
+      .ForMember(dest => dest.websiteUrl, opt => opt.Condition(src => src.websiteUrl != null))
       .ForMember(dest => dest.Omschrijving, opt => opt.Condition(src => src.Omschrijving != null))
       .ForMember(dest => dest.Vergoeding, opt => opt.Condition(src => src.Locatie != null))
       .ForMember(dest => dest.Locatie, opt => opt.Condition(src => src.Locatie != null))

@@ -1,12 +1,18 @@
-using Api.Models.Domain.Research.Tracking;
+﻿using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 
 namespace Api.Models.Domain.Research;
-
 public class Onderzoek {
 
   public Guid Id { get; set; }
   //duur
+
+  public string Titel { get; set; }
+
+  public string AantalParticipanten { get; set; }
+
+
+  public string websiteUrl { get; set; }
   public DateTime StartDatum { get; set; }
   public string Omschrijving { get; set; }
   public double Vergoeding { get; set; }
