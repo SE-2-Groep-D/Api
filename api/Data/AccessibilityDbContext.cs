@@ -57,23 +57,8 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
           .WithMany(p => p.OnderzoekErvaringsdekundigen)
           .HasForeignKey(pt => pt.OnderzoekId)
           .OnDelete(DeleteBehavior.NoAction));
-
-
-
-    /*Van Jason
-
-     builder.Entity<Onderzoek>()
-        .HasMany(e => e.Ervaringsdeskundigen)
-        .WithMany(e => e.Onderzoeken)
-        .UsingEntity<OnderzoekErvaringsdekundige>(
-            l=> l.HasOne<Ervaringsdeskundige>().WithMany(
-              e=>e.OnderzoekErvaringsdekundigen),
-            l=> l.HasOne<Onderzoek>().WithMany(
-              e=>e.OnderzoekErvaringsdekundigen));*/
-
-
-
-
+    
+    
     var beheerderRoleId = "40de5fb2-052b-43df-8f1d-f14e40d4e663";
     var ervaringsdeskundigeRoleId = "ab6b8e6f-ca39-4d40-b330-e5898a785899";
     var bedrijfRoleId = "7f13d193-aa0b-4e0f-905a-fddc7ba1e8ef";
