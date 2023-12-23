@@ -13,9 +13,11 @@ public class OnderzoekController : ControllerBase {
   private IOnderzoekRepository _onderzoekRepository;
   private IMapper _mapper;
 
+
   public OnderzoekController(IMapper mapper, IOnderzoekRepository onderzoekRepository) {
     this._mapper = mapper;
     this._onderzoekRepository = onderzoekRepository;
+
   }
 
   [HttpGet]
@@ -64,7 +66,9 @@ public class OnderzoekController : ControllerBase {
       Onderzoek? isUpdated = await _onderzoekRepository.UpdateAsync(id, bestaandOnderzoek);
 
       if (isUpdated == null) {
+
         return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
+
       }
 
       return Ok("Onderzoek succesvol geupdate.");
@@ -84,9 +88,5 @@ public class OnderzoekController : ControllerBase {
 
     return Ok("Onderzoek is verwijderd.");
   }
-
-
-
-
 
 }

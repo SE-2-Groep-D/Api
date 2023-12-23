@@ -11,7 +11,10 @@ using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories;
 using Api.Repositories.IGebruikerRepository;
+using Api.Repositories.VragenlijstRepository;
+using Api.Repositories.VragenRepository;
 using Api.Repositories.ITrackingRepository;
+
 
 //using Api.Repositories.ITrackingRepository;
 
@@ -106,6 +109,8 @@ public class Program {
 
   private static void AddRepositories(IServiceCollection services) {
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
+    services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
+    services.AddScoped<IVraagRepository, SQLVraagRepository>();
     services.AddScoped<ITrackingRepository, TrackingRepository>();
     services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>(); 
   }

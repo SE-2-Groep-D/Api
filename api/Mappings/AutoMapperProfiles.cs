@@ -62,12 +62,25 @@ public class AutoMapperProfiles : Profile {
     CreateMap<VragenlijstDto, Vragenlijst>().ReverseMap();
     CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
 
+    
+    //Voor vraag
+    
+    CreateMap<UpdateVraagRequestDto, Vraag>()
+      .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null))
+      .ForMember(dest => dest.Onderwerp, opt => opt.Condition(src => src.Onderwerp != null));
+
+    
+    
+    CreateMap<VraagDto, Vraag>().ReverseMap();
+    CreateMap<AddVraagRequestDto, Vraag>().ReverseMap();
+
     CreateMap<CreateTrackingResearchDto, TrackingOnderzoek>();
     CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>();
     CreateMap<SubmitTrackingResultsDto, TrackingResultaten>();
     CreateMap<ClickedItemDto, ClickedItem>();
     
  
+
   }
 
 }

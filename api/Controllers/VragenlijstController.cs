@@ -13,9 +13,11 @@ public class VragenlijstController : ControllerBase {
   private IMapper _mapper;
 
 
+
   public VragenlijstController(IMapper mapper, IVragenlijstRepository vragenlijstRepository) {
     this._mapper = mapper;
     this._vragenlijstRepository = vragenlijstRepository;
+
   }
 
   [HttpGet]
@@ -24,7 +26,6 @@ public class VragenlijstController : ControllerBase {
     var vragenlijsten = await _vragenlijstRepository.GetAllAsync(onderzoekId);
     var vragenlijstenDtos = _mapper.Map<IEnumerable<VragenlijstDto>>(vragenlijsten);
     return Ok(vragenlijstenDtos);
-
   }
 
   [HttpGet]
@@ -84,7 +85,6 @@ public class VragenlijstController : ControllerBase {
 
     return Ok("Vragenlijst is succsesvol updated");
   }
-
 
 
 
