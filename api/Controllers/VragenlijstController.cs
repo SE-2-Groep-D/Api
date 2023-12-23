@@ -13,15 +13,17 @@ public class VragenlijstController : ControllerBase {
   private IMapper _mapper;
 
 
-  public VragenlijstController(IMapper _mapper, IVragenlijstRepository _vragenlijstRepository) {
-    this._mapper = _mapper;
-    this._vragenlijstRepository = _vragenlijstRepository;
+
+  public VragenlijstController(IMapper mapper, IVragenlijstRepository vragenlijstRepository) {
+    this._mapper = mapper;
+    this._vragenlijstRepository = vragenlijstRepository;
+
   }
 
   [HttpGet]
   [Route("list")]
-  public async Task<ActionResult> GetAll(Guid OnderzoekId) {
-    var vragenlijsten = await _vragenlijstRepository.GetAllAsync(OnderzoekId);
+  public async Task<ActionResult> GetAll(Guid onderzoekId) {
+    var vragenlijsten = await _vragenlijstRepository.GetAllAsync(onderzoekId);
     var vragenlijstenDtos = _mapper.Map<IEnumerable<VragenlijstDto>>(vragenlijsten);
     return Ok(vragenlijstenDtos);
   }
@@ -62,8 +64,7 @@ public class VragenlijstController : ControllerBase {
       Vragenlijst? isUpdated = await _vragenlijstRepository.UpdateAsync(id, bestaandVragenlijst);
 
       if (isUpdated == null) {
-        return StatusCode(StatusCodes.Status500InternalServerError,
-          "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
+        return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
       }
 
       return Ok(isUpdated);
@@ -84,5 +85,7 @@ public class VragenlijstController : ControllerBase {
 
     return Ok("Vragenlijst is succsesvol updated");
   }
+
+
 
 }

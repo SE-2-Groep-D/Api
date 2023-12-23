@@ -2,7 +2,7 @@
 
 namespace Api.Models.DTO.Onderzoek;
 public class AddVragenlijstRequestDto {
-  
+
   public string Titel { get; set; }
   public string Samenvatting { get; set; }
 

@@ -3,25 +3,21 @@ using Api.Models.Domain.Research;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories;
+public class SQLOnderzoekRepository : IOnderzoekRepository {
 
-public class SQLOnderzoekRepository :IOnderzoekRepository {
-  
-  
+
   private AccessibilityDbContext _context;
-  
+
   public SQLOnderzoekRepository(AccessibilityDbContext context) {
     _context = context;
   }
 
-  public async Task<List<Onderzoek>> GetAllAsync(string status){
-   
-      return await _context.Onderzoeken.Where(o => o.Status == status).ToListAsync();
+  public async Task<List<Onderzoek>> GetAllAsync(string? status) {
+    return (status == null) ? await _context.Onderzoeken.ToListAsync() : await _context.Onderzoeken.Where(o => o.Status == status).ToListAsync();
   }
 
   public async Task<Onderzoek?> GetByIdAsync(Guid id) {
-
     return await _context.Onderzoeken.FirstOrDefaultAsync(o => o.Id == id);
-
   }
 
   public async Task<Onderzoek> CreateAsync(Onderzoek onderzoek) {
@@ -31,8 +27,7 @@ public class SQLOnderzoekRepository :IOnderzoekRepository {
 
   }
 
-  public async Task<Onderzoek?> UpdateAsync(Guid id, Onderzoek onderzoek) 
-  {
+  public async Task<Onderzoek?> UpdateAsync(Guid id, Onderzoek onderzoek) {
     var bestaandOnderzoek = await _context.Onderzoeken.FindAsync(id);
 
 
@@ -45,8 +40,7 @@ public class SQLOnderzoekRepository :IOnderzoekRepository {
   public async Task<bool> DeleteAsync(Guid id) {
 
     var onderzoek = await _context.Onderzoeken.FindAsync(id);
-    if (onderzoek == null)
-    {
+    if (onderzoek == null) {
       return false;
     }
 
