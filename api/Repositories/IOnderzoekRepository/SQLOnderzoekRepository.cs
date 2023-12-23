@@ -17,9 +17,7 @@ public class SQLOnderzoekRepository : IOnderzoekRepository {
   }
 
   public async Task<Onderzoek?> GetByIdAsync(Guid id) {
-
     return await _context.Onderzoeken.FirstOrDefaultAsync(o => o.Id == id);
-
   }
 
   public async Task<Onderzoek> CreateAsync(Onderzoek onderzoek) {

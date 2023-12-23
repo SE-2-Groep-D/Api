@@ -3,7 +3,7 @@
 namespace API.Models.DTO.Gebruiker;
 
 public class ErvaringsDeskundigeDetails : GebruikerDetails {
-  
+
   public string Postcode { get; set; }
   public bool ToestemmingBenadering { get; set; }
   public string Leeftijdscategorie { get; set; }
