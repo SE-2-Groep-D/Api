@@ -1,4 +1,3 @@
-﻿using System.ComponentModel.DataAnnotations;
 using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 
@@ -20,9 +19,5 @@ public class Onderzoek {
   public List<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; } = new();
   public Guid BedrijfId { get; set; }
   public Bedrijf Bedrijf { get; set; } = null!;
-
-
-
-
 
 }
