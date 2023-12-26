@@ -1,5 +1,6 @@
 ﻿using Api.Data;
 using Api.Models.Domain.Bericht;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories.IBerichtRepository {
   public class SQLBerichtRepository : IBerichtRepository {
@@ -17,5 +18,12 @@ namespace Api.Repositories.IBerichtRepository {
       return bericht;
 
     }
+
+    public async Task<IEnumerable<Bericht>> GetChatsByUserId(Guid userId) {
+      return await _context.Berichten
+          .Where(b => b.VerzenderId == userId || b.OntvangerId == userId)
+          .ToListAsync();
+    }
+
   }
 }

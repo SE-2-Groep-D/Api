@@ -25,10 +25,17 @@ namespace Api.Controllers {
 
     [HttpGet]
     [Route("chats/{id}")]
-    public async Task<IActionResult> GetChats([FromRoute] string id) {
+    public async Task<IActionResult> GetChats([FromRoute] Guid id) {
+      var chats = await BerichtRepository.GetChatsByUserId(id);
+      var groupedChats = chats
+          .GroupBy(chat => chat.VerzenderId == id ? chat.OntvangerId : chat.VerzenderId)
+          .Select(group => new {
+            OtherUserId = group.Key,
+            LastMessage = group.OrderByDescending(m => m.DatumTijd).First(),
+            TotalMessages = group.Count()
+          });
 
-      return Ok();
-
+      return Ok(groupedChats);
     }
 
     [HttpPost]

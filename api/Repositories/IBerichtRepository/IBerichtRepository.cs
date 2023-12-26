@@ -6,5 +6,7 @@
 
     public Task<Bericht> CreateBericht(Bericht bericht);
 
+    Task<IEnumerable<Bericht>> GetChatsByUserId(Guid userId);
+
   }
 }
