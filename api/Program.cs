@@ -12,14 +12,13 @@ using Api.Models.Domain.User;
 using Api.Repositories;
 using Api.Repositories.AntwoordRepository;
 using Api.Repositories.IGebruikerRepository;
+using Microsoft.AspNetCore.Authentication.Google;
 using Api.Repositories.VragenlijstRepository;
 using Api.Repositories.VragenRepository;
 using Api.Repositories.ITrackingRepository;
 
 
-//using Api.Repositories.ITrackingRepository;
 
-//using Api.Repositories.ITrackingRepository;
 
 namespace Api;
 public class Program {
@@ -106,6 +105,7 @@ public class Program {
       .AddDefaultTokenProviders();
 
     AddAuthentication(services, builder);
+
   }
 
   private static void AddRepositories(IServiceCollection services) {
@@ -140,6 +140,13 @@ public class Program {
 
     // configure HTTPS
     app.UseHttpsRedirection();
+
+    app.UseCors(builder =>
+    {
+      builder.WithOrigins("http://localhost:5173"); // Replace with your React app's URL
+      builder.AllowAnyHeader();
+      builder.AllowAnyMethod();
+    });
 
     app.UseAuthentication();
     app.UseAuthorization();
