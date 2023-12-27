@@ -16,6 +16,8 @@ public class TokenService : ITokenService {
     this.configuration = configuration;
   }
 
+
+
   public string CreateJWTToken(Gebruiker user, List<string> roles) {
     var claims = new List<Claim>();
     claims.Add(new Claim(ClaimTypes.Email, user.Email));

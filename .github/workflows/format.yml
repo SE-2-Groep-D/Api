@@ -13,7 +13,9 @@ jobs:
       - name: Restore dotnet tools
         uses: xt0rted/dotnet-tool-restore@v1
 
-      - name: Run dotnet format
+
+      - name: Run dotnet-format
+        run: dotnet format .\api\api.csproj --check --fix --folder .  # You can adjust the folder if needed
         uses: xt0rted/dotnet-format@v1
         with:
           only-changed-files: "true"
