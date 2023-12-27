@@ -1,5 +1,6 @@
 ﻿
 using Api.Models.Domain.Research;
+using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 using Api.Models.DTO;
 using Api.Models.DTO.Auth;
@@ -8,6 +9,7 @@ using Api.Models.DTO.Gebruiker.request;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using Api.Models.DTO.Nieuwsbrief;
 using Api.Models.DTO.Onderzoek;
+using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
 
 namespace Api.Mappings;
@@ -40,9 +42,12 @@ public class AutoMapperProfiles : Profile {
 
     CreateMap<CreateNiewsbriefDto, Nieuwsbrief>();
     CreateMap<UpdateNieuwsbriefDto, Nieuwsbrief>();
-    
+
     CreateMap<UpdateOnderzoekRequestDto, Onderzoek>()
       .ForMember(dest => dest.StartDatum, opt => opt.Condition(src => src.StartDatum != null))
+      .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
+      .ForMember(dest => dest.AantalParticipanten, opt => opt.Condition(src => src.AantalParticipanten != null))
+      .ForMember(dest => dest.websiteUrl, opt => opt.Condition(src => src.websiteUrl != null))
       .ForMember(dest => dest.Omschrijving, opt => opt.Condition(src => src.Omschrijving != null))
       .ForMember(dest => dest.Vergoeding, opt => opt.Condition(src => src.Locatie != null))
       .ForMember(dest => dest.Locatie, opt => opt.Condition(src => src.Locatie != null))
@@ -53,10 +58,49 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
       .ForMember(dest => dest.Samenvatting, opt => opt.Condition(src => src.Samenvatting != null));
 
-    
+
+    CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
+    CreateMap<AddOnderzoekRequestDto, Onderzoek>();
+
+
     //voor vragenlijst
     CreateMap<VragenlijstDto, Vragenlijst>().ReverseMap();
     CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
+
+
+    //Voor vraag
+
+    CreateMap<UpdateVraagRequestDto, Vraag>()
+      .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null))
+      .ForMember(dest => dest.Onderwerp, opt => opt.Condition(src => src.Onderwerp != null));
+
+
+    CreateMap<VraagDto, Vraag>().ReverseMap();
+    CreateMap<AddVraagRequestDto, Vraag>().ReverseMap();
+
+    //Voor antwoord
+
+  
+    CreateMap<UpdateAntwoordRequestDto, Antwoord>()
+      .ForMember(dest => dest.Tekst, opt => opt.Condition(src => src.Tekst != null));
+
+
+    CreateMap<AntwoordDto, Antwoord>()
+      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
+      .ReverseMap();
+
+
+    CreateMap<AddAntwoordRequestDto, Antwoord>()
+      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
+      .ReverseMap();
+    CreateMap<CreateTrackingResearchDto, TrackingOnderzoek>();
+    CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>();
+    CreateMap<SubmitTrackingResultsDto, TrackingResultaten>();
+    CreateMap<ClickedItemDto, ClickedItem>();
+    
+ 
+
+
   }
 
 }

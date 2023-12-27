@@ -1,4 +1,4 @@
-﻿namespace Api.Models.DTO.Gebruiker; 
+﻿namespace Api.Models.DTO.Gebruiker;
 public class ChangePasswordDto {
 
   public string password { get; set; }

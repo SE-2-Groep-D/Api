@@ -111,15 +111,15 @@ public class UserService : IUserService {
   private Gebruiker UpdateProperties(Gebruiker gebruiker, Object request, Dictionary<string, Action> properties) {
     var props = request.GetType().GetProperties();
     var userProps = gebruiker.GetType().GetProperties();
-    
+
     foreach (var cp in props) {
-      if(cp.GetValue(request) == null) continue;
-      
+      if (cp.GetValue(request) == null) continue;
+
       if (properties.TryGetValue(cp.Name, out var action)) {
         action();
         continue;
       }
-      
+
       var userProp = userProps.FirstOrDefault(p => p.Name.Equals(cp.Name));
       var newValue = cp.GetValue(request);
       if (userProp == null || cp.GetValue(request) == null) continue;
@@ -128,6 +128,6 @@ public class UserService : IUserService {
 
     return gebruiker;
   }
-  
-  
+
+
 }
