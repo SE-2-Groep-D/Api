@@ -9,7 +9,7 @@ public class Onderzoek {
 
   public string Titel { get; set; }
 
-  public string AantalParticipanten { get; set; }
+  public int AantalParticipanten { get; set; }
 
 
   public string websiteUrl { get; set; }
