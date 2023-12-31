@@ -31,7 +31,7 @@ public class ResultatenController : ControllerBase {
     var resultaat = await _trackingRepository.GetById(id);
 
     var results = new {
-      tracking = vragenlijstenDtos,
+      tracking = resultaat,
       vragenlijst = vragenlijstenDtos
     };
     
