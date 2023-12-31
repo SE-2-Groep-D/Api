@@ -7,7 +7,7 @@ public interface ITrackingRepository {
   public Task<bool> CreateTrackingResearch(CreateTrackingResearchDto request);
   public Task<bool> SubmitResults(SubmitTrackingResultsDto results);
 
-  public Task<List<TrackingOnderzoek>> GetTrackingOnderzoeken();
+  public Task<List<TrackingOnderzoek>> GetTrackingOnderzoeken(Guid id);
   public Task<TrackingOnderzoek?> GetById(Guid onderzoekId);
 
   public Task<bool> DeleteTrackingResearch(Guid onderzoekId);

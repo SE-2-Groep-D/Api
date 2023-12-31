@@ -36,16 +36,13 @@ public class TrackingRepository : ITrackingRepository {
     return true;
   }
 
-  public async Task<List<TrackingOnderzoek>> GetTrackingOnderzoeken() {
-    return  await _context.TrackingOnderzoeken
-      .Include(o => o.TrackingResultaten)
-      .ToListAsync();
-    ;
+  public async Task<List<TrackingOnderzoek>> GetTrackingOnderzoeken(Guid id) {
+    return await _context.TrackingOnderzoeken.Where(onderzoek => onderzoek.OnderzoekId == id).ToListAsync();
   }
 
-  public async Task<TrackingOnderzoek?> GetById(Guid onderzoekId) {
+  public async Task<TrackingOnderzoek?> GetById(Guid id) {
     return await _context.TrackingOnderzoeken
-      .Include(o => o.TrackingResultaten).FirstOrDefaultAsync(trackingOnderzoek => trackingOnderzoek.OnderzoekId == onderzoekId);;
+      .Include(o => o.TrackingResultaten).FirstOrDefaultAsync(trackingOnderzoek => trackingOnderzoek.Id == id);
   }
   
 

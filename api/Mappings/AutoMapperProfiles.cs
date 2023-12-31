@@ -9,6 +9,7 @@ using Api.Models.DTO.Gebruiker.request;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using Api.Models.DTO.Nieuwsbrief;
 using Api.Models.DTO.Onderzoek;
+using Api.Models.DTO.Onderzoek.results;
 using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
 
@@ -99,7 +100,10 @@ public class AutoMapperProfiles : Profile {
     CreateMap<ClickedItemDto, ClickedItem>();
     
  
-
+    // Voor results
+    
+    CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
+    CreateMap<Vragenlijst, ResponseVragenlijstDto>();
 
   }
 
