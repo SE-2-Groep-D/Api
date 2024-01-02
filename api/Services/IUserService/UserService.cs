@@ -104,7 +104,7 @@ public class UserService : IUserService {
     var newUser = UpdateProperties(gebruiker, request, properties);
     var updated = await _gebruikerManager.UpdateAsync(newUser);
     if (!updated.Succeeded) return new UpdateGebruikerResponse(false, "Could not update user.");
-    return new UpdateGebruikerResponse(false, "Succesfully updated the user.");
+    return new UpdateGebruikerResponse(true, "Succesfully updated the user.");
   }
 
 
