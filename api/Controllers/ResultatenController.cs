@@ -31,7 +31,6 @@ public class ResultatenController : ControllerBase {
     
     var mappedQuestionLists = _mapper.Map<List<ResponseVragenlijstDto>>(questionLists);
     var mappedTrackingResearch = _mapper.Map<List<ResponseTrackingDto>>(trackingResearch);
-
     
     return Ok(new ResultResponseDto {
       Vragenlijsten = mappedQuestionLists,

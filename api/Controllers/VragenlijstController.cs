@@ -32,10 +32,7 @@ public class VragenlijstController : ControllerBase {
   [Route("{id}")]
   public async Task<ActionResult> GetById(Guid id) {
     var vragenlijsten = await _vragenlijstRepository.GetByIdAsync(id);
-    if (vragenlijsten == null) {
-      return NotFound();
-    }
-
+    if (vragenlijsten == null)  return NotFound();
     var vragenlijstenDto = _mapper.Map<VragenlijstDto>(vragenlijsten);
     return Ok(vragenlijstenDto);
   }
@@ -53,7 +50,7 @@ public class VragenlijstController : ControllerBase {
   [Route("update/{id}")]
   public async Task<IActionResult> Update(Guid id, [FromBody] UpdateVragenlijstRequestDto request) {
     try {
-      Vragenlijst? bestaandVragenlijst = await _vragenlijstRepository.GetByIdAsync(id);
+      var bestaandVragenlijst = await _vragenlijstRepository.GetByIdAsync(id);
 
       if (bestaandVragenlijst == null) {
         return NotFound($"Vragenlijst met ID {id} is niet gevonden.");

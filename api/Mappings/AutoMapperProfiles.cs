@@ -98,6 +98,8 @@ public class AutoMapperProfiles : Profile {
     CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>();
     CreateMap<SubmitTrackingResultsDto, TrackingResultaten>();
     CreateMap<ClickedItemDto, ClickedItem>();
+
+    CreateMap<TrackingOnderzoek, ResponseTrackingDto>().ReverseMap();
     
  
     // Voor results

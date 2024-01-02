@@ -1,9 +1,8 @@
 ﻿using Api.Models.Domain.Research.Tracking;
-using Api.Models.DTO.Onderzoek.tracking;
 
-namespace Api.Models.DTO.Onderzoek.results; 
-public class ResponseTrackingDto {
-
+namespace Api.Models.DTO.Onderzoek.tracking; 
+public class RespondRequestDto {
+  
   public Guid Id { get; set; }
   public int Participants { get; set; }
   public int ScrollPercentage { get; set; }
@@ -14,4 +13,5 @@ public class ResponseTrackingDto {
 
   public ICollection<TrackingResultaten> TrackingResultaten { get; set; } = new List<TrackingResultaten>();
   public ICollection<OtherResult> OtherResults { get; set; } = new List<OtherResult>();
+  
 }
