@@ -75,6 +75,7 @@ public class AuthController : ControllerBase {
 
   [HttpPost]
   [Route("RegisterMedwerker")]
+  [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto) {
     var gebruiker = mapper.Map<Medewerker>(registerMedewerkerRequestDto);
 
