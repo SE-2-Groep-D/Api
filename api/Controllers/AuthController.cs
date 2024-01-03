@@ -41,8 +41,8 @@ public class AuthController : ControllerBase {
   public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto) {
     var gebruiker = mapper.Map<Gebruiker>(registerRequestDto);
 
-    string result = await userService.Register(gebruiker, registerRequestDto.Password, registerRequestDto.Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerRequestDto.Password, registerRequestDto.Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
 
 
   }
@@ -55,8 +55,8 @@ public class AuthController : ControllerBase {
 
     string[] Roles = { "Ervaringsdeskundige" };
 
-    string result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
@@ -68,8 +68,8 @@ public class AuthController : ControllerBase {
 
     string[] Roles = { "Bedrijf" };
 
-    string result = await userService.Register(gebruiker, registerBedrijfRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerBedrijfRequestDto.Password, Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
@@ -80,8 +80,8 @@ public class AuthController : ControllerBase {
 
     string[] Roles = { "Medewerker" };
 
-    string result = await userService.Register(gebruiker, registerMedewerkerRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerMedewerkerRequestDto.Password, Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
