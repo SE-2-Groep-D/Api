@@ -8,8 +8,21 @@ public class VragenlijstDto {
   public string Titel { get; set; }
   public string Samenvatting { get; set; }
   public Guid OnderzoekId { get; set; }
-  public ICollection<Vraag> Vragen { get; } = new List<Vraag>();
+  public IEnumerable<VraagDTO> Vragen { get; set; }
   public int? Participants { get; set; }
   public int? TotalQuestions { get; set; }
   public int? TotalAwnsers { get; set; }
+}
+
+public class VraagDTO {
+  public Guid Id { get; set; }
+  public string Type { get; set; }
+  public string Onderwerp { get; set; }
+  public IEnumerable<AntwoordDTO> Antwoorden { get; set; }
+  
+}
+
+public class AntwoordDTO {
+  public Guid Id { get; set; }
+  public string Tekst { get; set; }
 }

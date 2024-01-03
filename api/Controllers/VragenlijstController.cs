@@ -33,8 +33,7 @@ public class VragenlijstController : ControllerBase {
   public async Task<ActionResult> GetById(Guid id) {
     var vragenlijsten = await _vragenlijstRepository.GetByIdAsync(id);
     if (vragenlijsten == null)  return NotFound();
-    var vragenlijstenDto = _mapper.Map<VragenlijstDto>(vragenlijsten);
-    return Ok(vragenlijstenDto);
+    return Ok(vragenlijsten);
   }
 
   [HttpPost]

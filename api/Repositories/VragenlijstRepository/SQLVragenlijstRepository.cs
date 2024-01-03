@@ -1,4 +1,6 @@
-﻿using Api.Data;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Api.Data;
 using Api.Models.Domain.Research;
 using Api.Models.DTO.Onderzoek;
 using AutoMapper;
@@ -20,13 +22,18 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
   }
 
   public async Task<VragenlijstDto?> GetByIdAsync(Guid id) {
-    var vragenlijst =  await _context.Vragenlijsten.FirstOrDefaultAsync(v => v.Id == id);
+    var vragenlijst = _context.Vragenlijsten
+      .Include(v => v.Vragen)
+      .ThenInclude(v => v.Antwoorden)
+      .SingleOrDefault(v => v.Id == id);
 
-    if (vragenlijst == null) return null;
-    var dto = _mapper.Map<VragenlijstDto>(vragenlijst);
+    if (vragenlijst == null) {
+      return null;
+    }
 
-    await AddResearchInfo(vragenlijst, dto);
-    return dto;
+    var vragenlijstDTO = _mapper.Map<VragenlijstDto>(vragenlijst);
+    await AddResearchInfo(vragenlijst, vragenlijstDTO);
+    return vragenlijstDTO;
   }
   
   public async Task AddResearchInfo(Vragenlijst trackingOnderzoek, VragenlijstDto dto) {
