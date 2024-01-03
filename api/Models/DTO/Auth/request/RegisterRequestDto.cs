@@ -1,4 +1,4 @@
-﻿namespace Api.Models.DTO {
+﻿namespace Api.Models.DTO.Auth.request {
   public class RegisterRequestDto {
     public string Voornaam { get; set; }
     public string Achternaam { get; set; }

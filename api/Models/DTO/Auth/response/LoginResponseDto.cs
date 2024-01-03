@@ -1,4 +1,4 @@
-﻿namespace Api.Models.DTO.Auth {
+﻿namespace Api.Models.DTO.Auth.response {
   public class LoginResponseDto {
     public Guid UserId { get; set; }
     public string Voornaam { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace Api.Models.DTO.Auth {
+﻿namespace Api.Models.DTO.Auth.request {
 
   public class RegisterBedrijfRequestDto : RegisterRequestDto {
 

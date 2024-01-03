@@ -1,6 +1,4 @@
 ﻿using Api.Models.Domain;
-using Api.Models.DTO;
-using Api.Models.DTO.Auth;
 using Api.Services.ITokenService;
 using Api.Services.IUserService;
 using AutoMapper;
@@ -16,6 +14,7 @@ using Google.Apis.Auth;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Net;
+using Api.Models.DTO.Auth.request;
 
 namespace Api.Controllers;
 [Route("[controller]")]
