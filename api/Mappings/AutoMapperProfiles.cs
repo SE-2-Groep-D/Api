@@ -9,6 +9,7 @@ using Api.Models.DTO.Gebruiker.request;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using Api.Models.DTO.Nieuwsbrief;
 using Api.Models.DTO.Onderzoek;
+using Api.Models.DTO.Onderzoek.results;
 using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
 
@@ -64,7 +65,14 @@ public class AutoMapperProfiles : Profile {
 
 
     //voor vragenlijst
-    CreateMap<VragenlijstDto, Vragenlijst>().ReverseMap();
+    
+    CreateMap<Vragenlijst, VragenlijstDto>()
+      .ForMember(dest => dest.Vragen, opt => opt.MapFrom(src => src.Vragen));
+        
+    CreateMap<Vraag, VraagDTO>()
+      .ForMember(dest => dest.Antwoorden, opt => opt.MapFrom(src => src.Antwoorden));
+        
+    CreateMap<Antwoord, AntwoordDTO>();
     CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
 
 
@@ -73,9 +81,7 @@ public class AutoMapperProfiles : Profile {
     CreateMap<UpdateVraagRequestDto, Vraag>()
       .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null))
       .ForMember(dest => dest.Onderwerp, opt => opt.Condition(src => src.Onderwerp != null));
-
-
-    CreateMap<VraagDto, Vraag>().ReverseMap();
+    
     CreateMap<AddVraagRequestDto, Vraag>().ReverseMap();
 
     //Voor antwoord
@@ -83,13 +89,7 @@ public class AutoMapperProfiles : Profile {
   
     CreateMap<UpdateAntwoordRequestDto, Antwoord>()
       .ForMember(dest => dest.Tekst, opt => opt.Condition(src => src.Tekst != null));
-
-
-    CreateMap<AntwoordDto, Antwoord>()
-      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
-      .ReverseMap();
-
-
+    
     CreateMap<AddAntwoordRequestDto, Antwoord>()
       .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
       .ReverseMap();
@@ -97,9 +97,14 @@ public class AutoMapperProfiles : Profile {
     CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>();
     CreateMap<SubmitTrackingResultsDto, TrackingResultaten>();
     CreateMap<ClickedItemDto, ClickedItem>();
+
+    CreateMap<TrackingOnderzoek, ResponseTrackingDto>().ReverseMap();
     
  
-
+    // Voor results
+    
+    CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
+    CreateMap<Vragenlijst, ResponseVragenlijstDto>();
 
   }
 

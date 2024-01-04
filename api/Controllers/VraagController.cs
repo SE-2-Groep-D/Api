@@ -22,7 +22,7 @@ public class VraagController : ControllerBase {
   [Route("list")]
   public async Task<ActionResult> GetAllVragen(Guid VragenLijstId) {
     var vragenlijst = await _vraagRepository.GetAllAsync(VragenLijstId);
-    var vragenlijstDtos = _mapper.Map<IEnumerable<VraagDto>>(vragenlijst);
+    var vragenlijstDtos = _mapper.Map<IEnumerable<VraagDTO>>(vragenlijst);
     return Ok(vragenlijstDtos);
   }
 
@@ -34,16 +34,16 @@ public class VraagController : ControllerBase {
       return NotFound("vraag is niet gevonden met de " + id);
     }
 
-    var vraagDto = _mapper.Map<VraagDto>(vraag);
+    var vraagDto = _mapper.Map<VraagDTO>(vraag);
     return Ok(vraagDto);
   }
 
   [HttpPost]
   [Route("create")]
-  public async Task<ActionResult<VraagDto>> Create([FromBody] AddVraagRequestDto addDto) {
+  public async Task<ActionResult<VraagDTO>> Create([FromBody] AddVraagRequestDto addDto) {
     var vraag = _mapper.Map<Vraag>(addDto);
     var nieuwVraag = await _vraagRepository.CreateAsync(vraag);
-    var nieuwVraagDto = _mapper.Map<VraagDto>(nieuwVraag);
+    var nieuwVraagDto = _mapper.Map<VraagDTO>(nieuwVraag);
     return CreatedAtAction(nameof(GetById), new { id = nieuwVraagDto.Id }, nieuwVraagDto);
   }
 

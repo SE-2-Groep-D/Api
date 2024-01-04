@@ -24,7 +24,7 @@ public class AntwoordController : ControllerBase{
   [Route("list")]
   public async Task<ActionResult> GetAll(Guid id) {
     var antworden = await _antwoordRepository.GetAllAsync(id);
-    var antwordenDtos = _mapper.Map<IEnumerable<AntwoordDto>>(antworden);
+    var antwordenDtos = _mapper.Map<IEnumerable<AntwoordDTO>>(antworden);
     return Ok(antwordenDtos);
   }
   
@@ -37,16 +37,16 @@ public class AntwoordController : ControllerBase{
       return NotFound();
     }
 
-    var antwoordDto = _mapper.Map<AntwoordDto>(antwoord);
+    var antwoordDto = _mapper.Map<AntwoordDTO>(antwoord);
     return Ok(antwoordDto);
   }
   
   [HttpPost]
   [Route("create")]
-  public async Task<ActionResult<AntwoordDto>> Create([FromBody] AddAntwoordRequestDto addDto) {
+  public async Task<ActionResult<AntwoordDTO>> Create([FromBody] AddAntwoordRequestDto addDto) {
     var antwoord = _mapper.Map<Antwoord>(addDto);
     var nieuwAntwoord = await _antwoordRepository.CreateAsync(antwoord);
-    var nieuwAntwoordDto = _mapper.Map<AntwoordDto>(nieuwAntwoord);
+    var nieuwAntwoordDto = _mapper.Map<AntwoordDTO>(nieuwAntwoord);
     return CreatedAtAction(nameof(GetById), new { id = nieuwAntwoordDto.Id }, nieuwAntwoordDto);
   }
   
