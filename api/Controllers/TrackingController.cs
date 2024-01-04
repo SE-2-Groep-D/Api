@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Ocsp;
 
 namespace Api.Controllers;
+
 [Route("[controller]")]
 [ApiController]
 public class TrackingController : ControllerBase {

@@ -29,6 +29,8 @@ public class InsertGebruikersInfoDto {
   // Bedrijf
   public string? Bedrijfsnaam { get; set; }
   public string? Plaats { get; set; }
+  public string? Straat { get; set; }
+  public string? Nummer { get; set; }
   public string? WebsiteUrl { get; set; }
   public string? Omschrijving { get; set; }
 

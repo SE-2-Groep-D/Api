@@ -1,4 +1,5 @@
 ﻿using Api.Models.DTO.Onderzoek;
+using Api.Models.DTO.Onderzoek.results;
 using Api.Repositories;
 using Api.Repositories.ITrackingRepository;
 using Api.Repositories.VragenlijstRepository;
@@ -25,17 +26,16 @@ public class ResultatenController : ControllerBase {
   
   [HttpGet("{id}")]
   public async Task<IActionResult> GetResults(Guid id) {
-    var vragenlijsten = await _onderzoekRepository.GetAllAsync(id);
-    var vragenlijstenDtos = _mapper.Map<IEnumerable<VragenlijstDto>>(vragenlijsten);
+    var questionLists = await _onderzoekRepository.GetAllAsync(id);
+    var trackingResearch = await _trackingRepository.GetTrackingOnderzoeken(id);
     
-    var resultaat = await _trackingRepository.GetById(id);
-
-    var results = new {
-      tracking = resultaat,
-      vragenlijst = vragenlijstenDtos
-    };
+    var mappedQuestionLists = _mapper.Map<List<ResponseVragenlijstDto>>(questionLists);
+    var mappedTrackingResearch = _mapper.Map<List<ResponseTrackingDto>>(trackingResearch);
     
-    return Ok(results);
+    return Ok(new ResultResponseDto {
+      Vragenlijsten = mappedQuestionLists,
+      TrackingOnderzoeken = mappedTrackingResearch,
+    });
   }
   
 

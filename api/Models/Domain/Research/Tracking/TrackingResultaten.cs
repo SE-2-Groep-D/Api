@@ -3,7 +3,7 @@ public class TrackingResultaten {
 
   public Guid Id { get; set; }
   public string Page { get; set; }
-  public string PagePercentage { get; set; }
+  public int PagePercentage { get; set; }
   public string Browser { get; set; }
   public int TimeInSeconds { get; set; }
   public int TimeTillAction { get; set; }
