@@ -15,6 +15,7 @@ using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Net;
 using Api.Models.DTO.Auth.request;
+using Api.Repositories.IGebruikerRepository;
 
 namespace Api.Controllers;
 [Route("[controller]")]
@@ -26,13 +27,15 @@ public class AuthController : ControllerBase {
   private readonly ITokenService tokenService;
   private readonly IMapper mapper;
   private readonly IConfiguration configuration;
+  private readonly IGebruikerRepository gebruikerRepository;
 
-  public AuthController(UserManager<Gebruiker> gebruikerManager, IUserService userService, ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
+  public AuthController(UserManager<Gebruiker> gebruikerManager, IGebruikerRepository gebruikerRepository, IUserService userService, ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
     this.gebruikerManager = gebruikerManager;
     this.userService = userService;
     this.tokenService = tokenService;
     this.mapper = mapper;
     this.configuration = configuration;
+    this.gebruikerRepository = gebruikerRepository;
   }
 
   [HttpPost]
@@ -56,6 +59,16 @@ public class AuthController : ControllerBase {
     string[] Roles = { "Ervaringsdeskundige" };
 
     var result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
+
+    var AangemaakteGebruiker = await gebruikerManager.FindByEmailAsync(gebruiker.Email);
+    
+    if (result.Succeeded && registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen != null && AangemaakteGebruiker != null) {
+      var resultHulpmiddel = await gebruikerRepository.VoegHulpmiddelenToe(registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen, AangemaakteGebruiker.Id);
+      if (!resultHulpmiddel.Succeeded) {
+        return Ok(resultHulpmiddel.Message);
+      }
+    }
+    
     return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 

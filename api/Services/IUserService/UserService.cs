@@ -47,8 +47,11 @@ public class UserService : IUserService {
       await _gebruikerManager.DeleteAsync(gebruiker);
       return new RegisterResponseDto(false, "Ongeldige rol");
     }
-
-    return new RegisterResponseDto(true, "User was registerd! Please Login.");
+    
+    var id = await _gebruikerManager.FindByEmailAsync(gebruiker.Email);
+    
+    
+    return new RegisterResponseDto(true, "User was registerd! Please Login.") {Id = id.Id };
   }
 
 

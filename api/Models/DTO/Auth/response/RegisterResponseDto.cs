@@ -8,6 +8,7 @@
 
     public string? Message { get; set; }
     public bool Succeeded { get; set; }
+    public Guid? Id { get; set; }
 
   }
 }
