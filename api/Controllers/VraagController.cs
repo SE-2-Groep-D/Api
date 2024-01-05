@@ -41,6 +41,10 @@ public class VraagController : ControllerBase {
   [HttpPost]
   [Route("create")]
   public async Task<ActionResult<VraagDTO>> Create([FromBody] AddVraagRequestDto addDto) {
+    if (!Enum.IsDefined(typeof(VraagType), addDto.Type)) {
+      return BadRequest("Invalid VraagType");
+    }
+    
     var vraag = _mapper.Map<Vraag>(addDto);
     var nieuwVraag = await _vraagRepository.CreateAsync(vraag);
     var nieuwVraagDto = _mapper.Map<VraagDTO>(nieuwVraag);
