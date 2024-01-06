@@ -8,5 +8,7 @@
 
     Task<IEnumerable<Bericht>> GetChatsByUserId(Guid userId);
 
+    Task<IEnumerable<Bericht>> GetBerichten(Guid verzenderId, Guid ontvangerId);
+
   }
 }

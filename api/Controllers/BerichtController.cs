@@ -56,5 +56,12 @@ namespace Api.Controllers {
 
     }
 
+    [HttpGet]
+    [Route("getberichten/{verzenderId}/{ontvangerId}")]
+    public async Task<IActionResult> GetBerichten(Guid verzenderId, Guid ontvangerId) {
+      var messages = await BerichtRepository.GetBerichten(verzenderId, ontvangerId);
+      return Ok(messages);
+    }
+
   }
 }

@@ -25,5 +25,13 @@ namespace Api.Repositories.IBerichtRepository {
           .ToListAsync();
     }
 
+    public async Task<IEnumerable<Bericht>> GetBerichten(Guid verzenderId, Guid ontvangerId) {
+      return await _context.Berichten
+          .Where(b => (b.VerzenderId == verzenderId && b.OntvangerId == ontvangerId) ||
+                      (b.VerzenderId == ontvangerId && b.OntvangerId == verzenderId))
+          .OrderBy(b => b.DatumTijd)
+          .ToListAsync();
+    }
+
   }
 }
