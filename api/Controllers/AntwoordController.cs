@@ -12,7 +12,7 @@ public class AntwoordController : ControllerBase{
   private IAntwoordRepository _antwoordRepository;
   private IMapper _mapper;
 
-
+/*
   public AntwoordController(IMapper _mapper,IAntwoordRepository _antwoordRepository) {
     
     this._mapper = _mapper;
@@ -22,16 +22,16 @@ public class AntwoordController : ControllerBase{
   
   [HttpGet]
   [Route("list")]
-  public async Task<ActionResult> GetAll(Guid id) {
+ /* public async Task<ActionResult> GetAll(Guid id) {
     var antworden = await _antwoordRepository.GetAllAsync(id);
     var antwordenDtos = _mapper.Map<IEnumerable<AntwoordDTO>>(antworden);
     return Ok(antwordenDtos);
-  }
+  }*/
   
   
   [HttpGet]
   [Route("{id}")]
-  public async Task<ActionResult> GetById(Guid id) {
+  /*public async Task<ActionResult> GetById(Guid id) {
     var antwoord = await _antwoordRepository.GetByIdAsync(id);
     if (antwoord == null) {
       return NotFound();
@@ -48,13 +48,13 @@ public class AntwoordController : ControllerBase{
     var nieuwAntwoord = await _antwoordRepository.CreateAsync(antwoord);
     var nieuwAntwoordDto = _mapper.Map<AntwoordDTO>(nieuwAntwoord);
     return CreatedAtAction(nameof(GetById), new { id = nieuwAntwoordDto.Id }, nieuwAntwoordDto);
-  }
+  }*/
   
   [HttpPut]
   [Route("update/{id}")]
-  public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAntwoordRequestDto request) {
+ /* public async Task<IActionResult> Update(Guid id, [FromBody] UpdateAntwoordRequestDto request) {
     try {
-      Antwoord? bestaandAntwoord = await _antwoordRepository.GetByIdAsync(id);
+     // Antwoord? bestaandAntwoord = await _antwoordRepository.GetByIdAsync(id);
 
       if (bestaandAntwoord == null) {
         return NotFound($"Vraag met ID {id} is niet gevonden.");
@@ -76,7 +76,7 @@ public class AntwoordController : ControllerBase{
       return StatusCode(StatusCodes.Status500InternalServerError, $"Interne serverfout: {errorMsg}");
     }
   }
-  
+  */
   [HttpDelete]
   [Route("delete/{id}")]
   public async Task<IActionResult> Delete(Guid id) {

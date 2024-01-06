@@ -44,8 +44,14 @@ public class VraagController : ControllerBase {
     if (!Enum.IsDefined(typeof(VraagType), addDto.Type)) {
       return BadRequest("Invalid VraagType");
     }
-    
     var vraag = _mapper.Map<Vraag>(addDto);
+
+    // We moeten dit ook in fronttend aan geve als we dat doen dan hebben we deze niet nodig.
+    /**if (addDto.Type == VraagType.multiple_choice && addDto.Antwoorden.Count < 2)
+    {
+      return BadRequest("Meerkeuzevragen vereisen minimaal twee antwoorden.");
+    }**/
+    
     var nieuwVraag = await _vraagRepository.CreateAsync(vraag);
     var nieuwVraagDto = _mapper.Map<VraagDTO>(nieuwVraag);
     return CreatedAtAction(nameof(GetById), new { id = nieuwVraagDto.Id }, nieuwVraagDto);
@@ -62,7 +68,7 @@ public class VraagController : ControllerBase {
       }
 
       _mapper.Map(request, bestaandVraag);
-
+      
       Vraag? isUpdated = await _vraagRepository.UpdateAsync(id, bestaandVraag);
 
       if (isUpdated == null) {

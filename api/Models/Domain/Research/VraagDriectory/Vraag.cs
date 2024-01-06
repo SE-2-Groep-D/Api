@@ -6,7 +6,9 @@ public class Vraag {
   public string Onderwerp { get; set; }
   public Guid VragenlijstId { get; set; }
   public Vragenlijst Vragenlijst { get; set; } = null!;
-  public ICollection<Antwoord> Antwoorden { get; } = new List<Antwoord>();
+  
+  public List<Antwoord> MogelijkeAntwoorden { get; set; } 
+  public List<string>? GegevenAntwoorden { get; set; }  // hier komt [a,b,c ]  
 
 }
 

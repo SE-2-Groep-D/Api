@@ -24,5 +24,7 @@ public class VraagDTO {
 
 public class AntwoordDTO {
   public Guid Id { get; set; }
+  
+  public char Letter { get; set; }
   public string Tekst { get; set; }
 }

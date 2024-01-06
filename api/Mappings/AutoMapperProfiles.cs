@@ -69,11 +69,11 @@ public class AutoMapperProfiles : Profile {
     CreateMap<Vragenlijst, VragenlijstDto>()
       .ForMember(dest => dest.Vragen, opt => opt.MapFrom(src => src.Vragen));
         
-    CreateMap<Vraag, VraagDTO>()
-      .ForMember(dest => dest.Antwoorden, opt => opt.MapFrom(src => src.Antwoorden));
+  //  CreateMap<Vraag, VraagDTO>()
+   //   .ForMember(dest => dest.Antwoorden, opt => opt.MapFrom(src => src.Antwoorden));
         
-    CreateMap<Antwoord, AntwoordDTO>();
-    CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
+  //  CreateMap<Antwoord, AntwoordDTO>();
+   // CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
 
 
     //Voor vraag
@@ -86,7 +86,7 @@ public class AutoMapperProfiles : Profile {
 
     //Voor antwoord
 
-  
+  /*
     CreateMap<UpdateAntwoordRequestDto, Antwoord>()
       .ForMember(dest => dest.Tekst, opt => opt.Condition(src => src.Tekst != null));
     
@@ -99,7 +99,7 @@ public class AutoMapperProfiles : Profile {
     CreateMap<ClickedItemDto, ClickedItem>();
 
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>().ReverseMap();
-    
+    */
  
     // Voor results
     

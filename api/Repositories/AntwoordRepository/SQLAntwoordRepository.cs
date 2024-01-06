@@ -15,10 +15,10 @@ public class SQLAntwoordRepository : IAntwoordRepository {
   }
   
 
-  public async  Task<List<Antwoord?>> GetAllAsync(Guid vraagId) {
+ /* public async  Task<List<Antwoord?>> GetAllAsync(Guid vraagId) {
     
-    return await _context.Vragen.Where(v => v.Id == vraagId).SelectMany(vl => vl.Antwoorden).ToListAsync();
-  }
+  //  return await _context.Vragen.Where(v => v.Id == vraagId).SelectMany(vl => vl.Antwoorden).ToListAsync();
+  }*/
 
   public async Task<Antwoord> GetByIdAsync(Guid id) {
     

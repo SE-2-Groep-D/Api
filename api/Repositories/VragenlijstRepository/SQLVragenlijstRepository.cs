@@ -10,6 +10,7 @@ namespace Api.Repositories.VragenlijstRepository;
 public class SQLVragenlijstRepository : IVragenlijstRepository {
 
   private AccessibilityDbContext _context;
+
   private readonly IMapper _mapper;
 
   public SQLVragenlijstRepository(AccessibilityDbContext context, IMapper mapper) {
@@ -24,7 +25,7 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
   public async Task<VragenlijstDto?> GetByIdAsync(Guid id) {
     var vragenlijst = _context.Vragenlijsten
       .Include(v => v.Vragen)
-      .ThenInclude(v => v.Antwoorden)
+    //  .ThenInclude(v => v.Antwoorden)
       .SingleOrDefault(v => v.Id == id);
 
     if (vragenlijst == null) {
@@ -35,16 +36,16 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
     await AddResearchInfo(vragenlijst, vragenlijstDTO);
     return vragenlijstDTO;
   }
-  
+
   public async Task AddResearchInfo(Vragenlijst trackingOnderzoek, VragenlijstDto dto) {
     var onderzoek = await _context.Onderzoeken.FindAsync(trackingOnderzoek.OnderzoekId);
     dto.Participants = (onderzoek == null) ? 0 : onderzoek.AantalParticipanten;
     dto.TotalQuestions = (int)trackingOnderzoek.Vragen.Count();
-    dto.TotalAwnsers = trackingOnderzoek.Vragen.Sum(vraag => vraag.Antwoorden.Count());
+ //   dto.TotalAwnsers = trackingOnderzoek.Vragen.Sum(vraag => vraag.Antwoorden.Count());
 
     // dto.TimePerPage = (int)trackingOnderzoek.TrackingResultaten
     //   .Select(resultaten => resultaten.TimeInSeconds)
-    //   .DefaultIfEmpty(0) 
+    //   .DefaultIfEmpty(0)
     //   .Average() / 60;
   }
 
@@ -74,6 +75,7 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
     return true;
 
   }
+
 
 
 

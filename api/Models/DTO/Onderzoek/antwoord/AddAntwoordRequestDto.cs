@@ -5,7 +5,7 @@ public class AddAntwoordRequestDto {
 
 
   public string Tekst { get; set; }
-  public Guid VraagId { get; set; } 
+  public bool IsCorrect { get; set; }
 
 
 }
