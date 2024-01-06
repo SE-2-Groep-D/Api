@@ -16,7 +16,7 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
   public DbSet<Ervaringsdeskundige> Ervaringsdeskundigen { get; set; }
   public DbSet<Voorkeurbenadering> Voorkeurbenaderingen { get; set; }
   public DbSet<Voogd> Voogden { get; set; }
-  public DbSet<TypeBeperking> TypeBeperkingen { get; set; }
+  
   public DbSet<Hulpmiddel> Hulpmiddelen { get; set; }
   public DbSet<Beschikbaarheid> Beschikbaarheden { get; set; }
 

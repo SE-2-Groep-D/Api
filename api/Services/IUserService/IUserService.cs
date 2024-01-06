@@ -1,16 +1,15 @@
 ﻿
 using Api.Models.Domain.User;
-using Api.Models.DTO.Auth;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using API.Models.DTO.Gebruiker;
 using Api.Models.DTO.Gebruiker.request;
 using Api.Models.DTO.Gebruiker.response;
-
+using Api.Models.DTO.Auth.response;
 
 namespace Api.Services.IUserService;
 
 public interface IUserService {
-  public Task<string> Register(Gebruiker gebruiker, string password, string[] roles);
+  public Task<RegisterResponseDto> Register(Gebruiker gebruiker, string password, string[] roles);
   //public Task<string> Register(Ervaringsdeskundige ervaringsdeskundige, string password, string[] roles);
   //public Task<string> Register(Bedrijf ervaringsdeskundige, string password, string[] roles);
   //public Task<string> Register(Ervaringsdeskundige ervaringsdeskundige, string password, string[] roles);

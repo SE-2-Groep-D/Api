@@ -2,8 +2,6 @@
 using Api.Models.Domain.Research;
 using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
-using Api.Models.DTO;
-using Api.Models.DTO.Auth;
 using API.Models.DTO.Gebruiker;
 using Api.Models.DTO.Gebruiker.request;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
@@ -12,6 +10,7 @@ using Api.Models.DTO.Onderzoek;
 using Api.Models.DTO.Onderzoek.results;
 using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
+using Api.Models.DTO.Auth.request;
 
 namespace Api.Mappings;
 public class AutoMapperProfiles : Profile {

@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using Api.Models.Domain.User;
-using Api.Models.DTO.Auth;
 using API.Models.DTO.Gebruiker;
 using Api.Models.DTO.Gebruiker.request;
 using Api.Models.DTO.Gebruiker.response;
@@ -8,6 +7,7 @@ using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Api.Models.DTO.Auth.response;
 
 namespace Api.Services.IUserService;
 public class UserService : IUserService {
@@ -32,23 +32,26 @@ public class UserService : IUserService {
     return response;
   }
 
-  public async Task<string> Register(Gebruiker gebruiker, string password, string[] roles) {
+  public async Task<RegisterResponseDto> Register(Gebruiker gebruiker, string password, string[] roles) {
     if (!roles.Any()) {
-      return "Geef rol aan";
+      return new RegisterResponseDto(false, "Geef rol aan");
     }
 
     var identityResult = await _gebruikerManager.CreateAsync(gebruiker, password);
     if (!identityResult.Succeeded) {
-      return "Er ging iets mis!";
+      return new RegisterResponseDto(false, "Er ging iets mis!");
     }
 
     identityResult = await _gebruikerManager.AddToRolesAsync(gebruiker, roles);
     if (!identityResult.Succeeded) {
       await _gebruikerManager.DeleteAsync(gebruiker);
-      return "Ongeldige rol";
+      return new RegisterResponseDto(false, "Ongeldige rol");
     }
-
-    return "OK: User was registerd! Please Login.";
+    
+    var id = await _gebruikerManager.FindByEmailAsync(gebruiker.Email);
+    
+    
+    return new RegisterResponseDto(true, "User was registerd! Please Login.") {Id = id.Id };
   }
 
 

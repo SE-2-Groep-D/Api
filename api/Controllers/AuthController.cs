@@ -1,6 +1,4 @@
 ﻿using Api.Models.Domain;
-using Api.Models.DTO;
-using Api.Models.DTO.Auth;
 using Api.Services.ITokenService;
 using Api.Services.IUserService;
 using AutoMapper;
@@ -16,6 +14,8 @@ using Google.Apis.Auth;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Net;
+using Api.Models.DTO.Auth.request;
+using Api.Repositories.IGebruikerRepository;
 
 namespace Api.Controllers;
 [Route("[controller]")]
@@ -27,13 +27,15 @@ public class AuthController : ControllerBase {
   private readonly ITokenService tokenService;
   private readonly IMapper mapper;
   private readonly IConfiguration configuration;
+  private readonly IGebruikerRepository gebruikerRepository;
 
-  public AuthController(UserManager<Gebruiker> gebruikerManager, IUserService userService, ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
+  public AuthController(UserManager<Gebruiker> gebruikerManager, IGebruikerRepository gebruikerRepository, IUserService userService, ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
     this.gebruikerManager = gebruikerManager;
     this.userService = userService;
     this.tokenService = tokenService;
     this.mapper = mapper;
     this.configuration = configuration;
+    this.gebruikerRepository = gebruikerRepository;
   }
 
   [HttpPost]
@@ -42,8 +44,8 @@ public class AuthController : ControllerBase {
   public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto) {
     var gebruiker = mapper.Map<Gebruiker>(registerRequestDto);
 
-    string result = await userService.Register(gebruiker, registerRequestDto.Password, registerRequestDto.Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerRequestDto.Password, registerRequestDto.Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
 
 
   }
@@ -56,8 +58,18 @@ public class AuthController : ControllerBase {
 
     string[] Roles = { "Ervaringsdeskundige" };
 
-    string result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
+
+    var AangemaakteGebruiker = await gebruikerManager.FindByEmailAsync(gebruiker.Email);
+    
+    if (result.Succeeded && registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen != null && AangemaakteGebruiker != null) {
+      var resultHulpmiddel = await gebruikerRepository.VoegHulpmiddelenToe(registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen, AangemaakteGebruiker.Id);
+      if (!resultHulpmiddel.Succeeded) {
+        return Ok(resultHulpmiddel.Message);
+      }
+    }
+    
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
@@ -69,19 +81,20 @@ public class AuthController : ControllerBase {
 
     string[] Roles = { "Bedrijf" };
 
-    string result = await userService.Register(gebruiker, registerBedrijfRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerBedrijfRequestDto.Password, Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
   [Route("RegisterMedwerker")]
+  [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto) {
     var gebruiker = mapper.Map<Medewerker>(registerMedewerkerRequestDto);
 
     string[] Roles = { "Medewerker" };
 
-    string result = await userService.Register(gebruiker, registerMedewerkerRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerMedewerkerRequestDto.Password, Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
