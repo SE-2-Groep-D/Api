@@ -9,3 +9,4 @@ public class AddVraagRequestDto {
   public ICollection<Antwoord> Antwoorden { get; } = new List<Antwoord>();
 
 }
+
