@@ -44,6 +44,7 @@ public class VraagController : ControllerBase {
     if (!Enum.IsDefined(typeof(VraagType), addDto.Type)) {
       return BadRequest("Invalid VraagType");
     }
+
     var vraag = _mapper.Map<Vraag>(addDto);
 
     // We moeten dit ook in fronttend aan geve als we dat doen dan hebben we deze niet nodig.
