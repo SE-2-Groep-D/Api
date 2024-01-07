@@ -114,6 +114,16 @@ public class AuthController : ControllerBase {
     var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
     var response = userService.CreateLoginResponse(gebruiker, jwtToken);
 
+    HttpContext.Response.Cookies.Append(
+      "access_token",
+      jwtToken,
+      new CookieOptions { 
+        HttpOnly = true,
+        SameSite = SameSiteMode.None,
+        Secure = true
+      }
+    );
+
     return Ok(response);
   }
 
@@ -157,7 +167,7 @@ public class AuthController : ControllerBase {
   public async Task<IActionResult> test() {
     //var userName = User?.FindFirstValue(ClaimTypes.Email);
 
-    return Ok();
+    return Ok("yeye");
   }
 
 }
