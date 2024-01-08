@@ -52,7 +52,10 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Omschrijving, opt => opt.Condition(src => src.Omschrijving != null))
       .ForMember(dest => dest.Vergoeding, opt => opt.Condition(src => src.Locatie != null))
       .ForMember(dest => dest.Locatie, opt => opt.Condition(src => src.Locatie != null))
-      .ForMember(dest => dest.Status, opt => opt.Condition(src => src.Status != null));
+      .ForMember(dest => dest.Status, opt => opt.Condition(src => src.Status != null))
+      .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null));
+    ;
+    
 
 
     CreateMap<QuestionlistDto, Questionlist>()

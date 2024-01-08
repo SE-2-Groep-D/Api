@@ -11,5 +11,6 @@ public class AddOnderzoekRequestDto {
   public string Locatie { get; set; }
   public string Status { get; set; }
   public Guid BedrijfId { get; set; }
+  public string Type { get; set; }
 
 }

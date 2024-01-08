@@ -15,6 +15,7 @@ public class Onderzoek {
   public string Omschrijving { get; set; }
   public double Vergoeding { get; set; }
   public string Locatie { get; set; }
+  public string Type { get; set; }
   public string Status { get; set; }
 
   public ICollection<Questionlist> Vragenlijst { get; } = new List<Questionlist>();
