@@ -5,13 +5,13 @@ namespace Api.Repositories.VragenlijstRepository;
 public interface IVragenlijstRepository {
 
 
-  Task<List<Vragenlijst?>> GetAllAsync(Guid OnderzoekId);
-  Task<VragenlijstDto?> GetByIdAsync(Guid id);
+  Task<List<Questionlist?>> GetAllAsync(Guid OnderzoekId);
+  Task<Questionlist?> GetByIdAsync(Guid id);
 
-  Task<Vragenlijst> CreateAsync(Vragenlijst vragenlijst);
+  Task<Questionlist> CreateAsync(Questionlist vragenlijst);
 
 
-  Task<Vragenlijst?> UpdateAsync(Guid id, VragenlijstDto vragenlijst);
+ Task<Questionlist?> UpdateAsync(Guid id, Questionlist vragenlijst);
 
   Task<bool> DeleteAsync(Guid id);
 

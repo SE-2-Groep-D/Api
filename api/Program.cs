@@ -10,11 +10,9 @@ using Api.Services.ITokenService;
 using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories;
-using Api.Repositories.AntwoordRepository;
 using Api.Repositories.IGebruikerRepository;
 using Microsoft.AspNetCore.Authentication.Google;
 using Api.Repositories.VragenlijstRepository;
-using Api.Repositories.VragenRepository;
 using Api.Repositories.ITrackingRepository;
 
 
@@ -111,8 +109,6 @@ public class Program {
   private static void AddRepositories(IServiceCollection services) {
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
     services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
-    services.AddScoped<IVraagRepository, SQLVraagRepository>();
-    services.AddScoped<IAntwoordRepository, SQLAntwoordRepository>();
     services.AddScoped<ITrackingRepository, TrackingRepository>();
     services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>(); 
 

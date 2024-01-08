@@ -17,7 +17,7 @@ public class Onderzoek {
   public string Locatie { get; set; }
   public string Status { get; set; }
 
-  public ICollection<Vragenlijst> Vragenlijst { get; } = new List<Vragenlijst>();
+  public ICollection<Questionlist> Vragenlijst { get; } = new List<Questionlist>();
   public ICollection<TrackingOnderzoek> TrackingResultaten { get; } = new List<TrackingOnderzoek>();
   public List<Ervaringsdeskundige> Ervaringsdeskundigen { get; } = new();
   public List<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; } = new();

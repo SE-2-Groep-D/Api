@@ -18,30 +18,30 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
     _mapper = mapper;
   }
 
-  public async Task<List<Vragenlijst>> GetAllAsync(Guid OnderzoekId) {
-    return await _context.Vragenlijsten.Where(v => v.OnderzoekId == OnderzoekId).ToListAsync();
+  public async Task<List<Questionlist>> GetAllAsync(Guid OnderzoekId) {
+    return await _context.Questionlist.Where(v => v.OnderzoekId == OnderzoekId).ToListAsync();
   }
 
-  public async Task<VragenlijstDto?> GetByIdAsync(Guid id) {
-    var vragenlijst = _context.Vragenlijsten
-      .Include(v => v.Vragen)
-    //  .ThenInclude(v => v.Antwoorden)
+  public async Task<Questionlist?> GetByIdAsync(Guid id) {
+    var vragenlijst = _context.Questionlist
+      .Include(v => v.Questions)
+      //  .ThenInclude(v => v.Antwoorden)
       .SingleOrDefault(v => v.Id == id);
 
     if (vragenlijst == null) {
       return null;
     }
 
-    var vragenlijstDTO = _mapper.Map<VragenlijstDto>(vragenlijst);
+    var vragenlijstDTO = _mapper.Map<Questionlist>(vragenlijst);
     await AddResearchInfo(vragenlijst, vragenlijstDTO);
     return vragenlijstDTO;
   }
 
-  public async Task AddResearchInfo(Vragenlijst trackingOnderzoek, VragenlijstDto dto) {
+  public async Task AddResearchInfo(Questionlist trackingOnderzoek, Questionlist dto) {
     var onderzoek = await _context.Onderzoeken.FindAsync(trackingOnderzoek.OnderzoekId);
     dto.Participants = (onderzoek == null) ? 0 : onderzoek.AantalParticipanten;
-    dto.TotalQuestions = (int)trackingOnderzoek.Vragen.Count();
- //   dto.TotalAwnsers = trackingOnderzoek.Vragen.Sum(vraag => vraag.Antwoorden.Count());
+    dto.TotalQuestions = (int)trackingOnderzoek.Questions.Count();
+    //   dto.TotalAwnsers = trackingOnderzoek.Vragen.Sum(vraag => vraag.Antwoorden.Count());
 
     // dto.TimePerPage = (int)trackingOnderzoek.TrackingResultaten
     //   .Select(resultaten => resultaten.TimeInSeconds)
@@ -49,34 +49,93 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
     //   .Average() / 60;
   }
 
-  public async Task<Vragenlijst> CreateAsync(Vragenlijst vragenlijst) {
-    await _context.Vragenlijsten.AddAsync(vragenlijst);
+  public async Task<Questionlist> CreateAsync(Questionlist vragenlijst) {
+    await _context.AddAsync(vragenlijst);
     await _context.SaveChangesAsync();
     return vragenlijst;
-
   }
 
-  public async Task<Vragenlijst?> UpdateAsync(Guid id, VragenlijstDto vragenlijst) {
-    var bestaandVragenlijst = await _context.Vragenlijsten.FindAsync(id);
-    _context.Entry(bestaandVragenlijst).CurrentValues.SetValues(vragenlijst);
+  public async Task<Questionlist?> UpdateAsync(Guid id, Questionlist updatedQuestionlist) {
+    var bestaandVragenlijst = await GetByIdAsync(id);
+    _context.Entry(bestaandVragenlijst).CurrentValues.SetValues(updatedQuestionlist);
     await _context.SaveChangesAsync();
     return bestaandVragenlijst;
   }
 
   public async Task<bool> DeleteAsync(Guid id) {
+    var vragenlijst = await _context.Questionlist
+      .Include(q => q.Questions)
+      .ThenInclude(question => question.PossibleAnswers)
+      .FirstOrDefaultAsync(q => q.Id == id);
 
-    var vragenlijst = await _context.Vragenlijsten.FindAsync(id);
     if (vragenlijst == null) {
       return false;
     }
 
-    _context.Vragenlijsten.Remove(vragenlijst);
+    // Verwijder alle antwoorden die specifiek bij de vragen van deze vragenlijst horen
+    foreach (var question in vragenlijst.Questions) {
+      if (question.PossibleAnswers != null) {
+        _context.Answer.RemoveRange(question.PossibleAnswers);
+      }
+    }
+
+    // Verwijder de vragen die specifiek bij deze vragenlijst horen
+    _context.Question.RemoveRange(vragenlijst.Questions);
+
+    // Verwijder de vragenlijst zelf
+    _context.Questionlist.Remove(vragenlijst);
+
     await _context.SaveChangesAsync();
     return true;
-
   }
 
 
+ /* public async Task<SubmitedRequestDto> CreateSubmittedAnswerAsync(SubmitedRequestDto submittedRequestDto) {
+    var questionList = await _context.Questionlists
+      .Include(ql => ql.Questions)
+      .ThenInclude(q => q.GivenAnswers)
+      .FirstOrDefaultAsync(ql => ql.Id == submittedRequestDto.Id);
 
+    if (questionList == null) {
+      throw new Exception("Vragenlijst niet gevonden.");
+    }
 
+    foreach (var submittedAnswer in submittedRequestDto.GivenAnswers) {
+      var question = questionList.Questions.FirstOrDefault(q => q.Id == submittedAnswer.GivenAnswerQuestionId);
+      if (question != null) {
+        Answer answer = new Answer {
+          GivenAnswerQuestionId = question.Id,
+          Answertext = submittedAnswer.Answertext
+        };
+
+        switch (question.Type) {
+          case QuestionType.open:
+            // Verwerk het antwoord als een string
+            question.GivenAnswers.Add(answer);
+            break;
+
+          case QuestionType.one_choice:
+          case QuestionType.multiple_choice:
+            // Verwerk het antwoord als een array
+            // Hier moet je logica toevoegen om de array te verwerken
+            // Bijvoorbeeld, als Answertext een JSON-geformatteerde string is
+            var answerArray = JsonConverter.DeserializeObject<List<int>>(submittedAnswer.Answertext);
+            foreach (var ans in answerArray) {
+              // Voeg elk antwoord toe
+              question.GivenAnswers.Add(new Answer {
+                GivenAnswerQuestionId = question.Id,
+                Answertext = ans.ToString() // Of een andere representatie van het antwoord
+              });
+            }
+
+            break;
+        }
+      }
+    }
+
+    await _context.SaveChangesAsync();
+
+    return submittedRequestDto;
+  }
+*/
 }

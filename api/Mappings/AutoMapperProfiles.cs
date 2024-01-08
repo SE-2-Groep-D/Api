@@ -55,19 +55,35 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Status, opt => opt.Condition(src => src.Status != null));
 
 
-    CreateMap<UpdateVragenlijstRequestDto, Vragenlijst>()
-      .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
-      .ForMember(dest => dest.Samenvatting, opt => opt.Condition(src => src.Samenvatting != null));
+    CreateMap<QuestionlistDto, Questionlist>()
+      .ForMember(dest => dest.Title, opt => opt.Condition(src => src.Title != null))
+      .ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null))
+      .ForMember(dest => dest.OnderzoekId, opt => opt.MapFrom(src => src.OnderzoekId != null))
+      .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants != null))
+      .ForMember(dest => dest.TotalQuestions, opt => opt.MapFrom(src => src.TotalQuestions != null))
+      .ForMember(dest => dest.TotalAwnsers, opt => opt.MapFrom(src => src.TotalAwnsers != null));
 
+    
+    CreateMap<UpdateQuestionlistRequestDto, Questionlist>()
+      .ForMember(dest => dest.Title, opt => opt.Condition(src => src.Title != null))
+      .ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null))
+      .ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions))
+      .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants))
+      .ForMember(dest => dest.TotalQuestions, opt => opt.MapFrom(src => src.TotalQuestions))
+      .ForMember(dest => dest.TotalAwnsers, opt => opt.MapFrom(src => src.TotalAwnsers));
 
+ 
+
+    
+    
     CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
     CreateMap<AddOnderzoekRequestDto, Onderzoek>();
 
 
     //voor vragenlijst
     
-    CreateMap<Vragenlijst, VragenlijstDto>()
-      .ForMember(dest => dest.Vragen, opt => opt.MapFrom(src => src.Vragen));
+   /* CreateMap<Vragenlijst, VragenlijstDto>()
+      .ForMember(dest => dest.Vragen, opt => opt.MapFrom(src => src.Vragen));*/
         
   //  CreateMap<Vraag, VraagDTO>()
    //   .ForMember(dest => dest.Antwoorden, opt => opt.MapFrom(src => src.Antwoorden));
@@ -78,13 +94,26 @@ public class AutoMapperProfiles : Profile {
 
     //Voor vraag
 
-    CreateMap<UpdateVraagRequestDto, Vraag>()
+  /*  CreateMap<UpdateVraagRequestDto, Vraag>()
       .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null))
       .ForMember(dest => dest.Onderwerp, opt => opt.Condition(src => src.Onderwerp != null));
+  */  
+  CreateMap<Questionlist, QuestionlistDto>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
+  CreateMap<Question, QuestionDto>().ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers));
+  CreateMap<QuestionlistDto, Question>().ReverseMap();
+  
+ 
+  
+  CreateMap<AddQuestionlistRequestDto, Questionlist>().ReverseMap();
+    CreateMap<AddQuestionRequestDto, Question>().ReverseMap();
+    CreateMap<AddQAnsweRequestDto, Answer>().ReverseMap();
     
-    CreateMap<AddVraagRequestDto, Vraag>().ReverseMap();
-
+    
+    
+    
+    
     //Voor antwoord
+    
 
   /*
     CreateMap<UpdateAntwoordRequestDto, Antwoord>()
@@ -104,7 +133,7 @@ public class AutoMapperProfiles : Profile {
     // Voor results
     
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
-    CreateMap<Vragenlijst, ResponseVragenlijstDto>();
+    CreateMap<Questionlist, ResponseVragenlijstDto>();
 
   }
 

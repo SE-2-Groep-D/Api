@@ -28,10 +28,11 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
 
   public DbSet<Onderzoek> Onderzoeken { get; set; }
   public DbSet<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; set; }
-
-  public DbSet<Antwoord> Antwoorden { get; set; }
-  public DbSet<Vraag> Vragen { get; set; }
-  public DbSet<Vragenlijst> Vragenlijsten { get; set; }
+  
+  
+  public DbSet<Answer> Answer { get; set; }
+  public DbSet<Question> Question { get; set; }
+  public DbSet<Questionlist> Questionlist { get; set; }
 
   public DbSet<TrackingOnderzoek> TrackingOnderzoeken { get; set; }
 
@@ -41,6 +42,24 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
     builder.Entity<Ervaringsdeskundige>(entity => { entity.ToTable("Ervaringsdeskundigen"); });
     builder.Entity<Bedrijf>(entity => { entity.ToTable("Bedrijven"); });
     builder.Entity<Medewerker>(entity => { entity.ToTable("Medewerkers"); });
+
+   /* builder.Entity<Answer>()
+      .HasOne("Question")
+      .WithMany("Answers").HasForeignKey("QuestionId");*/
+   
+   builder.Entity<Answer>()
+     .HasOne(a => a.QuestionAsPossibleAnswer)
+     .WithMany(q => q.PossibleAnswers)
+     .HasForeignKey(a => a.PossibleAnswerQuestionId)
+     .OnDelete(DeleteBehavior.SetNull);
+
+   builder.Entity<Answer>()
+     .HasOne(a => a.QuestionAsGivenAnswer)
+     .WithMany(q => q.GivenAnswers)
+     .HasForeignKey(a => a.GivenAnswerQuestionId)
+     .OnDelete(DeleteBehavior.SetNull);
+   
+   
 
     builder.Entity<Onderzoek>()
       .HasMany(e => e.Ervaringsdeskundigen)
