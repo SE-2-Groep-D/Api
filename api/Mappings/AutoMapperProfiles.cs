@@ -104,7 +104,6 @@ public class AutoMapperProfiles : Profile {
     
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
     CreateMap<Vragenlijst, ResponseVragenlijstDto>();
-
   }
 
 }
