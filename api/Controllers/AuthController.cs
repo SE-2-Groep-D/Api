@@ -116,6 +116,8 @@ public class AuthController : ControllerBase {
 
     var response = mapper.Map<LoginResponseDto>(gebruiker);
 
+    response.UserType = GetUserType(gebruiker);
+
     HttpContext.Response.Cookies.Append(
       "access_token",
       jwtToken,
