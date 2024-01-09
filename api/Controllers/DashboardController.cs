@@ -186,6 +186,9 @@ public class DashboardController : ControllerBase {
 
       case Ervaringsdeskundige:
         return "Ervaringsdeskundige";
+      
+      case Medewerker:
+        return "Medewerker";
 
       default:
         return "Gebruiker";
