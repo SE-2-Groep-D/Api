@@ -170,4 +170,20 @@ public class AuthController : ControllerBase {
     return Ok("yeye");
   }
 
+  private string GetUserType(Gebruiker gebruiker) {
+    switch (gebruiker) {
+      case Bedrijf:
+        return "Bedrijf";
+
+      case Ervaringsdeskundige:
+        return "Ervaringsdeskundige";
+
+      case Medewerker:
+        return "Medewerker";
+
+      default:
+        return "Gebruiker";
+    }
+  }
+
 }
