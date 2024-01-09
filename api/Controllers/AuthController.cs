@@ -16,6 +16,7 @@ using System.Data;
 using System.Net;
 using Api.Models.DTO.Auth.request;
 using Api.Repositories.IGebruikerRepository;
+using Api.Models.DTO.Auth.response;
 
 namespace Api.Controllers;
 [Route("[controller]")]
@@ -112,7 +113,10 @@ public class AuthController : ControllerBase {
     if (roles == null) { return BadRequest("Ongeldig wachtwoord of emailadres."); }
 
     var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
-    var response = userService.CreateLoginResponse(gebruiker, jwtToken);
+
+    var response = mapper.Map<LoginResponseDto>(gebruiker);
+
+    response.UserType = GetUserType(gebruiker);
 
     HttpContext.Response.Cookies.Append(
       "access_token",
@@ -168,6 +172,22 @@ public class AuthController : ControllerBase {
     //var userName = User?.FindFirstValue(ClaimTypes.Email);
 
     return Ok("yeye");
+  }
+
+  private string GetUserType(Gebruiker gebruiker) {
+    switch (gebruiker) {
+      case Bedrijf:
+        return "Bedrijf";
+
+      case Ervaringsdeskundige:
+        return "Ervaringsdeskundige";
+
+      case Medewerker:
+        return "Medewerker";
+
+      default:
+        return "Gebruiker";
+    }
   }
 
 }

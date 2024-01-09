@@ -11,6 +11,7 @@ using Api.Models.DTO.Onderzoek.results;
 using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
 using Api.Models.DTO.Auth.request;
+using Api.Models.DTO.Auth.response;
 
 namespace Api.Mappings;
 public class AutoMapperProfiles : Profile {
@@ -34,6 +35,8 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
     CreateMap<RegisterErvaringsdeskundigeRequestDto, Ervaringsdeskundige>()
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
+
+    CreateMap<Gebruiker, LoginResponseDto>();
 
     CreateMap<Gebruiker, GebruikerDetails>();
     CreateMap<Medewerker, MedewerkerDetails>();
