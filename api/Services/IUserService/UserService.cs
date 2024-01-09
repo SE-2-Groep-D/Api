@@ -27,10 +27,9 @@ public class UserService : IUserService {
   public LoginResponseDto CreateLoginResponse (Gebruiker gebruiker, string jwtToken) {
   
     var response = new LoginResponseDto {
-      UserId = gebruiker.Id,
+      Id = gebruiker.Id,
       Voornaam = gebruiker.Voornaam,
-      Achternaam = gebruiker.Achternaam,
-      JwtToken = jwtToken
+      Achternaam = gebruiker.Achternaam
     };
 
     return response;
