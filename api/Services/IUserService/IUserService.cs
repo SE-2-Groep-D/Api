@@ -18,6 +18,7 @@ public interface IUserService {
   public GebruikerDetails GetUserDetails(Gebruiker gebruiker);
 
   public Task<List<Object>> GetUsersAsync();
+ 
 
   public Task<UpdateGebruikerResponse> UpdateUser(Gebruiker gebruiker, InsertGebruikersInfoDto request);
   public Task<UpdateGebruikerResponse> UpdateUserProperties(Gebruiker gebruiker, InsertGebruikersInfoDto request, Dictionary<string, Action> properties);

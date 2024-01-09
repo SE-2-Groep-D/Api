@@ -17,7 +17,7 @@ public class GebruikerController : ControllerBase {
     _userManager = manager;
     _userService = service;
   }
-
+  
   [HttpGet]
   [Route("list")]
   public async Task<IActionResult> GetAll() {

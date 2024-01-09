@@ -13,7 +13,7 @@ public class SQLOnderzoekRepository : IOnderzoekRepository {
   }
 
   public async Task<List<Onderzoek>> GetAllAsync(string? status) {
-    return (status == null) ? await _context.Onderzoeken.ToListAsync() : await _context.Onderzoeken.Where(o => o.Status == status).ToListAsync();
+    return (status == null) ? await _context.Onderzoeken.ToListAsync() : await _context.Onderzoeken.Where(o => o.Status.ToString() == status).ToListAsync();
   }
 
   public async Task<Onderzoek?> GetByIdAsync(Guid id) {
