@@ -116,10 +116,43 @@ public class AuthController : ControllerBase {
 
     var response = mapper.Map<LoginResponseDto>(gebruiker);
 
+    response.UserType = GetUserType(gebruiker);
+
     HttpContext.Response.Cookies.Append(
       "access_token",
       jwtToken,
       new CookieOptions { 
+        HttpOnly = true,
+        SameSite = SameSiteMode.None,
+        Secure = true
+      }
+    );
+
+    return Ok(response);
+  }
+
+  [HttpGet]
+  [Route("Refresh")]
+  [Authorize]
+  public async Task<IActionResult> Refresh() {
+
+    var userName = User?.FindFirstValue(ClaimTypes.Email);
+    var gebruiker = await gebruikerManager.FindByEmailAsync(userName);
+    if (gebruiker == null) { return BadRequest("Ongeldig wachtwoord of emailadres."); }
+
+    var roles = await gebruikerManager.GetRolesAsync(gebruiker);
+    if (roles == null) { return BadRequest("Ongeldig wachtwoord of emailadres."); }
+
+    var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
+
+    var response = mapper.Map<LoginResponseDto>(gebruiker);
+
+    response.UserType = GetUserType(gebruiker);
+
+    HttpContext.Response.Cookies.Append(
+      "access_token",
+      jwtToken,
+      new CookieOptions {
         HttpOnly = true,
         SameSite = SameSiteMode.None,
         Secure = true
@@ -170,6 +203,22 @@ public class AuthController : ControllerBase {
     //var userName = User?.FindFirstValue(ClaimTypes.Email);
 
     return Ok("yeye");
+  }
+
+  private string GetUserType(Gebruiker gebruiker) {
+    switch (gebruiker) {
+      case Bedrijf:
+        return "Bedrijf";
+
+      case Ervaringsdeskundige:
+        return "Ervaringsdeskundige";
+
+      case Medewerker:
+        return "Medewerker";
+
+      default:
+        return "Gebruiker";
+    }
   }
 
 }

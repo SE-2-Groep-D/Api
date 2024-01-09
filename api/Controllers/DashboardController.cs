@@ -101,6 +101,9 @@ public class DashboardController : ControllerBase {
         break;
     }
 
+
+    agenda = agenda.Where(dto => dto.Date >= new DateTime()).ToList();
+    
     return agenda;
   }
 
@@ -186,6 +189,9 @@ public class DashboardController : ControllerBase {
 
       case Ervaringsdeskundige:
         return "Ervaringsdeskundige";
+      
+      case Medewerker:
+        return "Medewerker";
 
       default:
         return "Gebruiker";
