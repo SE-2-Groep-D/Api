@@ -16,9 +16,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Api.Repositories.VragenlijstRepository;
 using Api.Repositories.VragenRepository;
 using Api.Repositories.ITrackingRepository;
-
-
-
+using Api.CustomMiddleware;
 
 namespace Api;
 public class Program {
@@ -44,14 +42,17 @@ public class Program {
 
     if (builder.Environment.IsDevelopment()) {
       services.AddCors(options => {
-        options.AddPolicy("AllowAny",
-          b => b.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod());
+        options.AddPolicy("AllowSpecific",
+          builder => builder.WithOrigins("http://localhost:3000") // Replace with your React app's URL
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials()
+                            .WithExposedHeaders("Set-Cookie"));
       });
 
 
     }
+   
     
     ConnectToDatabase(services, builder);
 
@@ -126,13 +127,14 @@ public class Program {
 
   private static void SetupMiddleware(WebApplication app) {
     // Configure the HTTP request pipeline.
+    
     if (app.Environment.IsDevelopment()) {
       app.UseSwagger();
       app.UseSwaggerUI();
-      app.UseCors(builder => {
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-        Console.WriteLine("Setup cors");
-      });
+      //app.UseCors(builder => {
+      //  builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+      //  Console.WriteLine("Setup cors");
+      //});
 
     }
 
@@ -141,16 +143,16 @@ public class Program {
     // configure HTTPS
     app.UseHttpsRedirection();
 
-    app.UseCors(builder =>
-    {
-      builder.WithOrigins("http://localhost:5173"); // Replace with your React app's URL
-      builder.AllowAnyHeader();
-      builder.AllowAnyMethod();
-    });
+    app.UseCors("AllowSpecific");
 
+
+    app.UseMiddleware<AuthorizationHeaderMiddleware>();
     app.UseAuthentication();
+    
     app.UseAuthorization();
+    
     app.MapControllers();
+    
   }
 
 
