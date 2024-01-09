@@ -101,6 +101,9 @@ public class DashboardController : ControllerBase {
         break;
     }
 
+
+    agenda = agenda.Where(dto => dto.Date >= new DateTime()).ToList();
+    
     return agenda;
   }
 
