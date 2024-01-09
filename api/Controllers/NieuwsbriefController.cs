@@ -30,14 +30,17 @@ public class NieuwsbriefController : ControllerBase {
   }
 
   [HttpPost]
-  [Authorize(Roles = "Medewerker")]
+  // [Authorize(Roles = "Medewerker")]
   public async Task<IActionResult> CreateNieuwsBrief([FromBody] CreateNiewsbriefDto request) {
-
-    var brief = _mapper.Map<Nieuwsbrief>(request);
-    await _dbContext.Nieuws.AddAsync(brief);
-    var result = await _dbContext.SaveChangesAsync();
-    if (result != 1) return Problem("Could not create news article");
-    return Ok("Succesfully created the news message.");
+    try {
+      var brief = _mapper.Map<Nieuwsbrief>(request);
+      await _dbContext.Nieuws.AddAsync(brief);
+      var result = await _dbContext.SaveChangesAsync();
+      return Ok("Succesfully created the news message.");
+    } catch (Exception ex) {
+      Console.WriteLine(ex);
+      return Problem("Could not create news article");
+    }
   }
 
   [Authorize(Roles = "Medewerker")]

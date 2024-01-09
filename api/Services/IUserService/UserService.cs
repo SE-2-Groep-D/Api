@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using Api.Data;
+using Api.Models.Domain.Research;
 using Api.Models.Domain.User;
 using API.Models.DTO.Gebruiker;
 using Api.Models.DTO.Gebruiker.request;
@@ -15,8 +17,10 @@ public class UserService : IUserService {
   private readonly UserManager<Gebruiker> _gebruikerManager;
   private readonly IMapper _mapper;
 
-  public UserService(UserManager<Gebruiker> gebruikerManager, IMapper mapper ) {
+
+  public UserService(UserManager<Gebruiker> gebruikerManager, IMapper mapper, AccessibilityDbContext dbContext) {
     _gebruikerManager = gebruikerManager;
+
     _mapper = mapper;
   }
 
