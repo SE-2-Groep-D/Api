@@ -42,6 +42,9 @@ public class UserService : IUserService {
 
     var identityResult = await _gebruikerManager.CreateAsync(gebruiker, password);
     if (!identityResult.Succeeded) {
+      if(identityResult.Errors.Any( x => x.Code.Equals("DuplicateUserName"))) {
+        return new RegisterResponseDto(false, "Er bestaat al een account met deze email");
+      }
       return new RegisterResponseDto(false, "Er ging iets mis!");
     }
 
