@@ -1,9 +1,8 @@
 ﻿namespace Api.Models.DTO.Auth.response {
   public class LoginResponseDto {
-    public Guid UserId { get; set; }
+    public Guid Id { get; set; }
     public string Voornaam { get; set; }
     public string Achternaam { get; set; }
-    public string JwtToken { get; set; }
 
   }
 }
