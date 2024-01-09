@@ -27,10 +27,9 @@ public class UserService : IUserService {
   public LoginResponseDto CreateLoginResponse (Gebruiker gebruiker, string jwtToken) {
   
     var response = new LoginResponseDto {
-      UserId = gebruiker.Id,
+      Id = gebruiker.Id,
       Voornaam = gebruiker.Voornaam,
-      Achternaam = gebruiker.Achternaam,
-      JwtToken = jwtToken
+      Achternaam = gebruiker.Achternaam
     };
 
     return response;
@@ -43,6 +42,9 @@ public class UserService : IUserService {
 
     var identityResult = await _gebruikerManager.CreateAsync(gebruiker, password);
     if (!identityResult.Succeeded) {
+      if(identityResult.Errors.Any( x => x.Code.Equals("DuplicateUserName"))) {
+        return new RegisterResponseDto(false, "Er bestaat al een account met deze email");
+      }
       return new RegisterResponseDto(false, "Er ging iets mis!");
     }
 
