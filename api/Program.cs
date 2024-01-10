@@ -39,21 +39,17 @@ public class Program {
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
+    var frontendUrl = builder.Configuration["DatabasFrontendUrleType"];
+    services.AddCors(options => {
+      options.AddPolicy("AllowSpecific",
+        builder => builder.WithOrigins(frontendUrl) 
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials()
+                          .WithExposedHeaders("Set-Cookie"));
+    });
 
-    if (builder.Environment.IsDevelopment()) {
-      services.AddCors(options => {
-        options.AddPolicy("AllowSpecific",
-          builder => builder.WithOrigins("http://localhost:3000") // Replace with your React app's URL
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials()
-                            .WithExposedHeaders("Set-Cookie"));
-      });
 
-
-    }
-   
-    
     ConnectToDatabase(services, builder);
 
     AddRepositories(services);
