@@ -39,7 +39,7 @@ public class Program {
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
-    var frontendUrl = builder.Configuration["DatabasFrontendUrleType"];
+    var frontendUrl = builder.Configuration["FrontendUrl"];
     services.AddCors(options => {
       options.AddPolicy("AllowSpecific",
         builder => builder.WithOrigins(frontendUrl) 
