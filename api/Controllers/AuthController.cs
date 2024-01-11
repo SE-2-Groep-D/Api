@@ -179,13 +179,24 @@ public class AuthController : ControllerBase {
       GoogleJsonWebSignature.Payload payload = GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings).Result;
       var gebruiker = await userService.GetUserByIdentification(payload.Email);
       if(gebruiker == null) {
-        return NotFound(new {Email = payload.Email, Message = "U moet u nog registreren"});
+        return NotFound(new { payload.Email, Message = "U moet u nog registreren"});
       }
 
       var roles = await gebruikerManager.GetRolesAsync(gebruiker);
       var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
 
-      var response = userService.CreateLoginResponse(gebruiker, jwtToken);
+      var response = mapper.Map<LoginResponseDto>(gebruiker);
+      response.UserType = GetUserType(gebruiker);
+
+      HttpContext.Response.Cookies.Append(
+      "access_token",
+      jwtToken,
+      new CookieOptions {
+        HttpOnly = true,
+        SameSite = SameSiteMode.None,
+        Secure = true
+      }
+    );
 
       return Ok(response);
     } catch (Exception ex) {

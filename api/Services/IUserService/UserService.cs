@@ -35,12 +35,20 @@ public class UserService : IUserService {
     return response;
   }
 
-  public async Task<RegisterResponseDto> Register(Gebruiker gebruiker, string password, string[] roles) {
+  public async Task<RegisterResponseDto> Register(Gebruiker gebruiker, string? password, string[] roles) {
     if (!roles.Any()) {
       return new RegisterResponseDto(false, "Geef rol aan");
     }
+    var identityResult = new IdentityResult();
+    if (gebruiker.GoogleAccount && password == null) {
+      identityResult = await _gebruikerManager.CreateAsync(gebruiker);
+    } else if (password != null) {
+      identityResult = await _gebruikerManager.CreateAsync(gebruiker, password);
+    } else {
+      return new RegisterResponseDto(false, "Er ging iets mis!");
+    }
 
-    var identityResult = await _gebruikerManager.CreateAsync(gebruiker, password);
+    
     if (!identityResult.Succeeded) {
       if(identityResult.Errors.Any( x => x.Code.Equals("DuplicateUserName"))) {
         return new RegisterResponseDto(false, "Er bestaat al een account met deze email");
