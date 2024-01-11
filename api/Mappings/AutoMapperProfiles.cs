@@ -45,6 +45,9 @@ public class AutoMapperProfiles : Profile {
 
     CreateMap<CreateNiewsbriefDto, Nieuwsbrief>();
     CreateMap<UpdateNieuwsbriefDto, Nieuwsbrief>();
+    CreateMap<Nieuwsbrief, NieuwsBriefDto>().ForMember(dest => dest.Medewerker, opt => opt.MapFrom(src => src.Medewerker));
+    CreateMap<Medewerker, NieuwsbriefMedewerkerDto>();
+    
 
     CreateMap<UpdateOnderzoekRequestDto, Onderzoek>()
       .ForMember(dest => dest.StartDatum, opt => opt.Condition(src => src.StartDatum != null))

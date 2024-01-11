@@ -74,19 +74,26 @@ public class UserService : IUserService {
 
 
   public GebruikerDetails GetUserDetails(Gebruiker gebruiker) {
-    if (gebruiker is Medewerker) {
-      return _mapper.Map<MedewerkerDetails>(gebruiker);
+    var details = _mapper.Map<GebruikerDetails>(gebruiker);
+
+    switch (gebruiker) {
+      case Ervaringsdeskundige er:
+        details = _mapper.Map<ErvaringsDeskundigeDetails>(gebruiker);
+        details.Type = "Ervaringsdeskundige";
+        break;
+      
+      case Bedrijf er:
+        details = _mapper.Map<BedrijfsDetails>(gebruiker);
+        details.Type = "Bedrijf";
+        break;
+      
+      case Medewerker er:
+        details = _mapper.Map<MedewerkerDetails>(gebruiker);
+        details.Type = "Medewerker";
+        break;
     }
 
-    if (gebruiker is Ervaringsdeskundige) {
-      return _mapper.Map<ErvaringsDeskundigeDetails>(gebruiker);
-    }
-
-    if (gebruiker is Bedrijf) {
-      return _mapper.Map<BedrijfsDetails>(gebruiker);
-    }
-
-    return _mapper.Map<GebruikerDetails>(gebruiker);
+    return details;
   }
 
   public async Task<List<Object>> GetUsersAsync() {
