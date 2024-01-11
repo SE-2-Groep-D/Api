@@ -1,5 +1,6 @@
 ﻿using Api.Data;
 using Api.Models.Domain.Bericht;
+using Api.Models.DTO.Bericht;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories.IBerichtRepository {
@@ -24,6 +25,7 @@ namespace Api.Repositories.IBerichtRepository {
           .Where(b => b.VerzenderId == userId || b.OntvangerId == userId)
           .ToListAsync();
     }
+
 
     public async Task<IEnumerable<Bericht>> GetBerichten(Guid verzenderId, Guid ontvangerId) {
       return await _context.Berichten
