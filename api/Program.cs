@@ -9,15 +9,12 @@ using System.Text;
 using Api.Services.ITokenService;
 using Api.Mappings;
 using Api.Models.Domain.User;
-using Api.Repositories;
-using Api.Repositories.AntwoordRepository;
 using Api.Repositories.IGebruikerRepository;
 using Api.Repositories.IBerichtRepository;
-using Microsoft.AspNetCore.Authentication.Google;
-using Api.Repositories.VragenlijstRepository;
-using Api.Repositories.VragenRepository;
-using Api.Repositories.ITrackingRepository;
-using Api.CustomMiddleware;
+
+//using Api.Repositories.ITrackingRepository;
+
+//using Api.Repositories.ITrackingRepository;
 
 namespace Api;
 public class Program {
@@ -41,84 +38,47 @@ public class Program {
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
-    if (builder.Environment.IsDevelopment()) {
-      services.AddCors(options => {
-        options.AddPolicy("AllowSpecific",
-          builder => builder.WithOrigins("http://localhost:3000") // Replace with your React app's URL
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials()
-                            .WithExposedHeaders("Set-Cookie"));
-      });
-
-
-    }
-   
-    
     ConnectToDatabase(services, builder);
-
     AddRepositories(services);
     AddServices(services);
 
     services.AddAutoMapper(typeof(AutoMapperProfiles));
 
     //Usermanager voor Gebruiker instellen
-    services.AddIdentityCore<Gebruiker>(options => {
-        options.Password.RequireDigit = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequiredLength = 5;
-      })
+    services.AddIdentityCore<Gebruiker>()
       .AddRoles<IdentityRole<Guid>>()
       .AddTokenProvider<DataProtectorTokenProvider<Gebruiker>>("API")
       .AddEntityFrameworkStores<AccessibilityDbContext>()
       .AddDefaultTokenProviders();
 
     //Usermanager voor Ervaringsdeskundige instellen
-    services.AddIdentityCore<Ervaringsdeskundige>(options => {
-        options.Password.RequireDigit = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequiredLength = 5;
-      })
+    services.AddIdentityCore<Ervaringsdeskundige>()
       .AddRoles<IdentityRole<Guid>>()
       .AddTokenProvider<DataProtectorTokenProvider<Ervaringsdeskundige>>("API")
       .AddEntityFrameworkStores<AccessibilityDbContext>()
       .AddDefaultTokenProviders();
 
     //Usermanager voor Bedrijf instellen
-    services.AddIdentityCore<Bedrijf>(options => {
-        options.Password.RequireDigit = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequiredLength = 5;
-      })
+    services.AddIdentityCore<Bedrijf>()
       .AddRoles<IdentityRole<Guid>>()
       .AddTokenProvider<DataProtectorTokenProvider<Bedrijf>>("API")
       .AddEntityFrameworkStores<AccessibilityDbContext>()
       .AddDefaultTokenProviders();
 
     //Usermanager voor Medewerker instellen
-    services.AddIdentityCore<Medewerker>(options => {
-        options.Password.RequireDigit = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequiredLength = 5;
-      })
+    services.AddIdentityCore<Medewerker>()
       .AddRoles<IdentityRole<Guid>>()
       .AddTokenProvider<DataProtectorTokenProvider<Medewerker>>("API")
       .AddEntityFrameworkStores<AccessibilityDbContext>()
       .AddDefaultTokenProviders();
 
     AddAuthentication(services, builder);
-
   }
 
   private static void AddRepositories(IServiceCollection services) {
     services.AddScoped<IBerichtRepository, SQLBerichtRepository>();
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
-    services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
-    services.AddScoped<IVraagRepository, SQLVraagRepository>();
-    services.AddScoped<IAntwoordRepository, SQLAntwoordRepository>();
-    services.AddScoped<ITrackingRepository, TrackingRepository>();
-    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>(); 
-
+    //services.AddScoped<ITrackingRepository, TrackingRepository>();
   }
 
   private static void AddServices(IServiceCollection services) {
@@ -129,32 +89,17 @@ public class Program {
 
   private static void SetupMiddleware(WebApplication app) {
     // Configure the HTTP request pipeline.
-    
     if (app.Environment.IsDevelopment()) {
       app.UseSwagger();
       app.UseSwaggerUI();
-      //app.UseCors(builder => {
-      //  builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-      //  Console.WriteLine("Setup cors");
-      //});
-
     }
-
-    app.UseStaticFiles();
 
     // configure HTTPS
     app.UseHttpsRedirection();
 
-    app.UseCors("AllowSpecific");
-
-
-    app.UseMiddleware<AuthorizationHeaderMiddleware>();
     app.UseAuthentication();
-    
     app.UseAuthorization();
-    
     app.MapControllers();
-    
   }
 
 
@@ -162,8 +107,6 @@ public class Program {
     var connectionString = builder.Configuration.GetConnectionString("APIDbConnectionString");
     var dbType = builder.Configuration["DatabaseType"];
 
-    Console.WriteLine(connectionString);
-    
     try {
       services.AddDbContext<AccessibilityDbContext>(options => {
         switch (dbType) {
