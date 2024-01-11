@@ -1,6 +1,4 @@
 ﻿using Api.Models.Domain;
-using Api.Models.DTO;
-using Api.Models.DTO.Auth;
 using Api.Services.ITokenService;
 using Api.Services.IUserService;
 using AutoMapper;
@@ -9,6 +7,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Api.Models.Domain.User;
+using static Azure.Core.HttpHeader;
+using System.Xml;
+using System.ComponentModel.DataAnnotations;
+using Google.Apis.Auth;
+using Newtonsoft.Json.Linq;
+using System.Data;
+using System.Net;
+using Api.Models.DTO.Auth.request;
+using Api.Repositories.IGebruikerRepository;
 
 namespace Api.Controllers;
 [Route("[controller]")]
@@ -19,12 +26,16 @@ public class AuthController : ControllerBase {
   private readonly IUserService userService;
   private readonly ITokenService tokenService;
   private readonly IMapper mapper;
+  private readonly IConfiguration configuration;
+  private readonly IGebruikerRepository gebruikerRepository;
 
-  public AuthController(UserManager<Gebruiker> gebruikerManager, IUserService userService, ITokenService tokenService, IMapper mapper) {
+  public AuthController(UserManager<Gebruiker> gebruikerManager, IGebruikerRepository gebruikerRepository, IUserService userService, ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
     this.gebruikerManager = gebruikerManager;
     this.userService = userService;
     this.tokenService = tokenService;
     this.mapper = mapper;
+    this.configuration = configuration;
+    this.gebruikerRepository = gebruikerRepository;
   }
 
   [HttpPost]
@@ -33,8 +44,8 @@ public class AuthController : ControllerBase {
   public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto) {
     var gebruiker = mapper.Map<Gebruiker>(registerRequestDto);
 
-    string result = await userService.Register(gebruiker, registerRequestDto.Password, registerRequestDto.Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerRequestDto.Password, registerRequestDto.Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
 
 
   }
@@ -47,8 +58,18 @@ public class AuthController : ControllerBase {
 
     string[] Roles = { "Ervaringsdeskundige" };
 
-    string result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
+
+    var AangemaakteGebruiker = await gebruikerManager.FindByEmailAsync(gebruiker.Email);
+    
+    if (result.Succeeded && registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen != null && AangemaakteGebruiker != null) {
+      var resultHulpmiddel = await gebruikerRepository.VoegHulpmiddelenToe(registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen, AangemaakteGebruiker.Id);
+      if (!resultHulpmiddel.Succeeded) {
+        return Ok(resultHulpmiddel.Message);
+      }
+    }
+    
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
@@ -60,19 +81,20 @@ public class AuthController : ControllerBase {
 
     string[] Roles = { "Bedrijf" };
 
-    string result = await userService.Register(gebruiker, registerBedrijfRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerBedrijfRequestDto.Password, Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
   [Route("RegisterMedwerker")]
+  [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto) {
     var gebruiker = mapper.Map<Medewerker>(registerMedewerkerRequestDto);
 
     string[] Roles = { "Medewerker" };
 
-    string result = await userService.Register(gebruiker, registerMedewerkerRequestDto.Password, Roles);
-    return result.StartsWith("OK") ? Ok(result) : BadRequest(result);
+    var result = await userService.Register(gebruiker, registerMedewerkerRequestDto.Password, Roles);
+    return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
   [HttpPost]
@@ -90,23 +112,62 @@ public class AuthController : ControllerBase {
     if (roles == null) { return BadRequest("Ongeldig wachtwoord of emailadres."); }
 
     var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
-    var response = new LoginResponseDto {
-      UserId = gebruiker.Id,
-      Voornaam = gebruiker.Voornaam,
-      Achternaam = gebruiker.Achternaam,
-      JwtToken = jwtToken
-    };
+    var response = userService.CreateLoginResponse(gebruiker, jwtToken);
+
+    HttpContext.Response.Cookies.Append(
+      "access_token",
+      jwtToken,
+      new CookieOptions { 
+        HttpOnly = true,
+        SameSite = SameSiteMode.None,
+        Secure = true
+      }
+    );
 
     return Ok(response);
   }
 
 
+  [AllowAnonymous]
+  [HttpPost("google")]
+  public async Task<IActionResult> Authenticate([FromBody] GoogleRequestDto request) {
+    GoogleJsonWebSignature.ValidationSettings settings = new GoogleJsonWebSignature.ValidationSettings();
+
+    // Change this to your google client ID
+    
+    string clientId = configuration["Authentication:Google:ClientId"];
+    if(clientId == null) { return StatusCode(500); }
+    settings.Audience = new List<string>() { clientId };
+
+
+    try {
+      GoogleJsonWebSignature.Payload payload = GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings).Result;
+      var gebruiker = await userService.GetUserByIdentification(payload.Email);
+      if(gebruiker == null) {
+        return NotFound(new {Email = payload.Email, Message = "U moet u nog registreren"});
+      }
+
+      var roles = await gebruikerManager.GetRolesAsync(gebruiker);
+      var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
+
+      var response = userService.CreateLoginResponse(gebruiker, jwtToken);
+
+      return Ok(response);
+    } catch (Exception ex) {
+      Console.WriteLine(ex);
+      return BadRequest("Ongeldig token");
+    }
+    
+  }
+
+
+
   [HttpGet]
   [Authorize]
   public async Task<IActionResult> test() {
-    var userName = User?.FindFirstValue(ClaimTypes.Email);
+    //var userName = User?.FindFirstValue(ClaimTypes.Email);
 
-    return Ok(userName);
+    return Ok("yeye");
   }
 
 }
