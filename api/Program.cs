@@ -44,7 +44,7 @@ public class Program {
     if (builder.Environment.IsDevelopment()) {
       services.AddCors(options => {
         options.AddPolicy("AllowSpecific",
-          builder => builder.WithOrigins("http://localhost:3000") // Replace with your React app's URL
+          builder => builder.WithOrigins("http://localhost:5173") // Replace with your React app's URL
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials()
