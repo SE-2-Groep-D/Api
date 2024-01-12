@@ -62,8 +62,11 @@ public class SQLOnderzoekRepository : IOnderzoekRepository {
   }
   
   
-  public async Task<OnderzoekErvaringsdekundige?> GetRegistrationByResearchId(Guid id) {
-    return await _context.OnderzoekErvaringsdekundigen.FirstOrDefaultAsync(o => o.OnderzoekId == id);
+  public async Task<List<OnderzoekErvaringsdekundige>> GetRegistrationByResearchId(Guid id) {
+    return await _context.OnderzoekErvaringsdekundigen
+      .Where(o => o.OnderzoekId == id)
+      .ToListAsync();
   }
+
   
 }

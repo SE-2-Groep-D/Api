@@ -93,18 +93,19 @@ public class OnderzoekController : ControllerBase {
   public async Task<ActionResult<AddRegistrationDto>> Registration([FromBody] AddRegistrationDto addDto) {
     var registration = _mapper.Map<OnderzoekErvaringsdekundige>(addDto);
     await _onderzoekRepository.CreateRegistrationAsync(registration);
-    return Ok("Registratie is aangemakt.");
+    return Ok("Registratie is aangemaakt.");
   }
   
   [HttpGet]
   [Route("registration/list/{id}")]
   public async Task<ActionResult> GetRegistrationByResearchId(Guid id) {
     var registrationList = await _onderzoekRepository.GetRegistrationByResearchId(id);
-    if (registrationList == null) {
+    if (!registrationList.Any()) {
       return NotFound();
     }
-    
+
     return Ok(registrationList);
   }
+
 
 }

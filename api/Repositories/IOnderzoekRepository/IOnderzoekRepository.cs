@@ -17,6 +17,6 @@ public interface IOnderzoekRepository {
   
   Task<OnderzoekErvaringsdekundige?> CreateRegistrationAsync(OnderzoekErvaringsdekundige registration);
   
-  Task<OnderzoekErvaringsdekundige?> GetRegistrationByResearchId(Guid id);
+  Task<List<OnderzoekErvaringsdekundige>> GetRegistrationByResearchId(Guid id);
 
 }
