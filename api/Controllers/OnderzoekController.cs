@@ -2,7 +2,6 @@
 using Api.Models.DTO.Onderzoek;
 using Api.Repositories;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -10,13 +9,14 @@ namespace Api.Controllers;
 [ApiController]
 public class OnderzoekController : ControllerBase {
 
-  private IOnderzoekRepository _onderzoekRepository;
-  private IMapper _mapper;
+  private readonly IMapper _mapper;
+
+  private readonly IOnderzoekRepository _onderzoekRepository;
 
 
   public OnderzoekController(IMapper mapper, IOnderzoekRepository onderzoekRepository) {
-    this._mapper = mapper;
-    this._onderzoekRepository = onderzoekRepository;
+    _mapper = mapper;
+    _onderzoekRepository = onderzoekRepository;
 
   }
 
@@ -55,7 +55,7 @@ public class OnderzoekController : ControllerBase {
   [Route("update/{id}")]
   public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOnderzoekRequestDto request) {
     try {
-      Onderzoek? bestaandOnderzoek = await _onderzoekRepository.GetByIdAsync(id);
+      var bestaandOnderzoek = await _onderzoekRepository.GetByIdAsync(id);
 
       if (bestaandOnderzoek == null) {
         return NotFound($"Onderzoek met ID {id} is niet gevonden.");
@@ -63,7 +63,7 @@ public class OnderzoekController : ControllerBase {
 
       _mapper.Map(request, bestaandOnderzoek);
 
-      Onderzoek? isUpdated = await _onderzoekRepository.UpdateAsync(id, bestaandOnderzoek);
+      var isUpdated = await _onderzoekRepository.UpdateAsync(id, bestaandOnderzoek);
 
       if (isUpdated == null) {
 

@@ -15,5 +15,4 @@ public interface IVragenlijstRepository {
 
   Task<bool> DeleteAsync(Guid id);
 
-
 }

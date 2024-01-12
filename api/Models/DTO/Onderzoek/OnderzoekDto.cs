@@ -3,7 +3,7 @@ public class OnderzoekDto {
 
   public Guid Id { get; set; }
   //duur
-  
+
   public string Titel { get; set; }
   public string AantalParticipanten { get; set; }
   public string websiteUrl { get; set; }
@@ -13,5 +13,5 @@ public class OnderzoekDto {
   public string? Locatie { get; set; }
   public string? Status { get; set; }
   public Guid? BedrijfId { get; set; }
-  
+
 }

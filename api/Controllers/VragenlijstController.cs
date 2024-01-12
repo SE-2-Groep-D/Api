@@ -9,14 +9,15 @@ namespace Api.Controllers;
 [ApiController]
 public class VragenlijstController : ControllerBase {
 
-  private IVragenlijstRepository _vragenlijstRepository;
-  private IMapper _mapper;
+  private readonly IMapper _mapper;
+
+  private readonly IVragenlijstRepository _vragenlijstRepository;
 
 
 
   public VragenlijstController(IMapper mapper, IVragenlijstRepository vragenlijstRepository) {
-    this._mapper = mapper;
-    this._vragenlijstRepository = vragenlijstRepository;
+    _mapper = mapper;
+    _vragenlijstRepository = vragenlijstRepository;
 
   }
 
@@ -32,7 +33,7 @@ public class VragenlijstController : ControllerBase {
   [Route("{id}")]
   public async Task<ActionResult> GetById(Guid id) {
     var vragenlijsten = await _vragenlijstRepository.GetByIdAsync(id);
-    if (vragenlijsten == null)  return NotFound();
+    if (vragenlijsten == null) return NotFound();
     return Ok(vragenlijsten);
   }
 
@@ -57,7 +58,7 @@ public class VragenlijstController : ControllerBase {
 
       _mapper.Map(request, bestaandVragenlijst);
 
-      Vragenlijst? isUpdated = await _vragenlijstRepository.UpdateAsync(id, bestaandVragenlijst);
+      var isUpdated = await _vragenlijstRepository.UpdateAsync(id, bestaandVragenlijst);
 
       if (isUpdated == null) {
         return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
@@ -81,7 +82,5 @@ public class VragenlijstController : ControllerBase {
 
     return Ok("Vragenlijst is succsesvol updated");
   }
-
-
 
 }

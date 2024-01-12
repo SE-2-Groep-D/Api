@@ -37,7 +37,4 @@ public class InsertGebruikersInfoDto {
   // Medewerker
   public string? Functie { get; set; }
 
-
-
-
 }

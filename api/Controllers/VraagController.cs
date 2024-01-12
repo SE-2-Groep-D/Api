@@ -9,13 +9,14 @@ namespace Api.Controllers;
 [ApiController]
 public class VraagController : ControllerBase {
 
-  private IVraagRepository _vraagRepository;
-  private IMapper _mapper;
+  private readonly IMapper _mapper;
+
+  private readonly IVraagRepository _vraagRepository;
 
 
   public VraagController(IMapper _mapper, IVraagRepository _vragenlijstRepository) {
     this._mapper = _mapper;
-    this._vraagRepository = _vragenlijstRepository;
+    _vraagRepository = _vragenlijstRepository;
   }
 
   [HttpGet]
@@ -44,7 +45,7 @@ public class VraagController : ControllerBase {
     if (!Enum.IsDefined(typeof(VraagType), addDto.Type)) {
       return BadRequest("Invalid VraagType");
     }
-    
+
     var vraag = _mapper.Map<Vraag>(addDto);
     var nieuwVraag = await _vraagRepository.CreateAsync(vraag);
     var nieuwVraagDto = _mapper.Map<VraagDTO>(nieuwVraag);
@@ -55,7 +56,7 @@ public class VraagController : ControllerBase {
   [Route("update/{id}")]
   public async Task<IActionResult> Update(Guid id, [FromBody] UpdateVraagRequestDto request) {
     try {
-      Vraag? bestaandVraag = await _vraagRepository.GetByIdAsync(id);
+      var bestaandVraag = await _vraagRepository.GetByIdAsync(id);
 
       if (bestaandVraag == null) {
         return NotFound($"Vraag met ID {id} is niet gevonden.");
@@ -63,7 +64,7 @@ public class VraagController : ControllerBase {
 
       _mapper.Map(request, bestaandVraag);
 
-      Vraag? isUpdated = await _vraagRepository.UpdateAsync(id, bestaandVraag);
+      var isUpdated = await _vraagRepository.UpdateAsync(id, bestaandVraag);
 
       if (isUpdated == null) {
         return StatusCode(StatusCodes.Status500InternalServerError,
