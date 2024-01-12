@@ -1,5 +1,7 @@
 ﻿using Api.Data;
+using Api.Models.Domain;
 using Api.Models.Domain.Research;
+using Api.Models.DTO.Onderzoek;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories;
@@ -51,5 +53,17 @@ public class SQLOnderzoekRepository : IOnderzoekRepository {
     return true;
 
   }
+  
+  public async Task<OnderzoekErvaringsdekundige> CreateRegistrationAsync(OnderzoekErvaringsdekundige registration) {
+    await _context.AddAsync(registration);
+    await _context.SaveChangesAsync();
+    return registration;
 
+  }
+  
+  
+  public async Task<OnderzoekErvaringsdekundige?> GetRegistrationByResearchId(Guid id) {
+    return await _context.OnderzoekErvaringsdekundigen.FirstOrDefaultAsync(o => o.OnderzoekId == id);
+  }
+  
 }
