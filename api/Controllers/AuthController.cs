@@ -162,6 +162,21 @@ public class AuthController : ControllerBase {
     return Ok(response);
   }
 
+  [HttpGet]
+  [Route("Logout")]
+  [Authorize]
+  public async Task<IActionResult> Logout() {
+    var cookieOptions = new CookieOptions {
+      HttpOnly = true,
+      SameSite = SameSiteMode.None,
+      Secure = true,
+      Expires = DateTime.Now.AddDays(-1)
+    };
+
+    HttpContext.Response.Cookies.Append("access_token", "", cookieOptions);
+    return Ok("Succesvol uitgelogd.");
+  }
+
 
   [AllowAnonymous]
   [HttpPost("google")]
