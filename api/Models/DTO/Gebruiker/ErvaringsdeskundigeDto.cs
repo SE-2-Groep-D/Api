@@ -1,7 +1,6 @@
 ﻿using Api.Models.Domain;
 
 namespace API.Models.DTO.Gebruiker;
-
 public class ErvaringsDeskundigeDetails : GebruikerDetails {
 
   public string Postcode { get; set; }

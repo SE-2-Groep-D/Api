@@ -11,5 +11,7 @@ public class Vraag {
 }
 
 public enum VraagType {
-  open, one_choice, multiple_choice,
+
+  open, one_choice, multiple_choice
+
 }

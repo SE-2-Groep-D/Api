@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Api.Data;
-using Api.Models.Domain.Research;
 using Api.Models.Domain.User;
+using Api.Models.DTO.Auth.response;
 using API.Models.DTO.Gebruiker;
 using Api.Models.DTO.Gebruiker.request;
 using Api.Models.DTO.Gebruiker.response;
@@ -9,7 +9,6 @@ using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Api.Models.DTO.Auth.response;
 
 namespace Api.Services.IUserService;
 public class UserService : IUserService {
@@ -24,8 +23,8 @@ public class UserService : IUserService {
     _mapper = mapper;
   }
 
-  public LoginResponseDto CreateLoginResponse (Gebruiker gebruiker, string jwtToken) {
-  
+  public LoginResponseDto CreateLoginResponse(Gebruiker gebruiker, string jwtToken) {
+
     var response = new LoginResponseDto {
       Id = gebruiker.Id,
       Voornaam = gebruiker.Voornaam,
@@ -39,20 +38,24 @@ public class UserService : IUserService {
     if (!roles.Any()) {
       return new RegisterResponseDto(false, "Geef rol aan");
     }
+
     var identityResult = new IdentityResult();
     if (gebruiker.GoogleAccount && password == null) {
       identityResult = await _gebruikerManager.CreateAsync(gebruiker);
-    } else if (password != null) {
+    }
+    else if (password != null) {
       identityResult = await _gebruikerManager.CreateAsync(gebruiker, password);
-    } else {
+    }
+    else {
       return new RegisterResponseDto(false, "Er ging iets mis!");
     }
 
-    
+
     if (!identityResult.Succeeded) {
-      if(identityResult.Errors.Any( x => x.Code.Equals("DuplicateUserName"))) {
+      if (identityResult.Errors.Any(x => x.Code.Equals("DuplicateUserName"))) {
         return new RegisterResponseDto(false, "Er bestaat al een account met deze email");
       }
+
       return new RegisterResponseDto(false, "Er ging iets mis!");
     }
 
@@ -61,19 +64,19 @@ public class UserService : IUserService {
       await _gebruikerManager.DeleteAsync(gebruiker);
       return new RegisterResponseDto(false, "Ongeldige rol");
     }
-    
+
     var id = await _gebruikerManager.FindByEmailAsync(gebruiker.Email);
-    
-    
-    return new RegisterResponseDto(true, "User was registerd! Please Login.") {Id = id.Id };
+
+
+    return new RegisterResponseDto(true, "User was registerd! Please Login.") { Id = id.Id };
   }
 
 
   public async Task<Gebruiker?> GetUserByIdentification(string identification) {
-    string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-    Regex regex = new Regex(emailPattern);
+    var emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+    var regex = new Regex(emailPattern);
 
-    Gebruiker? user = (regex.IsMatch(identification))
+    var user = regex.IsMatch(identification)
       ? await _gebruikerManager.FindByEmailAsync(identification)
       : await _gebruikerManager.FindByIdAsync(identification);
 
@@ -97,10 +100,10 @@ public class UserService : IUserService {
     return _mapper.Map<GebruikerDetails>(gebruiker);
   }
 
-  public async Task<List<Object>> GetUsersAsync() {
+  public async Task<List<object>> GetUsersAsync() {
     var users = await _gebruikerManager.Users.ToListAsync();
-    if (users.Count == 0) return new List<Object>();
-    List<Object> returned = new List<Object>();
+    if (users.Count == 0) return new List<object>();
+    var returned = new List<object>();
 
     foreach (var gebruiker in users) {
       var userDetails = GetUserDetails(gebruiker);
@@ -117,7 +120,8 @@ public class UserService : IUserService {
     return new UpdateGebruikerResponse(false, "Succesfully updated the user.");
   }
 
-  public async Task<UpdateGebruikerResponse> UpdateUserProperties(Gebruiker gebruiker, InsertGebruikersInfoDto request, Dictionary<string, Action> properties) {
+  public async Task<UpdateGebruikerResponse> UpdateUserProperties(Gebruiker gebruiker, InsertGebruikersInfoDto request,
+    Dictionary<string, Action> properties) {
     var newUser = UpdateProperties(gebruiker, request, properties);
     var updated = await _gebruikerManager.UpdateAsync(newUser);
     if (!updated.Succeeded) return new UpdateGebruikerResponse(false, "Could not update user.");
@@ -125,7 +129,7 @@ public class UserService : IUserService {
   }
 
 
-  private Gebruiker UpdateProperties(Gebruiker gebruiker, Object request, Dictionary<string, Action> properties) {
+  private Gebruiker UpdateProperties(Gebruiker gebruiker, object request, Dictionary<string, Action> properties) {
     var props = request.GetType().GetProperties();
     var userProps = gebruiker.GetType().GetProperties();
 
@@ -145,6 +149,5 @@ public class UserService : IUserService {
 
     return gebruiker;
   }
-
 
 }

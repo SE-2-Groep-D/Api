@@ -5,12 +5,13 @@ using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Repositories.ITrackingRepository; 
+namespace Api.Repositories.ITrackingRepository;
 public class TrackingRepository : ITrackingRepository {
-  
-  private readonly IOnderzoekRepository _onderzoekRepository;
+
   private readonly AccessibilityDbContext _context;
   private readonly IMapper _mapper;
+
+  private readonly IOnderzoekRepository _onderzoekRepository;
 
   public TrackingRepository(AccessibilityDbContext context, IOnderzoekRepository repository, IMapper mapper) {
     _context = context;
@@ -45,63 +46,19 @@ public class TrackingRepository : ITrackingRepository {
     var onderzoek = await _context.TrackingOnderzoeken
       .Include(o => o.TrackingResultaten)
       .FirstOrDefaultAsync(trackingOnderzoek => trackingOnderzoek.Id == id);
-    
+
     if (onderzoek == null) {
-      return null; 
+      return null;
     }
-    
+
     var dto = _mapper.Map<ResponseTrackingDto>(onderzoek);
     await AddResearchInfo(onderzoek, dto);
     await AddOtherResults(onderzoek, dto);
     return dto;
-}
-
-public async Task AddResearchInfo(TrackingOnderzoek trackingOnderzoek, ResponseTrackingDto dto) {
-    var onderzoek = await _context.Onderzoeken.FindAsync(trackingOnderzoek.OnderzoekId);
-    dto.Participants = (onderzoek == null) ? 0 : onderzoek.AantalParticipanten;
-    dto.ScrollPercentage = (int)trackingOnderzoek.TrackingResultaten
-      .Select(resultaten => resultaten.PagePercentage)
-      .DefaultIfEmpty(0) 
-      .Average();
-    
-    dto.TimePerPage = (int)trackingOnderzoek.TrackingResultaten
-      .Select(resultaten => resultaten.TimeInSeconds)
-      .DefaultIfEmpty(0) 
-      .Average() / 60;
-}
-
-public async Task AddOtherResults(TrackingOnderzoek trackingOnderzoek, ResponseTrackingDto dto) {
-    var mostUsedBrowser =  trackingOnderzoek.TrackingResultaten.GroupBy(resultaten => resultaten.Browser)
-        .OrderByDescending(group => group.Count()).Select(g => g.Key).FirstOrDefault();
-    
-    var mostVisitedPage = trackingOnderzoek.TrackingResultaten.GroupBy(resultaten => resultaten.Page)
-      .OrderByDescending(group => group.Count()).Select(g => g.Key).FirstOrDefault();
-
-    var mostClickedLink = trackingOnderzoek.TrackingResultaten
-        .SelectMany(resultaten => resultaten.ClickedItems)
-        .GroupBy(clickedItem => clickedItem.Href)
-        .OrderByDescending(group => group.Count())
-        .Select(group => group.Key)
-        .FirstOrDefault();
-    
-    dto.OtherResults = new List<OtherResult> {
-      new OtherResult() {
-        Title = "Meest gebruikte browser",
-        Value = mostUsedBrowser
-      },
-      new OtherResult() {
-        Title = "Meest bezochte pagina",
-        Value = mostVisitedPage
-      },
-      new OtherResult() {
-        Title = "Meest geklikte link",
-        Value = mostClickedLink
-      }
-    };
-}
+  }
 
 
-  
+
 
   public async Task<bool> DeleteTrackingResearch(Guid onderzoekId) {
     var result = await GetById(onderzoekId);
@@ -117,10 +74,54 @@ public async Task AddOtherResults(TrackingOnderzoek trackingOnderzoek, ResponseT
     var map = _mapper.Map(request, onderzoek);
     var result = await _context.TrackingOnderzoeken.FindAsync(map.Id);
     if (result == null) return false;
-    
+
     _context.Entry(result).CurrentValues.SetValues(map);
     await _context.SaveChangesAsync();
     return true;
+  }
+
+  public async Task AddResearchInfo(TrackingOnderzoek trackingOnderzoek, ResponseTrackingDto dto) {
+    var onderzoek = await _context.Onderzoeken.FindAsync(trackingOnderzoek.OnderzoekId);
+    dto.Participants = onderzoek == null ? 0 : onderzoek.AantalParticipanten;
+    dto.ScrollPercentage = (int)trackingOnderzoek.TrackingResultaten
+      .Select(resultaten => resultaten.PagePercentage)
+      .DefaultIfEmpty(0)
+      .Average();
+
+    dto.TimePerPage = (int)trackingOnderzoek.TrackingResultaten
+      .Select(resultaten => resultaten.TimeInSeconds)
+      .DefaultIfEmpty(0)
+      .Average() / 60;
+  }
+
+  public async Task AddOtherResults(TrackingOnderzoek trackingOnderzoek, ResponseTrackingDto dto) {
+    var mostUsedBrowser = trackingOnderzoek.TrackingResultaten.GroupBy(resultaten => resultaten.Browser)
+      .OrderByDescending(group => group.Count()).Select(g => g.Key).FirstOrDefault();
+
+    var mostVisitedPage = trackingOnderzoek.TrackingResultaten.GroupBy(resultaten => resultaten.Page)
+      .OrderByDescending(group => group.Count()).Select(g => g.Key).FirstOrDefault();
+
+    var mostClickedLink = trackingOnderzoek.TrackingResultaten
+      .SelectMany(resultaten => resultaten.ClickedItems)
+      .GroupBy(clickedItem => clickedItem.Href)
+      .OrderByDescending(group => group.Count())
+      .Select(group => group.Key)
+      .FirstOrDefault();
+
+    dto.OtherResults = new List<OtherResult> {
+      new() {
+        Title = "Meest gebruikte browser",
+        Value = mostUsedBrowser
+      },
+      new() {
+        Title = "Meest bezochte pagina",
+        Value = mostVisitedPage
+      },
+      new() {
+        Title = "Meest geklikte link",
+        Value = mostClickedLink
+      }
+    };
   }
 
 }

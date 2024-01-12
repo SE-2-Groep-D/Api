@@ -3,7 +3,7 @@ public class UpdateOnderzoekRequestDto {
 
 
   //duur
-  
+
   public string? Titel { get; set; }
 
   public string? AantalParticipanten { get; set; }
@@ -15,6 +15,5 @@ public class UpdateOnderzoekRequestDto {
   public double? Vergoeding { get; set; }
   public string? Locatie { get; set; }
   public string? Status { get; set; }
-
 
 }

@@ -9,6 +9,4 @@ public class AddVragenlijstRequestDto {
   public Guid OnderzoekId { get; set; }
   public ICollection<Vraag> Vragen { get; } = new List<Vraag>();
 
-
-
 }
