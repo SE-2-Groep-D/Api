@@ -1,4 +1,4 @@
-﻿namespace Api.Models.DTO.Onderzoek.results; 
+﻿namespace Api.Models.DTO.Onderzoek.results;
 public class ResultResponseDto {
 
   public List<ResponseVragenlijstDto> Vragenlijsten { get; set; }

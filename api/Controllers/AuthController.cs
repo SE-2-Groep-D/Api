@@ -1,36 +1,31 @@
-﻿using Api.Models.Domain;
+﻿using System.Security.Claims;
+using Api.Models.Domain.User;
+using Api.Models.DTO.Auth.request;
+using Api.Models.DTO.Auth.response;
+using Api.Repositories.IGebruikerRepository;
 using Api.Services.ITokenService;
 using Api.Services.IUserService;
 using AutoMapper;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Api.Models.Domain.User;
-using static Azure.Core.HttpHeader;
-using System.Xml;
-using System.ComponentModel.DataAnnotations;
-using Google.Apis.Auth;
-using Newtonsoft.Json.Linq;
-using System.Data;
-using System.Net;
-using Api.Models.DTO.Auth.request;
-using Api.Repositories.IGebruikerRepository;
-using Api.Models.DTO.Auth.response;
 
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
 public class AuthController : ControllerBase {
 
-  private readonly UserManager<Gebruiker> gebruikerManager;
-  private readonly IUserService userService;
-  private readonly ITokenService tokenService;
-  private readonly IMapper mapper;
   private readonly IConfiguration configuration;
-  private readonly IGebruikerRepository gebruikerRepository;
 
-  public AuthController(UserManager<Gebruiker> gebruikerManager, IGebruikerRepository gebruikerRepository, IUserService userService, ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
+  private readonly UserManager<Gebruiker> gebruikerManager;
+  private readonly IGebruikerRepository gebruikerRepository;
+  private readonly IMapper mapper;
+  private readonly ITokenService tokenService;
+  private readonly IUserService userService;
+
+  public AuthController(UserManager<Gebruiker> gebruikerManager, IGebruikerRepository gebruikerRepository, IUserService userService,
+    ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
     this.gebruikerManager = gebruikerManager;
     this.userService = userService;
     this.tokenService = tokenService;
@@ -62,14 +57,15 @@ public class AuthController : ControllerBase {
     var result = await userService.Register(gebruiker, registerErvaringsdeskundigeRequestDto.Password, Roles);
 
     var AangemaakteGebruiker = await gebruikerManager.FindByEmailAsync(gebruiker.Email);
-    
+
     if (result.Succeeded && registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen != null && AangemaakteGebruiker != null) {
-      var resultHulpmiddel = await gebruikerRepository.VoegHulpmiddelenToe(registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen, AangemaakteGebruiker.Id);
+      var resultHulpmiddel =
+        await gebruikerRepository.VoegHulpmiddelenToe(registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen, AangemaakteGebruiker.Id);
       if (!resultHulpmiddel.Succeeded) {
         return Ok(resultHulpmiddel.Message);
       }
     }
-    
+
     return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
@@ -119,14 +115,14 @@ public class AuthController : ControllerBase {
     response.UserType = GetUserType(gebruiker);
 
     HttpContext.Response.Cookies.Append(
-      "access_token",
-      jwtToken,
-      new CookieOptions { 
-        HttpOnly = true,
-        SameSite = SameSiteMode.None,
-        Secure = true
-      }
-    );
+        "access_token",
+        jwtToken,
+        new CookieOptions {
+          HttpOnly = true,
+          SameSite = SameSiteMode.None,
+          Secure = true
+        }
+      );
 
     return Ok(response);
   }
@@ -150,49 +146,76 @@ public class AuthController : ControllerBase {
     response.UserType = GetUserType(gebruiker);
 
     HttpContext.Response.Cookies.Append(
-      "access_token",
-      jwtToken,
-      new CookieOptions {
-        HttpOnly = true,
-        SameSite = SameSiteMode.None,
-        Secure = true
-      }
-    );
+        "access_token",
+        jwtToken,
+        new CookieOptions {
+          HttpOnly = true,
+          SameSite = SameSiteMode.None,
+          Secure = true
+        }
+      );
 
     return Ok(response);
+  }
+
+  [HttpGet]
+  [Route("Logout")]
+  [Authorize]
+  public async Task<IActionResult> Logout() {
+    var cookieOptions = new CookieOptions {
+      HttpOnly = true,
+      SameSite = SameSiteMode.None,
+      Secure = true,
+      Expires = DateTime.Now.AddDays(-1)
+    };
+
+    HttpContext.Response.Cookies.Append("access_token", "", cookieOptions);
+    return Ok("Succesvol uitgelogd.");
   }
 
 
   [AllowAnonymous]
   [HttpPost("google")]
   public async Task<IActionResult> Authenticate([FromBody] GoogleRequestDto request) {
-    GoogleJsonWebSignature.ValidationSettings settings = new GoogleJsonWebSignature.ValidationSettings();
+    var settings = new GoogleJsonWebSignature.ValidationSettings();
 
     // Change this to your google client ID
-    
-    string clientId = configuration["Authentication:Google:ClientId"];
-    if(clientId == null) { return StatusCode(500); }
-    settings.Audience = new List<string>() { clientId };
+
+    var clientId = "169633306915-is0h5dvfs7e6cu1ic8ee17qjpf787qmn.apps.googleusercontent.com";
+    if (clientId == null) { return StatusCode(500); }
+
+    settings.Audience = new List<string> { clientId };
 
 
     try {
-      GoogleJsonWebSignature.Payload payload = GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings).Result;
+      var payload = GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings).Result;
       var gebruiker = await userService.GetUserByIdentification(payload.Email);
-      if(gebruiker == null) {
-        return NotFound(new {Email = payload.Email, Message = "U moet u nog registreren"});
+      if (gebruiker == null) {
+        return NotFound(new { payload.Email, Message = "U moet u nog registreren" });
       }
 
       var roles = await gebruikerManager.GetRolesAsync(gebruiker);
       var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
 
-      var response = userService.CreateLoginResponse(gebruiker, jwtToken);
+      var response = mapper.Map<LoginResponseDto>(gebruiker);
+      response.UserType = GetUserType(gebruiker);
+
+      HttpContext.Response.Cookies.Append(
+          "access_token",
+          jwtToken,
+          new CookieOptions {
+            HttpOnly = true,
+            SameSite = SameSiteMode.None,
+            Secure = true
+          }
+        );
 
       return Ok(response);
     } catch (Exception ex) {
       Console.WriteLine(ex);
       return BadRequest("Ongeldig token");
     }
-    
+
   }
 
 

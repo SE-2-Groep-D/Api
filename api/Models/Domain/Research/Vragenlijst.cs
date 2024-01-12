@@ -9,5 +9,4 @@ public class Vragenlijst {
   public Onderzoek Onderzoek { get; set; } = null!;
   public ICollection<Vraag> Vragen { get; } = new List<Vraag>();
 
-
 }

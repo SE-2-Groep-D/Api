@@ -14,5 +14,4 @@ public interface ITrackingRepository {
   public Task<bool> DeleteTrackingResearch(Guid onderzoekId);
   public Task<bool> UpdateTrackingResearch(UpdateTrackingResearchDto request);
 
-
 }

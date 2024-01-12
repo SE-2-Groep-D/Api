@@ -10,6 +10,4 @@ public class UpdateVragenlijstRequestDto {
 
   public ICollection<Vraag> Vragen { get; } = new List<Vraag>();
 
-
-
 }

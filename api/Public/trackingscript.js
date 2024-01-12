@@ -29,13 +29,13 @@ function updateScrollPercentage() {
 
     var scrollPercentage = (scrollTop / documentHeight) * 100;
 
-    if(scrollPercentage <= pagePercentage) return;
+    if (scrollPercentage <= pagePercentage) return;
     pagePercentage = (scrollPercentage > 100) ? 100 : scrollPercentage.toFixed(0);
 }
 
 async function sendData() {
     console.log("Sending tracking data to: " + apiURL);
-    
+
     const data = JSON.stringify({
         domain: domain,
         page: page,
@@ -45,7 +45,7 @@ async function sendData() {
         timeTillAction: timeTillAction,
         clicks: clicks
     });
-    
+
     console.log(data)
 
     const response = await fetch(apiURL, {
@@ -55,19 +55,19 @@ async function sendData() {
         },
         body: data,
     });
-    
-    
-    if(response.status !== 200) return;
+
+
+    if (response.status !== 200) return;
     console.log("Succesfully send data.")
 }
 
 function updateTimeTillAction() {
-    if(timeTillAction !== 0) return;
+    if (timeTillAction !== 0) return;
     timeTillAction = timeInSeconds;
 }
 
 function addClick(e) {
-    if(timeTillAction === 0) updateTimeTillAction();
+    if (timeTillAction === 0) updateTimeTillAction();
     const target = e.target;
     const type = target.tagName;
 
@@ -78,7 +78,7 @@ function addClick(e) {
         text: target.innerText,
     }
 
-    if(type === 'A') {
+    if (type === 'A') {
         click.href = target.href;
         click.type = 'link';
     }
@@ -103,7 +103,6 @@ function getBrowserName() {
         return 'Unknown Browser';
     }
 }
-
 
 
 buttons.forEach(button => button.addEventListener('click', addClick));
