@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Api.Data;
+﻿using Api.Data;
 using Api.Models.Domain.Research;
 using Api.Models.DTO.Onderzoek;
 using AutoMapper;
@@ -9,9 +7,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Api.Repositories.VragenlijstRepository;
 public class SQLVragenlijstRepository : IVragenlijstRepository {
 
-  private AccessibilityDbContext _context;
 
+  private AccessibilityDbContext _context;
   private readonly IMapper _mapper;
+  
 
   public SQLVragenlijstRepository(AccessibilityDbContext context, IMapper mapper) {
     _context = context;
@@ -37,6 +36,7 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
     return vragenlijstDTO;
   }
 
+
   public async Task AddResearchInfo(Questionlist trackingOnderzoek, Questionlist dto) {
     var onderzoek = await _context.Onderzoeken.FindAsync(trackingOnderzoek.OnderzoekId);
     dto.Participants = (onderzoek == null) ? 0 : onderzoek.AantalParticipanten;
@@ -48,6 +48,8 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
     //   .DefaultIfEmpty(0)
     //   .Average() / 60;
   }
+
+
 
   public async Task<Questionlist> CreateAsync(Questionlist vragenlijst) {
     await _context.AddAsync(vragenlijst);
@@ -89,7 +91,14 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
     return true;
   }
 
+  /*
+  public async Task AddResearchInfo(Vragenlijst trackingOnderzoek, VragenlijstDto dto) {
+    var onderzoek = await _context.Onderzoeken.FindAsync(trackingOnderzoek.OnderzoekId);
+    dto.Participants = onderzoek == null ? 0 : onderzoek.AantalParticipanten;
+    dto.TotalQuestions = trackingOnderzoek.Vragen.Count();
+    dto.TotalAwnsers = trackingOnderzoek.Vragen.Sum(vraag => vraag.Antwoorden.Count());
 
+*/
  /* public async Task<SubmitedRequestDto> CreateSubmittedAnswerAsync(SubmitedRequestDto submittedRequestDto) {
     var questionList = await _context.Questionlists
       .Include(ql => ql.Questions)
@@ -139,3 +148,12 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
   }
 */
 }
+
+    // dto.TimePerPage = (int)trackingOnderzoek.TrackingResultaten
+    //   .Select(resultaten => resultaten.TimeInSeconds)
+    //   .DefaultIfEmpty(0) 
+    //   .Average() / 60;
+  
+
+
+

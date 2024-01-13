@@ -10,8 +10,9 @@ namespace Api.Controllers;
 [ApiController]
 public class GebruikerController : ControllerBase {
 
-  private UserManager<Gebruiker> _userManager;
   private readonly IUserService _userService;
+
+  private readonly UserManager<Gebruiker> _userManager;
 
   public GebruikerController(UserManager<Gebruiker> manager, IUserService service) {
     _userManager = manager;
@@ -28,7 +29,7 @@ public class GebruikerController : ControllerBase {
   [HttpGet]
   [Route("{id}")]
   public async Task<IActionResult> GetUser([FromRoute] string id) {
-    Gebruiker? user = await _userService.GetUserByIdentification(id);
+    var user = await _userService.GetUserByIdentification(id);
     if (user == null) return NotFound("Gebruiker niet gevonden.");
     return Ok(_userService.GetUserDetails(user));
   }
@@ -37,10 +38,10 @@ public class GebruikerController : ControllerBase {
   [HttpPut]
   [Route("{id}/update")]
   public async Task<IActionResult> Update([FromRoute] string id, [FromBody] InsertGebruikersInfoDto request) {
-    Gebruiker? user = await _userService.GetUserByIdentification(id);
+    var user = await _userService.GetUserByIdentification(id);
     if (user == null) return NotFound("Gebruiker niet gevonden.");
 
-    Dictionary<string, Action> functionDictionary = new Dictionary<string, Action>();
+    var functionDictionary = new Dictionary<string, Action>();
     functionDictionary.Add("Roles",
       () => {
         if (request.Roles == null) return;
@@ -56,7 +57,7 @@ public class GebruikerController : ControllerBase {
   [HttpPut]
   [Route("{id}/change-password")]
   public async Task<IActionResult> ResetPassword([FromRoute] string id, [FromBody] ChangePasswordDto request) {
-    Gebruiker? user = await _userService.GetUserByIdentification(id);
+    var user = await _userService.GetUserByIdentification(id);
     if (user == null) return NotFound("Gebruiker niet gevonden.");
     var result = _userManager.ChangePasswordAsync(user, request.password, request.NewPassword);
     if (!result.IsCompletedSuccessfully) return BadRequest("Could not change password.");
@@ -67,7 +68,7 @@ public class GebruikerController : ControllerBase {
   [HttpDelete]
   [Route("{id}/delete")]
   public async Task<IActionResult> Delete([FromRoute] string id) {
-    Gebruiker? user = await _userManager.FindByIdAsync(id);
+    var user = await _userManager.FindByIdAsync(id);
 
     if (user == null) {
       return NotFound("Gebruiker niet gevonden.");

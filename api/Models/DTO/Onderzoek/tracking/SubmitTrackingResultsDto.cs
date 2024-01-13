@@ -8,13 +8,15 @@ public class SubmitTrackingResultsDto {
   public int TimeInSeconds { get; set; }
   public int TimeTillAction { get; set; }
   public List<ClickedItemDto> ClickedItems { get; set; }
+
 }
 
 public class ClickedItemDto {
+
   public string? Id { get; set; }
   public string itemType { get; set; }
   public int TimeInSeconds { get; set; }
   public string Text { get; set; }
   public string? Href { get; set; }
-}
 
+}

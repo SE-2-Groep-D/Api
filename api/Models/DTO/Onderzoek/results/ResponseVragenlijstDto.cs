@@ -1,4 +1,4 @@
-﻿namespace Api.Models.DTO.Onderzoek.results; 
+﻿namespace Api.Models.DTO.Onderzoek.results;
 public class ResponseVragenlijstDto {
 
   public Guid Id { get; set; }

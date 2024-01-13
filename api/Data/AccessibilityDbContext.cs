@@ -16,7 +16,7 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
   public DbSet<Ervaringsdeskundige> Ervaringsdeskundigen { get; set; }
   public DbSet<Voorkeurbenadering> Voorkeurbenaderingen { get; set; }
   public DbSet<Voogd> Voogden { get; set; }
-  public DbSet<TypeBeperking> TypeBeperkingen { get; set; }
+
   public DbSet<Hulpmiddel> Hulpmiddelen { get; set; }
   public DbSet<Beschikbaarheid> Beschikbaarheden { get; set; }
 
@@ -75,39 +75,39 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
           .WithMany(p => p.OnderzoekErvaringsdekundigen)
           .HasForeignKey(pt => pt.OnderzoekId)
           .OnDelete(DeleteBehavior.NoAction));
-    
-    
+
+
     var beheerderRoleId = "40de5fb2-052b-43df-8f1d-f14e40d4e663";
     var ervaringsdeskundigeRoleId = "ab6b8e6f-ca39-4d40-b330-e5898a785899";
     var bedrijfRoleId = "7f13d193-aa0b-4e0f-905a-fddc7ba1e8ef";
     var medewerkerRoleId = "bb649c16-7c95-4319-9f00-9e1f7beade43";
-    
+
 
     var roles = new List<IdentityRole<Guid>> {
-      new IdentityRole<Guid> {
+      new() {
         Id = Guid.Parse(beheerderRoleId),
         ConcurrencyStamp = beheerderRoleId,
         Name = "Beheerder",
         NormalizedName = "Beheerder".ToUpper()
       },
-      new IdentityRole<Guid> {
+      new() {
         Id = Guid.Parse(ervaringsdeskundigeRoleId),
         ConcurrencyStamp = ervaringsdeskundigeRoleId,
         Name = "Ervaringsdeskundige",
         NormalizedName = "Ervaringsdeskundige".ToUpper()
       },
-      new IdentityRole<Guid> {
+      new() {
         Id = Guid.Parse(bedrijfRoleId),
         ConcurrencyStamp = bedrijfRoleId,
         Name = "Bedrijf",
         NormalizedName = "Bedrijf".ToUpper()
       },
-      new IdentityRole<Guid> {
+      new() {
         Id = Guid.Parse(medewerkerRoleId),
         ConcurrencyStamp = medewerkerRoleId,
         Name = "Medewerker",
         NormalizedName = "Medewerker".ToUpper()
-      },
+      }
     };
 
     builder.Entity<IdentityRole<Guid>>().HasData(roles);
@@ -116,10 +116,8 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
       .HasOne(n => n.Medewerker)
       .WithMany()
       .HasForeignKey(n => n.MedewerkerId);
-    
-    
+
+
   }
-  
-  
 
 }

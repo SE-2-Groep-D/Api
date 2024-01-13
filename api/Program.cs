@@ -1,21 +1,21 @@
-using System.Configuration;
+using System.Text;
+using Api.CustomMiddleware;
 using Api.Data;
+using Api.Mappings;
+using Api.Models.Domain.User;
+using Api.Repositories;
+using Api.Repositories.IGebruikerRepository;
+using Api.Repositories.ITrackingRepository;
+using Api.Repositories.VragenlijstRepository;
+using Api.Repositories.ITrackingRepository;
+
+using Api.Repositories.VragenRepository;
+using Api.Services.ITokenService;
 using Api.Services.IUserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Api.Services.ITokenService;
-using Api.Mappings;
-using Api.Models.Domain.User;
-using Api.Repositories;
-using Api.Repositories.IGebruikerRepository;
-using Microsoft.AspNetCore.Authentication.Google;
-using Api.Repositories.VragenlijstRepository;
-using Api.Repositories.ITrackingRepository;
-
-
 
 
 namespace Api;
@@ -39,18 +39,17 @@ public class Program {
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
+    var frontendUrl = builder.Configuration["FrontendUrl"];
+    services.AddCors(options => {
+      options.AddPolicy("AllowSpecific",
+        builder => builder.WithOrigins(frontendUrl)
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials()
+          .WithExposedHeaders("Set-Cookie"));
+    });
 
-    if (builder.Environment.IsDevelopment()) {
-      services.AddCors(options => {
-        options.AddPolicy("AllowAny",
-          b => b.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod());
-      });
 
-
-    }
-    
     ConnectToDatabase(services, builder);
 
     AddRepositories(services);
@@ -110,7 +109,7 @@ public class Program {
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
     services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
     services.AddScoped<ITrackingRepository, TrackingRepository>();
-    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>(); 
+    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
 
   }
 
@@ -122,13 +121,14 @@ public class Program {
 
   private static void SetupMiddleware(WebApplication app) {
     // Configure the HTTP request pipeline.
+
     if (app.Environment.IsDevelopment()) {
       app.UseSwagger();
       app.UseSwaggerUI();
-      app.UseCors(builder => {
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-        Console.WriteLine("Setup cors");
-      });
+      //app.UseCors(builder => {
+      //  builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+      //  Console.WriteLine("Setup cors");
+      //});
 
     }
 
@@ -137,16 +137,16 @@ public class Program {
     // configure HTTPS
     app.UseHttpsRedirection();
 
-    app.UseCors(builder =>
-    {
-      builder.WithOrigins("http://localhost:5173"); // Replace with your React app's URL
-      builder.AllowAnyHeader();
-      builder.AllowAnyMethod();
-    });
+    app.UseCors("AllowSpecific");
 
+
+    app.UseMiddleware<AuthorizationHeaderMiddleware>();
     app.UseAuthentication();
+
     app.UseAuthorization();
+
     app.MapControllers();
+
   }
 
 
@@ -155,7 +155,7 @@ public class Program {
     var dbType = builder.Configuration["DatabaseType"];
 
     Console.WriteLine(connectionString);
-    
+
     try {
       services.AddDbContext<AccessibilityDbContext>(options => {
         switch (dbType) {

@@ -15,8 +15,11 @@ public class Onderzoek {
   public string Omschrijving { get; set; }
   public double Vergoeding { get; set; }
   public string Locatie { get; set; }
+
   public string Type { get; set; }
-  public string Status { get; set; }
+
+  public Status Status { get; set; }
+
 
   public ICollection<Questionlist> Vragenlijst { get; } = new List<Questionlist>();
   public ICollection<TrackingOnderzoek> TrackingResultaten { get; } = new List<TrackingOnderzoek>();
@@ -24,5 +27,11 @@ public class Onderzoek {
   public List<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; } = new();
   public Guid BedrijfId { get; set; }
   public Bedrijf Bedrijf { get; set; } = null!;
+
+}
+
+public enum Status {
+
+  open, active, ended
 
 }

@@ -23,24 +23,29 @@ public class NieuwsbriefController : ControllerBase {
     var last30Days = DateTime.UtcNow.AddDays(-30);
 
     var newsArticles = await _dbContext.Nieuws
-      .Where(n => n.Datum >= last30Days) // Ensure you are using System.Linq
+      .Where(n => n.Datum >= last30Days)
+      .Include(nieuwsbrief => nieuwsbrief.Medewerker) // Include Medewerker navigation property
       .ToListAsync();
-
-    return Ok(newsArticles);
+    
+    var newsArticlesDto = _mapper.Map<IEnumerable<Nieuwsbrief>, IEnumerable<NieuwsBriefDto>>(newsArticles);
+    return Ok(newsArticlesDto);
   }
 
   [HttpPost]
-  [Authorize(Roles = "Medewerker")]
+  // [Authorize(Roles = "Medewerker")]
   public async Task<IActionResult> CreateNieuwsBrief([FromBody] CreateNiewsbriefDto request) {
-
-    var brief = _mapper.Map<Nieuwsbrief>(request);
-    await _dbContext.Nieuws.AddAsync(brief);
-    var result = await _dbContext.SaveChangesAsync();
-    if (result != 1) return Problem("Could not create news article");
-    return Ok("Succesfully created the news message.");
+    try {
+      var brief = _mapper.Map<Nieuwsbrief>(request);
+      await _dbContext.Nieuws.AddAsync(brief);
+      var result = await _dbContext.SaveChangesAsync();
+      return Ok(brief.Id);
+    } catch (Exception ex) {
+      Console.WriteLine(ex);
+      return Problem("Could not create news article");
+    }
   }
 
-  [Authorize(Roles = "Medewerker")]
+  // [Authorize(Roles = "Medewerker")]
   [HttpPut("update/{id}")]
   public async Task<IActionResult> UpdateNieuwsbrief([FromRoute] Guid id, [FromBody] UpdateNieuwsbriefDto request) {
     var nieuwsbrief = await _dbContext.Nieuws.FindAsync(id);
@@ -54,7 +59,7 @@ public class NieuwsbriefController : ControllerBase {
   }
 
   [HttpDelete("delete/{id}")]
-  [Authorize(Roles = "Medewerker")]
+  // [Authorize(Roles = "Medewerker")]
   public async Task<IActionResult> DeleteNieuwsbrief([FromRoute] Guid id) {
     var bericht = await _dbContext.Nieuws.FindAsync(id);
     if (bericht == null) return NotFound();

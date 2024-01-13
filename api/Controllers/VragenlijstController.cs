@@ -10,13 +10,16 @@ namespace Api.Controllers;
 [ApiController]
 public class VragenlijstController : ControllerBase {
 
-  private IVragenlijstRepository _vragenlijstRepository;
-  private IMapper _mapper;
+  private readonly IMapper _mapper;
+
+  private readonly IVragenlijstRepository _vragenlijstRepository;
 
 
   public VragenlijstController(IMapper mapper, IVragenlijstRepository vragenlijstRepository) {
-    this._mapper = mapper;
-    this._vragenlijstRepository = vragenlijstRepository;
+
+    _mapper = mapper;
+    _vragenlijstRepository = vragenlijstRepository;
+    
   }
 
   [HttpGet]
@@ -59,13 +62,15 @@ public class VragenlijstController : ControllerBase {
          return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
        }
 
-       return Ok(questionlist);
-     } catch (Exception ex) {
-       var errorMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
 
-       return StatusCode(StatusCodes.Status500InternalServerError, $"Interne serverfout: {errorMsg}");
-     }
-   }
+       return Ok(questionlist);
+     }  catch (Exception ex) {
+      var errorMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+      return StatusCode(StatusCodes.Status500InternalServerError, $"Interne serverfout: {errorMsg}");
+    }
+  }
+
  
   [HttpDelete]
   [Route("delete/{id}")]
@@ -78,4 +83,6 @@ public class VragenlijstController : ControllerBase {
     return Ok("Vragenlijst is succsesvol updated");
   }
 
+
 }
+

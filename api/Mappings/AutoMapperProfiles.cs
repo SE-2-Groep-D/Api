@@ -1,9 +1,8 @@
-﻿
-using Api.Models.Domain.Research;
+﻿using Api.Models.Domain.Research;
 using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
-using Api.Models.DTO;
-using Api.Models.DTO.Auth;
+using Api.Models.DTO.Auth.request;
+using Api.Models.DTO.Auth.response;
 using API.Models.DTO.Gebruiker;
 using Api.Models.DTO.Gebruiker.request;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
@@ -36,6 +35,8 @@ public class AutoMapperProfiles : Profile {
     CreateMap<RegisterErvaringsdeskundigeRequestDto, Ervaringsdeskundige>()
       .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
+    CreateMap<Gebruiker, LoginResponseDto>();
+
     CreateMap<Gebruiker, GebruikerDetails>();
     CreateMap<Medewerker, MedewerkerDetails>();
     CreateMap<Ervaringsdeskundige, ErvaringsDeskundigeDetails>();
@@ -43,6 +44,9 @@ public class AutoMapperProfiles : Profile {
 
     CreateMap<CreateNiewsbriefDto, Nieuwsbrief>();
     CreateMap<UpdateNieuwsbriefDto, Nieuwsbrief>();
+    CreateMap<Nieuwsbrief, NieuwsBriefDto>().ForMember(dest => dest.Medewerker, opt => opt.MapFrom(src => src.Medewerker));
+    CreateMap<Medewerker, NieuwsbriefMedewerkerDto>();
+    
 
     CreateMap<UpdateOnderzoekRequestDto, Onderzoek>()
       .ForMember(dest => dest.StartDatum, opt => opt.Condition(src => src.StartDatum != null))
@@ -84,6 +88,7 @@ public class AutoMapperProfiles : Profile {
 
 
     //voor vragenlijst
+
     
    /* CreateMap<Vragenlijst, VragenlijstDto>()
       .ForMember(dest => dest.Vragen, opt => opt.MapFrom(src => src.Vragen));*/
@@ -95,11 +100,22 @@ public class AutoMapperProfiles : Profile {
    // CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
 
 
+ //   CreateMap<Vragenlijst, VragenlijstDto>()
+  //    .ForMember(dest => dest.Vragen, opt => opt.MapFrom(src => src.Vragen));
+
+ //   CreateMap<Vraag, VraagDTO>()
+  //    .ForMember(dest => dest.Antwoorden, opt => opt.MapFrom(src => src.Antwoorden));
+
+   // CreateMap<Antwoord, AntwoordDTO>();
+   // CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
+
+
     //Voor vraag
 
   /*  CreateMap<UpdateVraagRequestDto, Vraag>()
       .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null))
       .ForMember(dest => dest.Onderwerp, opt => opt.Condition(src => src.Onderwerp != null));
+
   */  
   CreateMap<Questionlist, QuestionlistDto>().ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
   CreateMap<Question, QuestionDto>().ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers));
@@ -119,11 +135,18 @@ public class AutoMapperProfiles : Profile {
     
 
   /*
+
+
+    CreateMap<AddVraagRequestDto, Vraag>().ReverseMap();
+
+    //Voor antwoord
+
+
     CreateMap<UpdateAntwoordRequestDto, Antwoord>()
       .ForMember(dest => dest.Tekst, opt => opt.Condition(src => src.Tekst != null));
-    
+
     CreateMap<AddAntwoordRequestDto, Antwoord>()
-      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId)) 
+      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId))
       .ReverseMap();
     CreateMap<CreateTrackingResearchDto, TrackingOnderzoek>();
     CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>();
@@ -131,12 +154,13 @@ public class AutoMapperProfiles : Profile {
     CreateMap<ClickedItemDto, ClickedItem>();
 
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>().ReverseMap();
+
     */
- 
-    // Voor results
-    
+  
+
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
     CreateMap<Questionlist, ResponseVragenlijstDto>();
+
 
   }
 

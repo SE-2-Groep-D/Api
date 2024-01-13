@@ -6,14 +6,16 @@ namespace Api.Repositories;
 public class SQLOnderzoekRepository : IOnderzoekRepository {
 
 
-  private AccessibilityDbContext _context;
+  private readonly AccessibilityDbContext _context;
 
   public SQLOnderzoekRepository(AccessibilityDbContext context) {
     _context = context;
   }
 
   public async Task<List<Onderzoek>> GetAllAsync(string? status) {
-    return (status == null) ? await _context.Onderzoeken.ToListAsync() : await _context.Onderzoeken.Where(o => o.Status == status).ToListAsync();
+    return status == null
+      ? await _context.Onderzoeken.ToListAsync()
+      : await _context.Onderzoeken.Where(o => o.Status.ToString() == status).ToListAsync();
   }
 
   public async Task<Onderzoek?> GetByIdAsync(Guid id) {
@@ -49,7 +51,5 @@ public class SQLOnderzoekRepository : IOnderzoekRepository {
     return true;
 
   }
-
-
 
 }
