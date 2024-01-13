@@ -16,7 +16,7 @@ public class Onderzoek {
   public double Vergoeding { get; set; }
   public string Locatie { get; set; }
 
-  public string Type { get; set; }
+  public Type Type { get; set; }
 
   public Status Status { get; set; }
 
@@ -32,6 +32,15 @@ public class Onderzoek {
 
 public enum Status {
 
-  open, active, ended
+  open,
+  active,
+  ended
+
+}
+
+public enum Type {
+
+  vragenlijst,
+  websiteBezoek
 
 }

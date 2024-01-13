@@ -8,8 +8,6 @@ using Api.Repositories.IGebruikerRepository;
 using Api.Repositories.ITrackingRepository;
 using Api.Repositories.VragenlijstRepository;
 using Api.Repositories.ITrackingRepository;
-
-using Api.Repositories.VragenRepository;
 using Api.Services.ITokenService;
 using Api.Services.IUserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

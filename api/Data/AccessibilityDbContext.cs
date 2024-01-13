@@ -51,13 +51,13 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
      .HasOne(a => a.QuestionAsPossibleAnswer)
      .WithMany(q => q.PossibleAnswers)
      .HasForeignKey(a => a.PossibleAnswerQuestionId)
-     .OnDelete(DeleteBehavior.SetNull);
+     .OnDelete(DeleteBehavior.Restrict);
 
    builder.Entity<Answer>()
      .HasOne(a => a.QuestionAsGivenAnswer)
      .WithMany(q => q.GivenAnswers)
      .HasForeignKey(a => a.GivenAnswerQuestionId)
-     .OnDelete(DeleteBehavior.SetNull);
+     .OnDelete(DeleteBehavior.Restrict);
    
    
 

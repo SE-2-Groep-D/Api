@@ -1,4 +1,5 @@
-﻿using Api.Models.Domain.Research;
+﻿using Api.Models.Domain;
+using Api.Models.Domain.Research;
 using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 using Api.Models.DTO.Auth.request;
@@ -84,7 +85,7 @@ public class AutoMapperProfiles : Profile {
     
     
     CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
-    CreateMap<AddOnderzoekRequestDto, Onderzoek>();
+    CreateMap<AddOnderzoekRequestDto, Onderzoek>().ReverseMap();
 
 
     //voor vragenlijst
@@ -161,7 +162,7 @@ public class AutoMapperProfiles : Profile {
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
     CreateMap<Questionlist, ResponseVragenlijstDto>();
 
-
+    CreateMap<OnderzoekErvaringsdekundige, AddRegistrationDto>().ReverseMap();
   }
 
 }
