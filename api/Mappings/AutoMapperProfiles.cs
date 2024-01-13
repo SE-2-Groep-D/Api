@@ -1,4 +1,5 @@
-﻿using Api.Models.Domain.Research;
+﻿using Api.Models.Domain;
+using Api.Models.Domain.Research;
 using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 using Api.Models.DTO.Auth.request;
@@ -109,6 +110,8 @@ public class AutoMapperProfiles : Profile {
 
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
     CreateMap<Vragenlijst, ResponseVragenlijstDto>();
+    
+    CreateMap<OnderzoekErvaringsdekundige, AddRegistrationDto>().ReverseMap();
   }
 
 }
