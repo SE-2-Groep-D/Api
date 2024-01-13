@@ -17,18 +17,6 @@ public class QuestionlistDto {
 }
 
 
-public class UpdateQuestionlistRequestDto {
-
-
-  public string? Title { get; set; }
-  public string? Description { get; set; }
-  public ICollection<AddQuestionRequestDto>? Questions { get; set; }
-  public int? Participants { get; set; }
-  public int? TotalQuestions { get; set; }
-  public int? TotalAwnsers { get; set; }
-  
-}
-
 
 
 public class QuestionDto {
@@ -37,6 +25,7 @@ public class QuestionDto {
   public string Type { get; set; }
   public IEnumerable<AddQAnsweRequestDto> PossibleAnswers { get; set; }
 }
+
 
 
 
@@ -49,6 +38,10 @@ public class AddQuestionlistRequestDto
   
 
 }
+
+
+
+
 
 public class AddQuestionRequestDto
 {
@@ -85,5 +78,36 @@ public class SubmitedAnswerRequestDto {
 
 
 
+
+public class UpdateQuestionlistRequestDto {
+
+
+  public string? Title { get; set; }
+  public string? Description { get; set; }
+  public ICollection<UpdateQuestionRequestDto>? Questions { get; set; }
+  public int? Participants { get; set; }
+  public int? TotalQuestions { get; set; }
+  public int? TotalAwnsers { get; set; }
+  
+}
+
+
+
+public class UpdateQuestionRequestDto
+{
+  public Guid Id { get; set; } 
+  public string Title { get; set; }
+  public string Type { get; set; }
+  public IEnumerable<UpdateAnsweRequestDto>? PossibleAnswers { get; set; }
+ 
+ 
+
+}
+
+public class UpdateAnsweRequestDto {
+  public Guid Id { get; set; } 
+  public string Answertext { get; set; }
+
+}
 
 
