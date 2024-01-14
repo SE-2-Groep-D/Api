@@ -18,6 +18,7 @@ public class OnderzoekController : ControllerBase {
   public OnderzoekController(IMapper mapper, IOnderzoekRepository onderzoekRepository) {
     _mapper = mapper;
     _onderzoekRepository = onderzoekRepository;
+
   }
 
   [HttpGet]
@@ -66,8 +67,9 @@ public class OnderzoekController : ControllerBase {
       var isUpdated = await _onderzoekRepository.UpdateAsync(id, bestaandOnderzoek);
 
       if (isUpdated == null) {
-        return StatusCode(StatusCodes.Status500InternalServerError,
-          "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
+
+        return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
+
       }
 
       return Ok("Onderzoek succesvol geupdate.");
@@ -88,26 +90,6 @@ public class OnderzoekController : ControllerBase {
     return Ok("Onderzoek is verwijderd.");
   }
   
-  [HttpPost]
-  [Route("registration")]
-  public async Task<ActionResult<AddRegistrationDto>> Registration([FromBody] AddRegistrationDto addDto) {
-    var registration = _mapper.Map<OnderzoekErvaringsdekundige>(addDto);
-    await _onderzoekRepository.CreateRegistrationAsync(registration);
-    return Ok("Registratie is aangemaakt.");
-  }
-  
-  [HttpGet]
-  [Route("registration/list/{id}")]
-  public async Task<ActionResult> GetRegistrationByResearchId(Guid id) {
-    var registrationList = await _onderzoekRepository.GetRegistrationByResearchId(id);
-    if (!registrationList.Any()) {
-      return NotFound();
-    }
-
-    return Ok(registrationList);
-  }
-
-
   [HttpPost]
   [Route("registration")]
   public async Task<ActionResult<AddRegistrationDto>> Registration([FromBody] AddRegistrationDto addDto) {
