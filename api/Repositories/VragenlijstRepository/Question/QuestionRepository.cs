@@ -40,6 +40,7 @@ public class SQLQuestionRepository : IQuestionRepository {
   }
 
   public async Task DeleteQuestions(List<Question> questions) {
+    await _possibleAnswerRepository.DeleteAnswers(questions.SelectMany(q => q.PossibleAnswers).ToList());
     _context.Question.RemoveRange(questions);
     await _context.SaveChangesAsync();
   }

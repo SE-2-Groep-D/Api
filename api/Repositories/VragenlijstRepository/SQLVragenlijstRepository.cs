@@ -62,6 +62,7 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
   public async Task<bool> DeleteAsync(Guid guid) {
     var list = await GetByIdAsync(guid);
     if (list == null) return true;
+    await _questionRepository.DeleteQuestions(list.Questions);
     _context.Questionlist.Remove(list);
     await _context.SaveChangesAsync();
     return true;

@@ -59,51 +59,15 @@ public class VragenlijstController : ControllerBase {
     var response = _mapper.Map<QuestionListDto>(list);
     return Ok(response);
   }
-
-  // [HttpGet]
-  // [Route("{id}")]
-  // public async Task<ActionResult> GetById(Guid id) {
-  //   var vragenlijsten = await _vragenlijstRepository.GetByIdAsync(id);
-  //   if (vragenlijsten == null) return NotFound();
-  //   var vragenlijstenDto = _mapper.Map<QuestionListDto>(vragenlijsten);
-  //   return Ok(vragenlijstenDto);
-  // }
-  //
-  // [HttpPost]
-  // [Route("create")]
-  // public async Task<IActionResult> Create([FromBody] CreateQuestionListDto addDto) {
-  //   var questionlist = _mapper.Map<QuestionList>(addDto);
-  //   questionlist = await _vragenlijstRepository.CreateAsync(questionlist);
-  //   var questionlistDto = _mapper.Map<QuestionListDto>(questionlist);
-  //   return Ok(questionlistDto);
-  // }
-  //
-  //
-  // [HttpPut]
-  // [Route("update/{id}")]
-  // public async Task<IActionResult> Update(Guid id, [FromBody] UpdateQuestionlistRequestDto requestDto) {
-  //   var questionlist = await _vragenlijstRepository.GetByIdAsync(id);
-  //   if (questionlist == null) {
-  //     return NotFound();
-  //   }
-  //   
-  //   try {
-  //     return Ok(_vragenlijstRepository.UpdateAsync(id, requestDto));
-  //   } catch (Exception ex) {
-  //     return StatusCode(StatusCodes.Status500InternalServerError);
-  //   }
-  // }
-  //
-  //
-  // [HttpDelete]
-  // [Route("delete/{id}")]
-  // public async Task<IActionResult> Delete(Guid id) {
-  //   var success = await _vragenlijstRepository.DeleteAsync(id);
-  //   if (!success) {
-  //     return NotFound();
-  //   }
-  //
-  //   return Ok("Vragenlijst is succsesvol updated");
-  // }
-
+  
+  [HttpDelete("{id}")]
+  public async Task<ActionResult> Delete([FromRoute] Guid id) {
+    var list = await _vragenlijstRepository.DeleteAsync(id);
+    if (!list) {
+      return new StatusCodeResult(500);
+    }
+    
+    return Ok();
+  }
+  
 }
