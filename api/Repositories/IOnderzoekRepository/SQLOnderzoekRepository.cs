@@ -1,6 +1,7 @@
 ﻿using Api.Data;
 using Api.Models.Domain;
 using Api.Models.Domain.Research;
+using Api.Models.DTO.Onderzoek;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories;
@@ -67,5 +68,5 @@ public class SQLOnderzoekRepository : IOnderzoekRepository {
       .ToListAsync();
   }
 
-
+  
 }

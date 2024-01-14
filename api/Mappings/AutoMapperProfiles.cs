@@ -61,11 +61,12 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Vergoeding, opt => opt.Condition(src => src.Locatie != null))
       .ForMember(dest => dest.Locatie, opt => opt.Condition(src => src.Locatie != null))
       .ForMember(dest => dest.Status, opt => opt.Condition(src => src.Status != null));
-    ;
+      
+      CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
+      CreateMap<AddOnderzoekRequestDto, Onderzoek>();
     
     
-    CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
-    CreateMap<AddOnderzoekRequestDto, Onderzoek>().ReverseMap();
+      
     
     // QuestionList
     CreateMap<CreateQuestionListDto, QuestionList>();
@@ -97,8 +98,6 @@ public class AutoMapperProfiles : Profile {
   
     // Tracking onderzoek
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
-    
-
     CreateMap<OnderzoekErvaringsdekundige, AddRegistrationDto>().ReverseMap();
   }
 
