@@ -8,6 +8,7 @@ using Api.Repositories.IGebruikerRepository;
 using Api.Repositories.ITrackingRepository;
 using Api.Repositories.VragenlijstRepository;
 using Api.Repositories.ITrackingRepository;
+using Api.Repositories.VragenlijstRepository.Answer;
 using Api.Services.ITokenService;
 using Api.Services.IUserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -106,6 +107,8 @@ public class Program {
   private static void AddRepositories(IServiceCollection services) {
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
     services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
+    services.AddScoped<IQuestionRepository, SQLQuestionRepository>();
+    services.AddScoped<IPossibleAnswerRepository, SQLPossibleAnswerRepository>();
     services.AddScoped<ITrackingRepository, TrackingRepository>();
     services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
 

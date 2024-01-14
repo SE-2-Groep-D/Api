@@ -1,4 +1,7 @@
-﻿using Api.Models.Domain.Research.Tracking;
+﻿
+
+using Api.Models.Domain.Research.Questionlist;
+using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 
 namespace Api.Models.Domain.Research;
@@ -15,13 +18,10 @@ public class Onderzoek {
   public string Omschrijving { get; set; }
   public double Vergoeding { get; set; }
   public string Locatie { get; set; }
-
-  public Type Type { get; set; }
-
   public Status Status { get; set; }
 
 
-  public ICollection<Questionlist> Vragenlijst { get; } = new List<Questionlist>();
+  public ICollection<Questionlist.QuestionList> Vragenlijst { get; } = new List<Questionlist.QuestionList>();
   public ICollection<TrackingOnderzoek> TrackingResultaten { get; } = new List<TrackingOnderzoek>();
   public List<Ervaringsdeskundige> Ervaringsdeskundigen { get; } = new();
   public List<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; } = new();
@@ -31,16 +31,7 @@ public class Onderzoek {
 }
 
 public enum Status {
-
   open,
   active,
   ended
-
-}
-
-public enum Type {
-
-  vragenlijst,
-  websiteBezoek
-
 }

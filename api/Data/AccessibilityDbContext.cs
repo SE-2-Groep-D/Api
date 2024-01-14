@@ -1,5 +1,6 @@
 ﻿using Api.Models.Domain;
 using Api.Models.Domain.Research;
+using Api.Models.Domain.Research.Questionlist;
 using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 using Microsoft.AspNetCore.Identity;
@@ -29,10 +30,9 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
   public DbSet<Onderzoek> Onderzoeken { get; set; }
   public DbSet<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; set; }
   
-  
-  public DbSet<Answer> Answer { get; set; }
   public DbSet<Question> Question { get; set; }
-  public DbSet<Questionlist> Questionlist { get; set; }
+  public DbSet<Answer> Answers { get; set; }
+  public DbSet<QuestionList> Questionlist { get; set; }
 
   public DbSet<TrackingOnderzoek> TrackingOnderzoeken { get; set; }
 
@@ -47,20 +47,6 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
       .HasOne("Question")
       .WithMany("Answers").HasForeignKey("QuestionId");*/
    
-   builder.Entity<Answer>()
-     .HasOne(a => a.QuestionAsPossibleAnswer)
-     .WithMany(q => q.PossibleAnswers)
-     .HasForeignKey(a => a.PossibleAnswerQuestionId)
-     .OnDelete(DeleteBehavior.Restrict);
-
-   builder.Entity<Answer>()
-     .HasOne(a => a.QuestionAsGivenAnswer)
-     .WithMany(q => q.GivenAnswers)
-     .HasForeignKey(a => a.GivenAnswerQuestionId)
-     .OnDelete(DeleteBehavior.Restrict);
-   
-   
-
     builder.Entity<Onderzoek>()
       .HasMany(e => e.Ervaringsdeskundigen)
       .WithMany(e => e.Onderzoeken)
@@ -75,6 +61,17 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
           .WithMany(p => p.OnderzoekErvaringsdekundigen)
           .HasForeignKey(pt => pt.OnderzoekId)
           .OnDelete(DeleteBehavior.NoAction));
+    
+    // Ignore the conflicting relationship between Question.PossibleAnswers and Answer.Question
+    builder.Entity<QuestionList>()
+      .HasMany(ql => ql.Questions)
+      .WithOne(q => q.QuestionList)
+      .HasForeignKey(q => q.QuestionListId);
+
+    builder.Entity<Question>()
+      .HasMany(q => q.PossibleAnswers)
+      .WithOne(a => a.Question)
+      .HasForeignKey(a => a.QuestionId);
 
 
     var beheerderRoleId = "40de5fb2-052b-43df-8f1d-f14e40d4e663";
