@@ -18,6 +18,7 @@ using Api.Repositories.VragenlijstRepository;
 using Api.Repositories.VragenRepository;
 using Api.Repositories.ITrackingRepository;
 using Api.CustomMiddleware;
+using Api.Hubs;
 
 namespace Api;
 public class Program {
@@ -26,6 +27,7 @@ public class Program {
     // configure application
     var builder = WebApplication.CreateBuilder(args);
     SetupServices(builder.Services, builder);
+    builder.Services.AddSignalR();
 
     // add middelware
     var app = builder.Build();
@@ -44,7 +46,7 @@ public class Program {
     if (builder.Environment.IsDevelopment()) {
       services.AddCors(options => {
         options.AddPolicy("AllowSpecific",
-          builder => builder.WithOrigins("http://localhost:5173") // Replace with your React app's URL
+          builder => builder.WithOrigins("http://localhost:5173", "http://localhost:5174") // Replace with your React app's URL
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials()
@@ -152,7 +154,9 @@ public class Program {
     app.UseAuthentication();
     
     app.UseAuthorization();
-    
+
+    app.MapHub<ChatHub>("/chatHub");
+
     app.MapControllers();
     
   }
