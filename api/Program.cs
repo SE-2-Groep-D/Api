@@ -45,15 +45,15 @@ public class Program {
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
-    var frontendUrl = builder.Configuration["FrontendUrl"];
     services.AddCors(options => {
       options.AddPolicy("AllowSpecific",
-        builder => builder.WithOrigins(frontendUrl)
-          .AllowAnyHeader()
-          .AllowAnyMethod()
-          .AllowCredentials()
-          .WithExposedHeaders("Set-Cookie"));
+        builder => builder.WithOrigins("http://localhost:5173/", "http://localhost:5174") // Replace with your React app's URL
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials()
+                          .WithExposedHeaders("Set-Cookie"));
     });
+  
 
     ConnectToDatabase(services, builder);
 
