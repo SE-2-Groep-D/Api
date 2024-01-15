@@ -1,10 +1,12 @@
-﻿using Api.Models.Domain.Bericht;
+﻿namespace Api.Models.DTO.Bericht;
+using Api.Models.Domain.Bericht;
+using Api.Models.DTO.Bericht;
 
-namespace Api.Models.DTO.Berichten {
-  public class ChatResponseDto {
-    public Guid OtherUserId { get; set; }
-    public Bericht LastMessage { get; set; }
-    public int TotalMessages { get; set; }
-
-  }
+public class ChatResponseDto {
+  public Guid OtherUserId { get; set; }
+  public string? Naam { get; set; }
+  public BerichtDto LastMessage { get; set; }
+  public int TotalMessages { get; set; }
+  public bool? Suceeded { get; set; }
 }
+

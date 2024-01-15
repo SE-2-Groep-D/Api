@@ -12,6 +12,8 @@ using Api.Models.DTO.Onderzoek;
 using Api.Models.DTO.Onderzoek.results;
 using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
+using Api.Models.Domain.Bericht;
+using Api.Models.DTO.Bericht;
 
 namespace Api.Mappings;
 public class AutoMapperProfiles : Profile {
@@ -112,6 +114,8 @@ public class AutoMapperProfiles : Profile {
     CreateMap<Vragenlijst, ResponseVragenlijstDto>();
     
     CreateMap<OnderzoekErvaringsdekundige, AddRegistrationDto>().ReverseMap();
+
+    CreateMap<Bericht, BerichtDto>().ReverseMap();
   }
 
 }

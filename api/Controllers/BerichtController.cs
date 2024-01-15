@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Api.Repositories.IBerichtRepository;
 using System.Runtime.CompilerServices;
+using AutoMapper;
+
 namespace Api.Controllers {
 
 
@@ -27,15 +29,21 @@ namespace Api.Controllers {
     [Route("chats/{id}")]
     public async Task<IActionResult> GetChats([FromRoute] Guid id) {
       var chats = await BerichtRepository.GetChatsByUserId(id);
-      var groupedChats = chats
-          .GroupBy(chat => chat.VerzenderId == id ? chat.OntvangerId : chat.VerzenderId)
-          .Select(group => new {
-            OtherUserId = group.Key,
-            LastMessage = group.OrderByDescending(m => m.DatumTijd).First(),
-            TotalMessages = group.Count()
-          });
 
-      return Ok(groupedChats);
+      List<ChatResponseDto> response = new List<ChatResponseDto>();
+      foreach (var chat in chats) {
+        var naam = await BerichtRepository.GetNaam(chat.OtherUserId.ToString());
+        response.Add(new ChatResponseDto {
+          OtherUserId = chat.OtherUserId,
+          LastMessage = chat.LastMessage,
+          TotalMessages = chat.TotalMessages,
+          Naam = naam
+        });
+      }
+      
+      
+      
+      return Ok(response);
     }
 
     [HttpPost]
