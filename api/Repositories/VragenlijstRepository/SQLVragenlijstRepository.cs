@@ -24,22 +24,17 @@ public class SQLVragenlijstRepository : IVragenlijstRepository {
   }
 
   public async Task<QuestionList?> GetByIdAsync(Guid questionListId) {
-    return await _context.Questionlist.Include(ql => ql.Questions).ThenInclude(q => q.PossibleAnswers).SingleOrDefaultAsync(); 
+    return await _context.Questionlist.Include(ql => ql.Questions).ThenInclude(q => q.PossibleAnswers).FirstOrDefaultAsync(); 
   }
 
 
 
   public async Task<QuestionList?> CreateAsync(CreateQuestionListDto dto) {
     try {
-      Console.WriteLine('1');
       var questionList = _mapper.Map<QuestionList>(dto);
-      
-      Console.WriteLine('2');
       
       await _context.AddAsync(questionList);
       await _context.SaveChangesAsync();
-      
-      Console.WriteLine('3');
 
       return questionList;
     } catch (Exception ex) {
