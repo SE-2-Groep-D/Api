@@ -1,5 +1,6 @@
 ﻿using Api.Models.Domain;
 using Api.Models.Domain.Research;
+using Api.Models.Domain.Research.Questionlist;
 using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 using Api.Models.DTO.Auth.request;
@@ -9,6 +10,8 @@ using Api.Models.DTO.Gebruiker.request;
 using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using Api.Models.DTO.Nieuwsbrief;
 using Api.Models.DTO.Onderzoek;
+using Api.Models.DTO.Onderzoek.request;
+using Api.Models.DTO.Onderzoek.response;
 using Api.Models.DTO.Onderzoek.results;
 using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
@@ -58,59 +61,53 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Vergoeding, opt => opt.Condition(src => src.Locatie != null))
       .ForMember(dest => dest.Locatie, opt => opt.Condition(src => src.Locatie != null))
       .ForMember(dest => dest.Status, opt => opt.Condition(src => src.Status != null));
-
-
-    CreateMap<UpdateVragenlijstRequestDto, Vragenlijst>()
-      .ForMember(dest => dest.Titel, opt => opt.Condition(src => src.Titel != null))
-      .ForMember(dest => dest.Samenvatting, opt => opt.Condition(src => src.Samenvatting != null));
-
-
-    CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
-    CreateMap<AddOnderzoekRequestDto, Onderzoek>();
-
-
-    //voor vragenlijst
-
-    CreateMap<Vragenlijst, VragenlijstDto>()
-      .ForMember(dest => dest.Vragen, opt => opt.MapFrom(src => src.Vragen));
-
-    CreateMap<Vraag, VraagDTO>()
-      .ForMember(dest => dest.Antwoorden, opt => opt.MapFrom(src => src.Antwoorden));
-
-    CreateMap<Antwoord, AntwoordDTO>();
-    CreateMap<AddVragenlijstRequestDto, Vragenlijst>().ReverseMap();
-
-
-    //Voor vraag
-
-    CreateMap<UpdateVraagRequestDto, Vraag>()
-      .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null))
-      .ForMember(dest => dest.Onderwerp, opt => opt.Condition(src => src.Onderwerp != null));
-
-    CreateMap<AddVraagRequestDto, Vraag>().ReverseMap();
-
-    //Voor antwoord
-
-
-    CreateMap<UpdateAntwoordRequestDto, Antwoord>()
-      .ForMember(dest => dest.Tekst, opt => opt.Condition(src => src.Tekst != null));
-
-    CreateMap<AddAntwoordRequestDto, Antwoord>()
-      .ForMember(dest => dest.VraagId, opt => opt.MapFrom(src => src.VraagId))
-      .ReverseMap();
-    CreateMap<CreateTrackingResearchDto, TrackingOnderzoek>();
-    CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>();
-    CreateMap<SubmitTrackingResultsDto, TrackingResultaten>();
-    CreateMap<ClickedItemDto, ClickedItem>();
-
-    CreateMap<TrackingOnderzoek, ResponseTrackingDto>().ReverseMap();
-
-
-    // Voor results
-
-    CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
-    CreateMap<Vragenlijst, ResponseVragenlijstDto>();
+      
+      CreateMap<OnderzoekDto, Onderzoek>().ReverseMap();
+      CreateMap<AddOnderzoekRequestDto, Onderzoek>();
     
+    
+      
+    
+    // QuestionList
+    CreateMap<CreateQuestionListDto, QuestionList>()
+      .ForMember(dest => dest.Title, opt => opt.Condition(src => src.Title != null))
+      .ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null));
+
+    CreateMap<CreateQuestionDto, Question>()
+      .ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null))
+      .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null));
+    // .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers));
+
+    CreateMap<CreatePossibleAnswerDto, Answer>();
+    
+    CreateMap<QuestionListDto, QuestionList>().ReverseMap();
+    CreateMap<QuestionList, MinimalQuestionListDto>();
+
+    CreateMap<Answer, AnswerDto>();
+    CreateMap<Question, QuestionDto>()
+      .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
+      .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers))
+      .ForMember(dest => dest.GivenAnswers, opt => opt.MapFrom(src => src.GivenAnswers));
+    CreateMap<QuestionList, QuestionListDto>()
+      .ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
+
+    CreateMap<UpdateQuestionListDto, QuestionList>()
+      .ForMember(dest => dest.Title, opt => opt.Condition(src => src.Title != null))
+      .ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null));
+
+    CreateMap<UpdateQuestionDto, Question>()
+      .ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null))
+      .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null));
+      // .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers));
+
+      CreateMap<UpdatePossibleAnswerDto, Answer>();
+    // CreateMap<UpdatePossibleAnswerDto, Answer>()
+    //   .ForMember(dest => dest.Value, opt => opt.Condition(src => src.Value != null));
+    //
+    //
+  
+    // Tracking onderzoek
+    CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
     CreateMap<OnderzoekErvaringsdekundige, AddRegistrationDto>().ReverseMap();
   }
 
