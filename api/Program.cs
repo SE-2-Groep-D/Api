@@ -30,7 +30,6 @@ public class Program {
     // configure application
     var builder = WebApplication.CreateBuilder(args);
     SetupServices(builder.Services, builder);
-    builder.Services.AddSignalR();
 
     // add middelware
     var app = builder.Build();
@@ -108,6 +107,7 @@ public class Program {
       .AddDefaultTokenProviders();
 
     AddAuthentication(services, builder);
+    services.AddSignalR();
 
   }
 
