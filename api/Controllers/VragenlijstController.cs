@@ -33,8 +33,11 @@ public class VragenlijstController : ControllerBase {
   
   [HttpGet("{id}")]
   public async Task<ActionResult> GetQuestionList([FromRoute] Guid id) {
-    var list = await _vragenlijstRepository.GetByIdAsync(id);
-    var dto = _mapper.Map<QuestionListDto>(list);
+    var dto = await _vragenlijstRepository.GetInfo(id);
+    if (dto == null) {
+      return NotFound();
+    } 
+    
     return Ok(dto);
   }
   
@@ -68,6 +71,36 @@ public class VragenlijstController : ControllerBase {
     }
     
     return Ok();
+  }
+  
+  
+  
+  [HttpPost("{id}/submit")]
+  public async Task<ActionResult> SubmitAnswers([FromRoute] Guid id, SubmitAnswersDto answersDto) {
+    try {
+      var list = await _vragenlijstRepository.SubmitAnswers(id, answersDto);
+      if (list == null) {
+        return NotFound();
+      }
+      return Ok();
+    } catch (Exception e) {
+      Console.WriteLine(e.Message);
+      return new StatusCodeResult(500);
+    }
+  }
+  
+  [HttpGet("{id}/results")]
+  public async Task<ActionResult> SubmitAnswers([FromRoute] Guid id) {
+    try {
+      List<Answer> answers = await _vragenlijstRepository.GetAnswers(id);
+      Console.WriteLine($"Number of answers retrieved: {answers?.Count}");
+      var dtoList = _mapper.Map<List<ResponseAnswerDto>>(answers);
+
+      return Ok(dtoList);
+    } catch (Exception e) {
+      Console.WriteLine(e.Message);
+      return new StatusCodeResult(500);
+    }
   }
   
 }
