@@ -7,16 +7,16 @@ public class TrackingResultaten {
   public string Browser { get; set; }
   public int TimeInSeconds { get; set; }
   public int TimeTillAction { get; set; }
- public ICollection<ClickedItem> ClickedItems { get; set; } = new List<ClickedItem>();
+  public ICollection<ClickedItem> ClickedItems { get; set; } = new List<ClickedItem>();
+
 }
 
 public class ClickedItem {
+
   public string? Id { get; set; }
   public string itemType { get; set; }
   public int TimeInSeconds { get; set; }
   public string Text { get; set; }
   public string? Href { get; set; }
+
 }
-
-
-

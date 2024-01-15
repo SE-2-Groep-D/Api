@@ -1,6 +1,4 @@
-﻿using Api.Models.DTO.Onderzoek.tracking;
-
-namespace Api.Models.Domain.Research.Tracking;
+﻿namespace Api.Models.Domain.Research.Tracking;
 public class TrackingOnderzoek {
 
   public Guid Id { get; set; }

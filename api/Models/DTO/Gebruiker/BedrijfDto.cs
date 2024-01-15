@@ -1,5 +1,4 @@
 ﻿namespace API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
-
 public class BedrijfsDetails : GebruikerDetails {
 
   public string Bedrijfsnaam { get; set; }
@@ -9,4 +8,5 @@ public class BedrijfsDetails : GebruikerDetails {
   public string Nummer { get; set; }
   public string WebsiteUrl { get; set; }
   public string Omschrijving { get; set; }
+
 }

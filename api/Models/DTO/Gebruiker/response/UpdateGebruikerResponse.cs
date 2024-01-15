@@ -8,4 +8,5 @@ public class UpdateGebruikerResponse {
 
   public string? Message { get; set; }
   public bool Succeeded { get; set; }
+
 }

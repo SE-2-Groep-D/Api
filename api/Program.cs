@@ -1,12 +1,6 @@
-using System.Configuration;
-using Api.Data;
-using Api.Services.IUserService;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Api.Services.ITokenService;
+using Api.CustomMiddleware;
+using Api.Data;
 using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories;
@@ -19,6 +13,15 @@ using Api.Repositories.VragenRepository;
 using Api.Repositories.ITrackingRepository;
 using Api.CustomMiddleware;
 using Api.Hubs;
+using Api.Repositories.ITrackingRepository;
+using Api.Repositories.VragenlijstRepository;
+using Api.Repositories.VragenRepository;
+using Api.Services.ITokenService;
+using Api.Services.IUserService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Api;
 public class Program {
@@ -43,20 +46,16 @@ public class Program {
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
-    if (builder.Environment.IsDevelopment()) {
-      services.AddCors(options => {
-        options.AddPolicy("AllowSpecific",
-          builder => builder.WithOrigins("http://localhost:5173", "http://localhost:5174") // Replace with your React app's URL
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials()
-                            .WithExposedHeaders("Set-Cookie"));
-      });
+    var frontendUrl = builder.Configuration["FrontendUrl"];
+    services.AddCors(options => {
+      options.AddPolicy("AllowSpecific",
+        builder => builder.WithOrigins(frontendUrl)
+          .AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowCredentials()
+          .WithExposedHeaders("Set-Cookie"));
+    });
 
-
-    }
-   
-    
     ConnectToDatabase(services, builder);
 
     AddRepositories(services);
@@ -119,7 +118,7 @@ public class Program {
     services.AddScoped<IVraagRepository, SQLVraagRepository>();
     services.AddScoped<IAntwoordRepository, SQLAntwoordRepository>();
     services.AddScoped<ITrackingRepository, TrackingRepository>();
-    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>(); 
+    services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
 
   }
 
@@ -131,7 +130,7 @@ public class Program {
 
   private static void SetupMiddleware(WebApplication app) {
     // Configure the HTTP request pipeline.
-    
+
     if (app.Environment.IsDevelopment()) {
       app.UseSwagger();
       app.UseSwaggerUI();
@@ -152,13 +151,13 @@ public class Program {
 
     app.UseMiddleware<AuthorizationHeaderMiddleware>();
     app.UseAuthentication();
-    
+
     app.UseAuthorization();
 
     app.MapHub<ChatHub>("/chatHub");
 
     app.MapControllers();
-    
+
   }
 
 
@@ -167,7 +166,7 @@ public class Program {
     var dbType = builder.Configuration["DatabaseType"];
 
     Console.WriteLine(connectionString);
-    
+
     try {
       services.AddDbContext<AccessibilityDbContext>(options => {
         switch (dbType) {

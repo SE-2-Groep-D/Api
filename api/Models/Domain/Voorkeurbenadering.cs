@@ -1,7 +1,6 @@
 ﻿using Api.Models.Domain.User;
 
 namespace Api.Models.Domain;
-
 public class Voorkeurbenadering {
 
   public Guid Id { get; set; }

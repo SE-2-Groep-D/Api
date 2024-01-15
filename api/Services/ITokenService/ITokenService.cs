@@ -1,13 +1,8 @@
-﻿using Api.Models.Domain;
-using Api.Models.Domain.User;
-using Microsoft.AspNetCore.Identity;
+﻿using Api.Models.Domain.User;
 
-namespace Api.Services.ITokenService {
+namespace Api.Services.ITokenService; 
+public interface ITokenService {
 
-  public interface ITokenService {
-
-    string CreateJWTToken(Gebruiker user, List<string> roles);
-
-  }
+  string CreateJWTToken(Gebruiker user, List<string> roles);
 
 }

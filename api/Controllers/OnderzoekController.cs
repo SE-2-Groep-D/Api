@@ -1,8 +1,8 @@
-﻿using Api.Models.Domain.Research;
+﻿using Api.Models.Domain;
+using Api.Models.Domain.Research;
 using Api.Models.DTO.Onderzoek;
 using Api.Repositories;
 using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -10,14 +10,14 @@ namespace Api.Controllers;
 [ApiController]
 public class OnderzoekController : ControllerBase {
 
-  private IOnderzoekRepository _onderzoekRepository;
-  private IMapper _mapper;
+  private readonly IMapper _mapper;
+
+  private readonly IOnderzoekRepository _onderzoekRepository;
 
 
   public OnderzoekController(IMapper mapper, IOnderzoekRepository onderzoekRepository) {
-    this._mapper = mapper;
-    this._onderzoekRepository = onderzoekRepository;
-
+    _mapper = mapper;
+    _onderzoekRepository = onderzoekRepository;
   }
 
   [HttpGet]
@@ -55,7 +55,7 @@ public class OnderzoekController : ControllerBase {
   [Route("update/{id}")]
   public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOnderzoekRequestDto request) {
     try {
-      Onderzoek? bestaandOnderzoek = await _onderzoekRepository.GetByIdAsync(id);
+      var bestaandOnderzoek = await _onderzoekRepository.GetByIdAsync(id);
 
       if (bestaandOnderzoek == null) {
         return NotFound($"Onderzoek met ID {id} is niet gevonden.");
@@ -63,12 +63,11 @@ public class OnderzoekController : ControllerBase {
 
       _mapper.Map(request, bestaandOnderzoek);
 
-      Onderzoek? isUpdated = await _onderzoekRepository.UpdateAsync(id, bestaandOnderzoek);
+      var isUpdated = await _onderzoekRepository.UpdateAsync(id, bestaandOnderzoek);
 
       if (isUpdated == null) {
-
-        return StatusCode(StatusCodes.Status500InternalServerError, "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
-
+        return StatusCode(StatusCodes.Status500InternalServerError,
+          "Er is een fout opgetreden bij het bijwerken van het onderzoek.");
       }
 
       return Ok("Onderzoek succesvol geupdate.");
@@ -88,5 +87,25 @@ public class OnderzoekController : ControllerBase {
 
     return Ok("Onderzoek is verwijderd.");
   }
+
+  [HttpPost]
+  [Route("registration")]
+  public async Task<ActionResult<AddRegistrationDto>> Registration([FromBody] AddRegistrationDto addDto) {
+    var registration = _mapper.Map<OnderzoekErvaringsdekundige>(addDto);
+    await _onderzoekRepository.CreateRegistrationAsync(registration);
+    return Ok("Registratie is aangemaakt.");
+  }
+  
+  [HttpGet]
+  [Route("registration/list/{id}")]
+  public async Task<ActionResult> GetRegistrationByResearchId(Guid id) {
+    var registrationList = await _onderzoekRepository.GetRegistrationByResearchId(id);
+    if (!registrationList.Any()) {
+      return NotFound();
+    }
+
+    return Ok(registrationList);
+  }
+
 
 }

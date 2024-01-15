@@ -27,5 +27,7 @@ public class Onderzoek {
 }
 
 public enum Status {
+
   open, active, ended
+
 }
