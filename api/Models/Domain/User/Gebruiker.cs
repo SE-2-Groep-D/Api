@@ -12,5 +12,3 @@ public class Gebruiker : IdentityUser<Guid> {
   public ICollection<Bericht> VerzondenBerichten { get; } = new List<Bericht>();
   public ICollection<Bericht> OntvangenBerichten { get; } = new List<Bericht>();
 }
-
-}
