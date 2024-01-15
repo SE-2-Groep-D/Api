@@ -3,9 +3,11 @@ using Api.Models.Domain.Research;
 using Api.Models.Domain.Research.Questionlist;
 using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
+using Api.Models.Domain.Bericht;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace Api.Data;
 public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<Guid>, Guid> {
@@ -20,6 +22,7 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
 
   public DbSet<Hulpmiddel> Hulpmiddelen { get; set; }
   public DbSet<Beschikbaarheid> Beschikbaarheden { get; set; }
+  public DbSet<Bericht> Berichten { get; set; }
 
 
   public DbSet<Bedrijf> Bedrijven { get; set; }
@@ -43,8 +46,19 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
     builder.Entity<Bedrijf>(entity => { entity.ToTable("Bedrijven"); });
     builder.Entity<Medewerker>(entity => { entity.ToTable("Medewerkers"); });
 
-  
-   
+    
+    builder.Entity<Gebruiker>()
+        .HasMany(e => e.VerzondenBerichten)
+        .WithOne(e => e.Verzender)
+        .HasForeignKey(e => e.VerzenderId)
+        .IsRequired();
+    builder.Entity<Gebruiker>()
+            .HasMany(e => e.OntvangenBerichten)
+            .WithOne(e => e.Ontvanger)
+            .HasForeignKey(e => e.OntvangerId)
+            .IsRequired();
+    
+
     builder.Entity<Onderzoek>()
       .HasMany(e => e.Ervaringsdeskundigen)
       .WithMany(e => e.Onderzoeken)
@@ -70,7 +84,6 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
       .HasMany(q => q.PossibleAnswers)
       .WithOne(a => a.Question)
       .HasForeignKey(a => a.QuestionId);
-
 
     var beheerderRoleId = "40de5fb2-052b-43df-8f1d-f14e40d4e663";
     var ervaringsdeskundigeRoleId = "ab6b8e6f-ca39-4d40-b330-e5898a785899";
