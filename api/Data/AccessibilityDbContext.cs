@@ -43,9 +43,7 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
     builder.Entity<Bedrijf>(entity => { entity.ToTable("Bedrijven"); });
     builder.Entity<Medewerker>(entity => { entity.ToTable("Medewerkers"); });
 
-   /* builder.Entity<Answer>()
-      .HasOne("Question")
-      .WithMany("Answers").HasForeignKey("QuestionId");*/
+  
    
     builder.Entity<Onderzoek>()
       .HasMany(e => e.Ervaringsdeskundigen)

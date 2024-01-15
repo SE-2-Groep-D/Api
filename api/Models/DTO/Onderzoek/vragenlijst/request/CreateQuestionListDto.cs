@@ -1,4 +1,6 @@
-﻿namespace Api.Models.DTO.Onderzoek.request;
+﻿using Api.Models.Domain.Research.Questionlist;
+
+namespace Api.Models.DTO.Onderzoek.request;
 public class CreateQuestionListDto {
 
   public string Title { get; set; }
@@ -9,8 +11,14 @@ public class CreateQuestionListDto {
 
 public class CreateQuestionDto {
   
-  public string QuestionType { get; set; }
+  public QuestionType Type { get; set; }
   public string Description { get; set; }
-  public List<string> PossibleAnswers { get; set; }
+  public List<CreatePossibleAnswerDto> PossibleAnswers { get; set; }
+
+}
+
+public class CreatePossibleAnswerDto {
+
+  public string Value { get; set; }
 
 }

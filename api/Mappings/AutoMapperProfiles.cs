@@ -69,7 +69,17 @@ public class AutoMapperProfiles : Profile {
       
     
     // QuestionList
-    CreateMap<CreateQuestionListDto, QuestionList>();
+    CreateMap<CreateQuestionListDto, QuestionList>()
+      .ForMember(dest => dest.Title, opt => opt.Condition(src => src.Title != null))
+      .ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null));
+
+    CreateMap<CreateQuestionDto, Question>()
+      .ForMember(dest => dest.Description, opt => opt.Condition(src => src.Description != null))
+      .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null));
+    // .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers));
+
+    CreateMap<CreatePossibleAnswerDto, Answer>();
+    
     CreateMap<QuestionListDto, QuestionList>().ReverseMap();
     CreateMap<QuestionList, MinimalQuestionListDto>();
 

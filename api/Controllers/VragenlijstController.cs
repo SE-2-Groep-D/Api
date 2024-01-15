@@ -45,8 +45,8 @@ public class VragenlijstController : ControllerBase {
       return new BadRequestResult();
     }
 
-    var response = _mapper.Map<QuestionListDto>(list);
-    return Ok(response);
+    var dto = _mapper.Map<QuestionListDto>(list);
+    return Ok(dto);
   }
   
   [HttpPut("{id}")]
