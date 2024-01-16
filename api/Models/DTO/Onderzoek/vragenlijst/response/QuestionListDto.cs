@@ -6,5 +6,5 @@ public class QuestionListDto {
   public string Description { get; set; }
   public Guid OnderzoekId { get; set; }
   public List<QuestionDto> Questions { get; set; }
-
+  
 }

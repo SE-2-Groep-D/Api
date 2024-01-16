@@ -13,12 +13,11 @@ public class Question {
   [Required]
   public string Description { get; set; }
 
-  public List<Answer> PossibleAnswers { get; set; } = new List<Answer>();
+  public List<PossibleAnswer> PossibleAnswers { get; set; } = new List<PossibleAnswer>();
   public List<Answer> GivenAnswers { get; set; } = new List<Answer>();
   
-  public Guid QuestionListId { get; set; }
-
   [ForeignKey("QuestionListId")]
+  public Guid QuestionListId { get; set; }
   public QuestionList QuestionList { get; set; }
 
 }

@@ -6,7 +6,6 @@ using Api.Models.Domain.User;
 using Api.Repositories;
 using Api.Repositories.IGebruikerRepository;
 using Api.Repositories.IBerichtRepository;
-using Microsoft.AspNetCore.Authentication.Google;
 using Api.Repositories.VragenlijstRepository;
 using Api.Repositories.ITrackingRepository;
 using Api.Hubs;
