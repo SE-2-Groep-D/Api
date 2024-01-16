@@ -78,16 +78,17 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null));
     // .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers));
 
-    CreateMap<CreatePossibleAnswerDto, Answer>();
+    CreateMap<CreatePossibleAnswerDto, PossibleAnswer>();
     
     CreateMap<QuestionListDto, QuestionList>().ReverseMap();
-    CreateMap<QuestionList, MinimalQuestionListDto>();
+    CreateMap<BigQuestionListDto, QuestionList>().ReverseMap();
+    CreateMap<QuestionList, MinimalQuestionListDto>().ReverseMap();
 
     CreateMap<Answer, AnswerDto>();
+    CreateMap<PossibleAnswer, AnswerDto>();
     CreateMap<Question, QuestionDto>()
       .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
-      .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers))
-      .ForMember(dest => dest.GivenAnswers, opt => opt.MapFrom(src => src.GivenAnswers));
+      .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers));
     CreateMap<QuestionList, QuestionListDto>()
       .ForMember(dest => dest.Questions, opt => opt.MapFrom(src => src.Questions));
 
@@ -100,13 +101,16 @@ public class AutoMapperProfiles : Profile {
       .ForMember(dest => dest.Type, opt => opt.Condition(src => src.Type != null));
       // .ForMember(dest => dest.PossibleAnswers, opt => opt.MapFrom(src => src.PossibleAnswers));
 
-      CreateMap<UpdatePossibleAnswerDto, Answer>();
-    // CreateMap<UpdatePossibleAnswerDto, Answer>()
-    //   .ForMember(dest => dest.Value, opt => opt.Condition(src => src.Value != null));
-    //
-    //
-  
+      CreateMap<UpdatePossibleAnswerDto, PossibleAnswer>();
+
+      CreateMap<SubmitAnswerDto, Answer>();
+      CreateMap<Answer, ResponseAnswerDto>();
+
+      // CreateMap<Answer, ResponseAnswerDto>();
+      
+      
     // Tracking onderzoek
+    CreateMap<QuestionList, ResponseQuestionListDto>().ReverseMap();
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
     CreateMap<OnderzoekErvaringsdekundige, AddRegistrationDto>().ReverseMap();
   }

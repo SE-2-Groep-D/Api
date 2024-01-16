@@ -8,5 +8,7 @@ public class QuestionDto {
   public string Description { get; set; }
   public List<AnswerDto> PossibleAnswers { get; set; }
   public List<AnswerDto> GivenAnswers { get; set; }
+  
+  public int? TotalAnswers { get; set; }
 
 }
