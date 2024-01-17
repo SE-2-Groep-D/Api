@@ -15,6 +15,7 @@ using Api.Models.DTO.Onderzoek.response;
 using Api.Models.DTO.Onderzoek.results;
 using Api.Models.DTO.Onderzoek.tracking;
 using AutoMapper;
+using Api.Models.DTO.Gebruiker;
 
 namespace Api.Mappings;
 public class AutoMapperProfiles : Profile {
@@ -44,6 +45,8 @@ public class AutoMapperProfiles : Profile {
     CreateMap<Gebruiker, GebruikerDetails>();
     CreateMap<Medewerker, MedewerkerDetails>();
     CreateMap<Ervaringsdeskundige, ErvaringsDeskundigeDetails>();
+    CreateMap<Hulpmiddel, HulpmiddelDto>();
+    CreateMap<Voorkeurbenadering, VoorkeurbenaderingDto>();
     CreateMap<Bedrijf, BedrijfsDetails>();
 
     CreateMap<CreateNiewsbriefDto, Nieuwsbrief>();

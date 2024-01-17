@@ -66,6 +66,14 @@ public class AuthController : ControllerBase {
       }
     }
 
+    if (result.Succeeded && registerErvaringsdeskundigeRequestDto.NieuweVoorkeursbenaderingen != null && AangemaakteGebruiker != null) {
+      var resultBenadering =
+        await gebruikerRepository.VoegBenaderingToe(registerErvaringsdeskundigeRequestDto.NieuweVoorkeursbenaderingen, AangemaakteGebruiker.Id);
+      if (!resultBenadering.Succeeded) {
+        return Ok(resultBenadering.Message);
+      }
+    }
+
     return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 

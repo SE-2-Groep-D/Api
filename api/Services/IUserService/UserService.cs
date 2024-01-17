@@ -15,12 +15,13 @@ public class UserService : IUserService {
 
   private readonly UserManager<Gebruiker> _gebruikerManager;
   private readonly IMapper _mapper;
+  private readonly AccessibilityDbContext context;
 
-
-  public UserService(UserManager<Gebruiker> gebruikerManager, IMapper mapper, AccessibilityDbContext dbContext) {
+  public UserService(UserManager<Gebruiker> gebruikerManager, IMapper mapper, AccessibilityDbContext context) {
     _gebruikerManager = gebruikerManager;
 
     _mapper = mapper;
+    this.context = context;
   }
 
   public LoginResponseDto CreateLoginResponse(Gebruiker gebruiker, string jwtToken) {
@@ -89,7 +90,9 @@ public class UserService : IUserService {
 
     switch (gebruiker) {
       case Ervaringsdeskundige er:
-        details = _mapper.Map<ErvaringsDeskundigeDetails>(gebruiker);
+        context.Entry(er).Collection(h => h.Hulpmiddelen).Load();
+        context.Entry(er).Collection(v => v.Voorkeurbenaderingen).Load();
+        details = _mapper.Map<ErvaringsDeskundigeDetails>(er);
         details.Type = "Ervaringsdeskundige";
         break;
       

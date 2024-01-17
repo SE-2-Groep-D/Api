@@ -5,5 +5,6 @@ public class RegisterErvaringsdeskundigeRequestDto : RegisterRequestDto {
   public bool ToestemmingBenadering { get; set; }
   public string Leeftijdscategorie { get; set; }
   public string[]? NieuweHulpmiddelen { get; set; }
+  public string[]? NieuweVoorkeursbenaderingen { get; set; }
 
 }

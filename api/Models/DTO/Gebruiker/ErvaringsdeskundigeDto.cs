@@ -1,4 +1,5 @@
 ﻿using Api.Models.Domain;
+using Api.Models.DTO.Gebruiker;
 
 namespace API.Models.DTO.Gebruiker;
 public class ErvaringsDeskundigeDetails : GebruikerDetails {
@@ -7,8 +8,8 @@ public class ErvaringsDeskundigeDetails : GebruikerDetails {
   public bool ToestemmingBenadering { get; set; }
   public string Leeftijdscategorie { get; set; }
 
-  public List<Voorkeurbenadering> Voorkeurbenaderingen { get; } = new();
-  public List<Hulpmiddel> Hulpmiddelen { get; } = new();
+  public List<VoorkeurbenaderingDto> Voorkeurbenaderingen { get; } = new();
+  public List<HulpmiddelDto> Hulpmiddelen { get; } = new();
   public List<TypeBeperking> TypeBeperkingen { get; } = new();
 
   public Guid? VoogdId { get; set; }

@@ -30,10 +30,10 @@ public class SQLGebruikerRepository : IGebruikerRepository {
           Naam = hulpmiddel
         };
         await _context.Hulpmiddelen.AddAsync(nieuwHulpmiddel);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
       }
 
-      var test = _context.Hulpmiddelen.ToList();
+      //var test = _context.Hulpmiddelen.ToList();
       var hulp = await _context.Hulpmiddelen.FirstAsync(x => x.Naam.Equals(hulpmiddel));
       if (hulp == null) { return new RegisterResponseDto(false, "Een hulpmiddel kon niet worden gevonden"); }
 
@@ -44,6 +44,34 @@ public class SQLGebruikerRepository : IGebruikerRepository {
     await _context.SaveChangesAsync();
 
     return new RegisterResponseDto(true, "Hulpmiddelen toegevoegd");
+  }
+
+  public async Task<RegisterResponseDto> VoegBenaderingToe(string[] Benaderingen, Guid GebruikerId) {
+    var gebruiker = await _context.Ervaringsdeskundigen.FindAsync(GebruikerId);
+    if (gebruiker == null) { return new RegisterResponseDto(false, "Gebruiker niet gevonden"); }
+
+    foreach (var benadering in Benaderingen) {
+      var exists = _context.Voorkeurbenaderingen.Any(h => h.Type.Equals(benadering));
+
+      if (!exists) {
+        var nieuwBenadering = new Voorkeurbenadering {
+          Type = benadering
+        };
+        await _context.Voorkeurbenaderingen.AddAsync(nieuwBenadering);
+        await _context.SaveChangesAsync();
+      }
+
+      //var test = _context.Hulpmiddelen.ToList();
+      var ben = await _context.Voorkeurbenaderingen.FirstAsync(x => x.Type.Equals(benadering));
+      if (ben == null) { return new RegisterResponseDto(false, "Een voorkeurbenadering kon niet worden gevonden"); }
+
+      gebruiker.Voorkeurbenaderingen.Add(ben);
+      ben.Ervaringsdeskundigen.Add(gebruiker);
+    }
+
+    await _context.SaveChangesAsync();
+
+    return new RegisterResponseDto(true, "Benaderingen toegevoegd");
   }
 
 }
