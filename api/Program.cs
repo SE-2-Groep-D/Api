@@ -7,8 +7,6 @@ using Api.Repositories;
 using Api.Repositories.IGebruikerRepository;
 using Api.Repositories.IBerichtRepository;
 using Microsoft.AspNetCore.Authentication.Google;
-using Api.Repositories.VragenlijstRepository;
-using Api.Repositories.VragenRepository;
 using Api.Repositories.ITrackingRepository;
 using Api.CustomMiddleware;
 using Api.Hubs;
