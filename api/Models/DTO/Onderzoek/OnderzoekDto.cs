@@ -5,7 +5,7 @@ public class OnderzoekDto {
   //duur
 
   public string Titel { get; set; }
-  public string AantalParticipanten { get; set; }
+  public int AantalParticipanten { get; set; }
   public string websiteUrl { get; set; }
   public DateTime StartDatum { get; set; }
   public string? Omschrijving { get; set; }

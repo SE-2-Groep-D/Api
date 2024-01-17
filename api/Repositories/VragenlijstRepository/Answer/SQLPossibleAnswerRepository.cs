@@ -35,8 +35,8 @@ public class SQLPossibleAnswerRepository : IPossibleAnswerRepository {
     await _context.SaveChangesAsync();
   }
 
-  public async Task DeleteAnswers(List<Models.Domain.Research.Questionlist.Answer> answers) {
-    _context.Answers.RemoveRange(answers);
+  public async Task DeleteAnswers(List<Models.Domain.Research.Questionlist.PossibleAnswer> answers) {
+    _context.PossibleAnswers.RemoveRange(answers);
     await _context.SaveChangesAsync();
   }
 
@@ -44,9 +44,9 @@ public class SQLPossibleAnswerRepository : IPossibleAnswerRepository {
     foreach (var updateDto in dtos) {
       if (updateDto.Id != null) continue;
       
-      var mapped = _mapper.Map<Models.Domain.Research.Questionlist.Answer>(updateDto);
+      var mapped = _mapper.Map<Models.Domain.Research.Questionlist.PossibleAnswer>(updateDto);
       mapped.QuestionId = id;
-      _context.Answers.Add(mapped);
+      _context.PossibleAnswers.Add(mapped);
     }
 
     await _context.SaveChangesAsync();
