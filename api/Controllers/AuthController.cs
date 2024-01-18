@@ -119,7 +119,7 @@ public class AuthController : ControllerBase {
 
     var response = mapper.Map<LoginResponseDto>(gebruiker);
 
-    response.UserType = GetUserType(gebruiker);
+    response.UserType = await GetUserType(gebruiker);
 
     HttpContext.Response.Cookies.Append(
         "access_token",
@@ -150,7 +150,7 @@ public class AuthController : ControllerBase {
 
     var response = mapper.Map<LoginResponseDto>(gebruiker);
 
-    response.UserType = GetUserType(gebruiker);
+    response.UserType = await GetUserType(gebruiker);
 
     HttpContext.Response.Cookies.Append(
         "access_token",
@@ -203,7 +203,7 @@ public class AuthController : ControllerBase {
       var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
 
       var response = mapper.Map<LoginResponseDto>(gebruiker);
-      response.UserType = GetUserType(gebruiker);
+      response.UserType = await GetUserType(gebruiker);
 
       HttpContext.Response.Cookies.Append(
           "access_token",
@@ -224,20 +224,11 @@ public class AuthController : ControllerBase {
   }
 
 
-  private string GetUserType(Gebruiker gebruiker) {
-    switch (gebruiker) {
-      case Bedrijf:
-        return "Bedrijf";
+  private async Task<string> GetUserType(Gebruiker gebruiker) {
+    var roles = await gebruikerManager.GetRolesAsync(gebruiker);
 
-      case Ervaringsdeskundige:
-        return "Ervaringsdeskundige";
-
-      case Medewerker:
-        return "Medewerker";
-
-      default:
-        return "Gebruiker";
-    }
+    var role = roles.Single();
+    return role;
   }
 
 }
