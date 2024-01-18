@@ -5,12 +5,14 @@ using Api.Models.DTO.Gebruiker;
 using Api.Models.DTO.Onderzoek;
 using Api.Services.IUserService;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class DashboardController : ControllerBase {
 
   private readonly AccessibilityDbContext _dbContext;

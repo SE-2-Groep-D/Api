@@ -2,12 +2,14 @@
 using Api.Models.DTO.Gebruiker;
 using Api.Models.DTO.Gebruiker.request;
 using Api.Services.IUserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class GebruikerController : ControllerBase {
 
   private readonly IUserService _userService;
@@ -21,6 +23,7 @@ public class GebruikerController : ControllerBase {
 
   [HttpGet]
   [Route("list")]
+  [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> GetAll() {
     var lessDetailUsers = await _userService.GetUsersAsync();
     return Ok(lessDetailUsers);
@@ -67,6 +70,7 @@ public class GebruikerController : ControllerBase {
 
   [HttpDelete]
   [Route("{id}/delete")]
+  [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> Delete([FromRoute] string id) {
     var user = await _userManager.FindByIdAsync(id);
 

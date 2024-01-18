@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Api.Repositories.IBerichtRepository;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Api.Controllers {
 
 
   //localhost:3001/bericht
   [Route("[controller]")]
   [ApiController]
+  [Authorize]
   public class BerichtController : ControllerBase {
 
     private IBerichtRepository BerichtRepository;

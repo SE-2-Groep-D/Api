@@ -3,11 +3,13 @@ using Api.Models.DTO.Onderzoek.results;
 using Api.Repositories.ITrackingRepository;
 using Api.Repositories.VragenlijstRepository;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class ResultatenController : ControllerBase {
 
   private readonly IMapper _mapper;

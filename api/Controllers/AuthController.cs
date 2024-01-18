@@ -187,8 +187,6 @@ public class AuthController : ControllerBase {
   public async Task<IActionResult> Authenticate([FromBody] GoogleRequestDto request) {
     var settings = new GoogleJsonWebSignature.ValidationSettings();
 
-    // Change this to your google client ID
-
     var clientId = "169633306915-is0h5dvfs7e6cu1ic8ee17qjpf787qmn.apps.googleusercontent.com";
     if (clientId == null) { return StatusCode(500); }
 

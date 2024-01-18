@@ -8,10 +8,12 @@ using System;
 using Api.Models.Domain.Research.Questionlist;
 using Api.Models.DTO.Onderzoek.request;
 using Api.Models.DTO.Onderzoek.response;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class VragenlijstController : ControllerBase {
 
   private readonly IMapper _mapper;
@@ -42,6 +44,7 @@ public class VragenlijstController : ControllerBase {
   }
   
   [HttpPost]
+  [Authorize(Roles = "Bedrijf, Beheerder")]
   public async Task<ActionResult> Create(CreateQuestionListDto questionListDto) {
     var list = await _vragenlijstRepository.CreateAsync(questionListDto);
     if (list == null) {
@@ -64,6 +67,7 @@ public class VragenlijstController : ControllerBase {
   }
   
   [HttpDelete("{id}")]
+  [Authorize(Roles = "Bedrijf, Beheerder")]
   public async Task<ActionResult> Delete([FromRoute] Guid id) {
     var list = await _vragenlijstRepository.DeleteAsync(id);
     if (!list) {
@@ -90,6 +94,7 @@ public class VragenlijstController : ControllerBase {
   }
   
   [HttpGet("{id}/results")]
+  [Authorize(Roles = "Bedrijf, Beheerder")]
   public async Task<ActionResult> SubmitAnswers([FromRoute] Guid id) {
     try {
       List<Answer> answers = await _vragenlijstRepository.GetAnswers(id);
