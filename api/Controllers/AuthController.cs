@@ -227,15 +227,6 @@ public class AuthController : ControllerBase {
   }
 
 
-
-  [HttpGet]
-  [Authorize]
-  public async Task<IActionResult> test() {
-    //var userName = User?.FindFirstValue(ClaimTypes.Email);
-
-    return Ok("yeye");
-  }
-
   private string GetUserType(Gebruiker gebruiker) {
     switch (gebruiker) {
       case Bedrijf:
