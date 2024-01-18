@@ -33,7 +33,7 @@ public class NieuwsbriefController : ControllerBase {
   }
 
   [HttpPost]
-  [Authorize(Roles = "Medewerker, Beheerder")]
+  [Authorize(Roles = "Medewerker,Beheerder")]
   public async Task<IActionResult> CreateNieuwsBrief([FromBody] CreateNiewsbriefDto request) {
     try {
       var brief = _mapper.Map<Nieuwsbrief>(request);
@@ -48,7 +48,7 @@ public class NieuwsbriefController : ControllerBase {
 
   
   [HttpPut("update/{id}")]
-  [Authorize(Roles = "Medewerker, Beheerder")]
+  [Authorize(Roles = "Medewerker,Beheerder")]
   public async Task<IActionResult> UpdateNieuwsbrief([FromRoute] Guid id, [FromBody] UpdateNieuwsbriefDto request) {
     var nieuwsbrief = await _dbContext.Nieuws.FindAsync(id);
     if (nieuwsbrief == null) {
@@ -61,7 +61,7 @@ public class NieuwsbriefController : ControllerBase {
   }
 
   [HttpDelete("delete/{id}")]
-  [Authorize(Roles = "Medewerker, Beheerder")]
+  [Authorize(Roles = "Medewerker,Beheerder")]
   public async Task<IActionResult> DeleteNieuwsbrief([FromRoute] Guid id) {
     var bericht = await _dbContext.Nieuws.FindAsync(id);
     if (bericht == null) return NotFound();
