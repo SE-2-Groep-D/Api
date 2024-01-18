@@ -1,11 +1,13 @@
 ﻿using Api.Models.DTO.Onderzoek.tracking;
 using Api.Repositories.ITrackingRepository;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class TrackingController : ControllerBase {
 
   private readonly IMapper _mapper;
@@ -44,7 +46,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpPost("create")]
-  // [Authorize(Roles = "Bedrijf")]
+  [Authorize(Roles = "Bedrijf, Beheerder")]
   public async Task<IActionResult> CreateTrackingResearch([FromBody] CreateTrackingResearchDto request) {
     var created = await _repository.CreateTrackingResearch(request);
     if (!created) return NotFound();
@@ -52,6 +54,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpDelete("{id}")]
+  [Authorize(Roles = "Bedrijf, Beheerder")]
   public async Task<IActionResult> DeleteResearch(Guid id) {
     var resultaat = await _repository.DeleteTrackingResearch(id);
     if (!resultaat) return BadRequest();

@@ -1,4 +1,6 @@
-﻿namespace Api.Models.DTO.Onderzoek;
+﻿using Api.CustomActionFilters.CustomAttributes;
+
+namespace Api.Models.DTO.Onderzoek;
 public class OnderzoekAgendaDto {
 
   public Guid Id { get; set; }
@@ -7,6 +9,7 @@ public class OnderzoekAgendaDto {
   public string Title { get; set; }
   public int Participants { get; set; }
   public DateTime Date { get; set; }
+  [AllowedValues("open", "active", "ended")]
   public string? Status { get; set; }
 
 }
