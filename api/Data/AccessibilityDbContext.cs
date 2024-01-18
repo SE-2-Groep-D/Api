@@ -51,12 +51,14 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
         .HasMany(e => e.VerzondenBerichten)
         .WithOne(e => e.Verzender)
         .HasForeignKey(e => e.VerzenderId)
-        .IsRequired();
+        .IsRequired()
+        .OnDelete(DeleteBehavior.Restrict);
     builder.Entity<Gebruiker>()
             .HasMany(e => e.OntvangenBerichten)
             .WithOne(e => e.Ontvanger)
             .HasForeignKey(e => e.OntvangerId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
     
 
     builder.Entity<Onderzoek>()
