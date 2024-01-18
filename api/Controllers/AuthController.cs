@@ -16,8 +16,6 @@ namespace Api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase {
 
-  private readonly IConfiguration configuration;
-
   private readonly UserManager<Gebruiker> gebruikerManager;
   private readonly IGebruikerRepository gebruikerRepository;
   private readonly IMapper mapper;

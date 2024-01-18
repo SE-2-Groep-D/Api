@@ -4,7 +4,6 @@ namespace Api.Models.DTO.Auth.request;
 public class RegisterRequestDto {
     [Required]
     public string Voornaam { get; set; }
-    [Required]
     public string Achternaam { get; set; }
     public bool? GoogleAccount { get; set; } = false;
     [Required]
