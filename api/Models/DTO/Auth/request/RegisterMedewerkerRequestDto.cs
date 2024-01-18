@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Models.DTO.Auth.request; 
+namespace Api.Models.DTO.Auth.request;
 public class RegisterMedewerkerRequestDto : RegisterRequestDto {
-    [Required]
+  [Required]
   public string Functie { get; set; }
 
 }

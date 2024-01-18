@@ -16,6 +16,8 @@ namespace Api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase {
 
+
+
   private readonly UserManager<Gebruiker> gebruikerManager;
   private readonly IGebruikerRepository gebruikerRepository;
   private readonly IMapper mapper;
@@ -23,12 +25,11 @@ public class AuthController : ControllerBase {
   private readonly IUserService userService;
 
   public AuthController(UserManager<Gebruiker> gebruikerManager, IGebruikerRepository gebruikerRepository, IUserService userService,
-    ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
+    ITokenService tokenService, IMapper mapper) {
     this.gebruikerManager = gebruikerManager;
     this.userService = userService;
     this.tokenService = tokenService;
     this.mapper = mapper;
-    this.configuration = configuration;
     this.gebruikerRepository = gebruikerRepository;
   }
 
