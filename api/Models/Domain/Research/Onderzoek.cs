@@ -1,4 +1,7 @@
-﻿using Api.Models.Domain.Research.Tracking;
+﻿
+
+using Api.Models.Domain.Research.Questionlist;
+using Api.Models.Domain.Research.Tracking;
 using Api.Models.Domain.User;
 
 namespace Api.Models.Domain.Research;
@@ -17,7 +20,8 @@ public class Onderzoek {
   public string Locatie { get; set; }
   public Status Status { get; set; }
 
-  public ICollection<Vragenlijst> Vragenlijst { get; } = new List<Vragenlijst>();
+
+  public ICollection<Questionlist.QuestionList> Vragenlijst { get; } = new List<Questionlist.QuestionList>();
   public ICollection<TrackingOnderzoek> TrackingResultaten { get; } = new List<TrackingOnderzoek>();
   public List<Ervaringsdeskundige> Ervaringsdeskundigen { get; } = new();
   public List<OnderzoekErvaringsdekundige> OnderzoekErvaringsdekundigen { get; } = new();
@@ -27,7 +31,7 @@ public class Onderzoek {
 }
 
 public enum Status {
-
-  open, active, ended
-
+  open,
+  active,
+  ended
 }

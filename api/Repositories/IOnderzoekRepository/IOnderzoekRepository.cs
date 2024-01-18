@@ -1,6 +1,5 @@
 ﻿using Api.Models.Domain;
 using Api.Models.Domain.Research;
-using Api.Models.DTO.Onderzoek;
 
 namespace Api.Repositories; 
 public interface IOnderzoekRepository {

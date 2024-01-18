@@ -4,24 +4,23 @@ using Api.Data;
 using Api.Mappings;
 using Api.Models.Domain.User;
 using Api.Repositories;
-using Api.Repositories.AntwoordRepository;
 using Api.Repositories.IGebruikerRepository;
 using Api.Repositories.IBerichtRepository;
+
 using Microsoft.AspNetCore.Authentication.Google;
+
 using Api.Repositories.VragenlijstRepository;
-using Api.Repositories.VragenRepository;
+
 using Api.Repositories.ITrackingRepository;
-using Api.CustomMiddleware;
 using Api.Hubs;
-using Api.Repositories.ITrackingRepository;
-using Api.Repositories.VragenlijstRepository;
-using Api.Repositories.VragenRepository;
+using Api.Repositories.VragenlijstRepository.Answer;
 using Api.Services.ITokenService;
 using Api.Services.IUserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 
 namespace Api;
 public class Program {
@@ -117,8 +116,8 @@ public class Program {
     services.AddScoped<IBerichtRepository, SQLBerichtRepository>();
     services.AddScoped<IGebruikerRepository, SQLGebruikerRepository>();
     services.AddScoped<IVragenlijstRepository, SQLVragenlijstRepository>();
-    services.AddScoped<IVraagRepository, SQLVraagRepository>();
-    services.AddScoped<IAntwoordRepository, SQLAntwoordRepository>();
+    services.AddScoped<IQuestionRepository, SQLQuestionRepository>();
+    services.AddScoped<IPossibleAnswerRepository, SQLPossibleAnswerRepository>();
     services.AddScoped<ITrackingRepository, TrackingRepository>();
     services.AddScoped<IOnderzoekRepository, SQLOnderzoekRepository>();
 
