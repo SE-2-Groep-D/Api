@@ -1,12 +1,15 @@
-﻿using Api.Models.Domain.Research;
+﻿using Api.Models.Domain;
+using Api.Models.Domain.Research;
 using Api.Models.DTO.Onderzoek;
 using Api.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class OnderzoekController : ControllerBase {
 
   private readonly IMapper _mapper;
@@ -43,6 +46,7 @@ public class OnderzoekController : ControllerBase {
 
   [HttpPost]
   [Route("create")]
+  [Authorize(Roles = "Bedrijf, Beheerder")]
   public async Task<ActionResult<OnderzoekDto>> Create([FromBody] AddOnderzoekRequestDto addDto) {
     var onderzoek = _mapper.Map<Onderzoek>(addDto);
     onderzoek = await _onderzoekRepository.CreateAsync(onderzoek);
@@ -53,6 +57,7 @@ public class OnderzoekController : ControllerBase {
 
   [HttpPut]
   [Route("update/{id}")]
+  [Authorize(Roles = "Bedrijf, Beheerder")]
   public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOnderzoekRequestDto request) {
     try {
       var bestaandOnderzoek = await _onderzoekRepository.GetByIdAsync(id);
@@ -80,6 +85,7 @@ public class OnderzoekController : ControllerBase {
 
   [HttpDelete]
   [Route("delete/{id}")]
+  [Authorize(Roles = "Bedrijf, Beheerder")]
   public async Task<IActionResult> Delete(Guid id) {
     var success = await _onderzoekRepository.DeleteAsync(id);
     if (!success) {
@@ -88,5 +94,25 @@ public class OnderzoekController : ControllerBase {
 
     return Ok("Onderzoek is verwijderd.");
   }
+  
+  [HttpPost]
+  [Route("registration")]
+  public async Task<ActionResult<AddRegistrationDto>> Registration([FromBody] AddRegistrationDto addDto) {
+    var registration = _mapper.Map<OnderzoekErvaringsdekundige>(addDto);
+    await _onderzoekRepository.CreateRegistrationAsync(registration);
+    return Ok("Registratie is aangemaakt.");
+  }
+  
+  [HttpGet]
+  [Route("registration/list/{id}")]
+  public async Task<ActionResult> GetRegistrationByResearchId(Guid id) {
+    var registrationList = await _onderzoekRepository.GetRegistrationByResearchId(id);
+    if (!registrationList.Any()) {
+      return NotFound();
+    }
+
+    return Ok(registrationList);
+  }
+
 
 }

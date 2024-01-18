@@ -16,7 +16,7 @@ namespace Api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase {
 
-  private readonly IConfiguration configuration;
+
 
   private readonly UserManager<Gebruiker> gebruikerManager;
   private readonly IGebruikerRepository gebruikerRepository;
@@ -25,12 +25,11 @@ public class AuthController : ControllerBase {
   private readonly IUserService userService;
 
   public AuthController(UserManager<Gebruiker> gebruikerManager, IGebruikerRepository gebruikerRepository, IUserService userService,
-    ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
+    ITokenService tokenService, IMapper mapper) {
     this.gebruikerManager = gebruikerManager;
     this.userService = userService;
     this.tokenService = tokenService;
     this.mapper = mapper;
-    this.configuration = configuration;
     this.gebruikerRepository = gebruikerRepository;
   }
 
@@ -63,6 +62,14 @@ public class AuthController : ControllerBase {
         await gebruikerRepository.VoegHulpmiddelenToe(registerErvaringsdeskundigeRequestDto.NieuweHulpmiddelen, AangemaakteGebruiker.Id);
       if (!resultHulpmiddel.Succeeded) {
         return Ok(resultHulpmiddel.Message);
+      }
+    }
+
+    if (result.Succeeded && registerErvaringsdeskundigeRequestDto.NieuweVoorkeursbenaderingen != null && AangemaakteGebruiker != null) {
+      var resultBenadering =
+        await gebruikerRepository.VoegBenaderingToe(registerErvaringsdeskundigeRequestDto.NieuweVoorkeursbenaderingen, AangemaakteGebruiker.Id);
+      if (!resultBenadering.Succeeded) {
+        return Ok(resultBenadering.Message);
       }
     }
 
@@ -179,8 +186,6 @@ public class AuthController : ControllerBase {
   public async Task<IActionResult> Authenticate([FromBody] GoogleRequestDto request) {
     var settings = new GoogleJsonWebSignature.ValidationSettings();
 
-    // Change this to your google client ID
-
     var clientId = "169633306915-is0h5dvfs7e6cu1ic8ee17qjpf787qmn.apps.googleusercontent.com";
     if (clientId == null) { return StatusCode(500); }
 
@@ -218,15 +223,6 @@ public class AuthController : ControllerBase {
 
   }
 
-
-
-  [HttpGet]
-  [Authorize]
-  public async Task<IActionResult> test() {
-    //var userName = User?.FindFirstValue(ClaimTypes.Email);
-
-    return Ok("yeye");
-  }
 
   private string GetUserType(Gebruiker gebruiker) {
     switch (gebruiker) {

@@ -1,77 +1,128 @@
-﻿using Api.Data;
-using Api.Models.Domain.Research;
-using Api.Models.DTO.Onderzoek;
+﻿using System.Runtime.InteropServices.JavaScript;
+using Api.Data;
+using Api.Models.Domain.Research.Questionlist;
+using Api.Models.DTO.Onderzoek.request;
+using Api.Models.DTO.Onderzoek.response;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Api.Repositories.VragenlijstRepository;
 public class SQLVragenlijstRepository : IVragenlijstRepository {
 
+  private AccessibilityDbContext _context;
   private readonly IMapper _mapper;
+  private readonly IQuestionRepository _questionRepository;
 
-  private readonly AccessibilityDbContext _context;
 
-  public SQLVragenlijstRepository(AccessibilityDbContext context, IMapper mapper) {
+  public SQLVragenlijstRepository(AccessibilityDbContext context, IMapper mapper, IQuestionRepository questionRepository) {
+    _questionRepository = questionRepository;
     _context = context;
     _mapper = mapper;
   }
 
-  public async Task<List<Vragenlijst>> GetAllAsync(Guid OnderzoekId) {
-    return await _context.Vragenlijsten.Where(v => v.OnderzoekId == OnderzoekId).ToListAsync();
+  public async Task<List<QuestionList>> GetAllAsync(Guid onderzoekId) {
+    return await _context.Questionlist.Where(l => l.OnderzoekId == onderzoekId).Include(q => q.Questions).ToListAsync();
   }
 
-  public async Task<VragenlijstDto?> GetByIdAsync(Guid id) {
-    var vragenlijst = _context.Vragenlijsten
-      .Include(v => v.Vragen)
-      .ThenInclude(v => v.Antwoorden)
-      .SingleOrDefault(v => v.Id == id);
+  public async Task<QuestionList?> GetByIdAsync(Guid questionListId) {
+    return await _context.Questionlist.Include(ql => ql.Questions).ThenInclude(q => q.PossibleAnswers).FirstOrDefaultAsync(); 
+  }
 
-    if (vragenlijst == null) {
+
+
+  public async Task<QuestionList?> CreateAsync(CreateQuestionListDto dto) {
+    try {
+      var questionList = _mapper.Map<QuestionList>(dto);
+      
+      await _context.AddAsync(questionList);
+      await _context.SaveChangesAsync();
+
+      return questionList;
+    } catch (Exception ex) {
+      Console.WriteLine(ex.Message);
       return null;
     }
-
-    var vragenlijstDTO = _mapper.Map<VragenlijstDto>(vragenlijst);
-    await AddResearchInfo(vragenlijst, vragenlijstDTO);
-    return vragenlijstDTO;
   }
 
-  public async Task<Vragenlijst> CreateAsync(Vragenlijst vragenlijst) {
-    await _context.Vragenlijsten.AddAsync(vragenlijst);
-    await _context.SaveChangesAsync();
-    return vragenlijst;
+  public async Task<QuestionList?> UpdateAsync(Guid id, UpdateQuestionListDto dto) {
+    var questionList = await GetByIdAsync(id);
+    if (questionList == null) return null;
+    var itemsToUpdate = dto.GetType().GetProperties().Count(p => p.Name != "Questions" && p.GetValue(dto) != null);
 
-  }
-
-  public async Task<Vragenlijst?> UpdateAsync(Guid id, VragenlijstDto vragenlijst) {
-    var bestaandVragenlijst = await _context.Vragenlijsten.FindAsync(id);
-    _context.Entry(bestaandVragenlijst).CurrentValues.SetValues(vragenlijst);
-    await _context.SaveChangesAsync();
-    return bestaandVragenlijst;
-  }
-
-  public async Task<bool> DeleteAsync(Guid id) {
-
-    var vragenlijst = await _context.Vragenlijsten.FindAsync(id);
-    if (vragenlijst == null) {
-      return false;
+    await _questionRepository.ManageQuestions(questionList, dto.Questions);
+    if (itemsToUpdate == 0) {
+      return questionList;
     }
 
-    _context.Vragenlijsten.Remove(vragenlijst);
+    _mapper.Map(dto, questionList);
     await _context.SaveChangesAsync();
-    return true;
-
+    return questionList;
   }
 
-  public async Task AddResearchInfo(Vragenlijst trackingOnderzoek, VragenlijstDto dto) {
-    var onderzoek = await _context.Onderzoeken.FindAsync(trackingOnderzoek.OnderzoekId);
-    dto.Participants = onderzoek == null ? 0 : onderzoek.AantalParticipanten;
-    dto.TotalQuestions = trackingOnderzoek.Vragen.Count();
-    dto.TotalAwnsers = trackingOnderzoek.Vragen.Sum(vraag => vraag.Antwoorden.Count());
 
-    // dto.TimePerPage = (int)trackingOnderzoek.TrackingResultaten
-    //   .Select(resultaten => resultaten.TimeInSeconds)
-    //   .DefaultIfEmpty(0) 
-    //   .Average() / 60;
+  public async Task<bool> DeleteAsync(Guid guid) {
+    var list = await GetByIdAsync(guid);
+    if (list == null) return true;
+    await _questionRepository.DeleteQuestions(list.Questions);
+    _context.Questionlist.Remove(list);
+    await _context.SaveChangesAsync();
+    return true;
+  }
+  
+  public async Task<BigQuestionListDto?> GetInfo(Guid id) {
+    var questionList = await _context.Questionlist
+      .Include(ql => ql.Onderzoek)
+      .Include(ql => ql.Questions)
+      .ThenInclude(q => q.GivenAnswers)
+      .Include(ql => ql.Questions)
+      .ThenInclude(q => q.PossibleAnswers)
+      .FirstOrDefaultAsync(ql => ql.Id.Equals(id));
+
+    if (questionList == null) {
+      return null;
+    }
+    var dto = _mapper.Map<BigQuestionListDto>(questionList);
+    
+    foreach (var dtoQuestion in dto.Questions) {
+      var matchingQuestion = questionList.Questions.FirstOrDefault(q => q.Id.Equals(dtoQuestion.Id));
+      dtoQuestion.TotalAnswers = matchingQuestion?.GivenAnswers.Count ?? 0;
+    }
+    
+    
+    dto.Participants = questionList.Onderzoek.Ervaringsdeskundigen?.Count ?? 0;
+    dto.TotalQuestions = questionList.Questions?.Count ?? 0;
+    dto.TotalAnwsers = questionList?.Questions.Sum(q => q.GivenAnswers.Count) ?? 0;
+    
+    return dto;
+  }
+
+  public async Task<QuestionList?> SubmitAnswers(Guid id, SubmitAnswersDto dto) {
+    var list = await _context.Questionlist.Include(ql => ql.Questions).ThenInclude(q => q.GivenAnswers).SingleOrDefaultAsync(q => q.Id.Equals(id));
+    if (list == null) {
+      return null;
+    }
+    
+    var answers = _mapper.Map<List<Models.Domain.Research.Questionlist.Answer>>(dto.Answers);
+    if (answers == null) {
+      throw new Exception("Could not map Answer from list.");
+    }
+    
+    var answerGroups = answers.GroupBy(answer => answer.QuestionId);
+    foreach (var group in answerGroups) {
+      var question = list.Questions.FirstOrDefault(q => q.Id.Equals(group.Key));
+      Console.WriteLine(question == null);
+      Console.WriteLine(group.Key);
+      if(question == null) continue;
+      question.GivenAnswers.AddRange(group);
+    }
+    
+    await _context.SaveChangesAsync();
+    return list;
+  }
+
+  public async Task<List<Models.Domain.Research.Questionlist.Answer>> GetAnswers(Guid questionListId) {
+    return await _context.Answers.Where(answer => answer.Question.QuestionListId.Equals(questionListId)).ToListAsync();;
   }
 
 }

@@ -1,18 +1,23 @@
-﻿using Api.Models.Domain.Research;
-using Api.Models.DTO.Onderzoek;
+﻿using Api.Models.Domain.Research.Questionlist;
+using Api.Models.DTO.Onderzoek.request;
+using Api.Models.DTO.Onderzoek.response;
 
 namespace Api.Repositories.VragenlijstRepository;
 public interface IVragenlijstRepository {
 
 
-  Task<List<Vragenlijst?>> GetAllAsync(Guid OnderzoekId);
-  Task<VragenlijstDto?> GetByIdAsync(Guid id);
+  Task<List<QuestionList>> GetAllAsync(Guid onderzoekId);
+  Task<QuestionList?> GetByIdAsync(Guid id);
 
-  Task<Vragenlijst> CreateAsync(Vragenlijst vragenlijst);
+  Task<QuestionList?> CreateAsync(CreateQuestionListDto questionListDto);
 
 
-  Task<Vragenlijst?> UpdateAsync(Guid id, VragenlijstDto vragenlijst);
+ Task<QuestionList?> UpdateAsync(Guid id, UpdateQuestionListDto updateDto);
 
   Task<bool> DeleteAsync(Guid id);
+  Task<BigQuestionListDto?> GetInfo(Guid id);
+
+  Task<QuestionList?> SubmitAnswers(Guid id, SubmitAnswersDto dto);
+  Task<List<Models.Domain.Research.Questionlist.Answer>> GetAnswers(Guid questionListId);
 
 }

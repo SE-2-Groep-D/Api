@@ -8,9 +8,8 @@ public class AuthorizationHeaderMiddleware {
   }
 
   public async Task InvokeAsync(HttpContext context) {
-
     var token = context.Request.Cookies["access_token"];
-    Console.WriteLine(token != null ? token : "er is geen token");
+    // Console.WriteLine(token != null ? token : "er is geen token");
     if (token != null) {
       context.Request.Headers.Append("Authorization", $"Bearer {token}");
     }
