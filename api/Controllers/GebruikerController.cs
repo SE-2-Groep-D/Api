@@ -41,7 +41,7 @@ public class GebruikerController : ControllerBase {
     
     var user = await _userService.GetUserByIdentification(id);
     var claimedUser = await _userService.GetUserByIdentification(email);
-    if (role != "Beheerder" &&  (claimedUser == null || claimedUser != user)) {
+    if (role != "Beheerder" && role != "Bedrijf" && (claimedUser == null || claimedUser != user)) {
       return BadRequest("Ongeldig token.");
     }
 
