@@ -24,7 +24,7 @@ public class GebruikerController : ControllerBase {
 
   [HttpGet]
   [Route("list")]
-  //[Authorize(Roles = "Beheerder")]
+  [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> GetAll() {
     var lessDetailUsers = await _userService.GetUsersAsync();
     return Ok(lessDetailUsers);
