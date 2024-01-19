@@ -7,31 +7,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moq;
 
 namespace Api.Tests.Chats {
    public class getChats {
 
     [Fact]
     public async Task GetChats_ReturnsChatsForUser() {
+      
       // Arrange
-
       var predefinedChatData = new List<ChatResponseDto>
 {
     new ChatResponseDto
     {
-        OtherUserId = Guid.NewGuid(), // Simulating another user's ID
-        LastMessage = "Hello, how are you?",
+        OtherUserId = Guid.NewGuid(),
+        LastMessage = new BerichtDto
+        {
+            Tekst = "Hello, how are you?"
+        },
         TotalMessages = 10,
         Naam = "John Doe"
     },
     new ChatResponseDto
     {
         OtherUserId = Guid.NewGuid(),
-        LastMessage = "Are we still meeting tomorrow?",
+        LastMessage = new BerichtDto
+        {
+            Tekst = "Are we still meeting tomorrow?"
+        },
         TotalMessages = 5,
         Naam = "Jane Smith"
     }
 };
+
 
       var testUserId = Guid.NewGuid();
 
