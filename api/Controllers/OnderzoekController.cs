@@ -46,7 +46,7 @@ public class OnderzoekController : ControllerBase {
 
   [HttpPost]
   [Route("create")]
-  [Authorize(Roles = "Bedrijf, Beheerder")]
+  [Authorize(Roles = "Bedrijf,Beheerder")]
   public async Task<ActionResult<OnderzoekDto>> Create([FromBody] AddOnderzoekRequestDto addDto) {
     var onderzoek = _mapper.Map<Onderzoek>(addDto);
     onderzoek = await _onderzoekRepository.CreateAsync(onderzoek);
@@ -57,7 +57,7 @@ public class OnderzoekController : ControllerBase {
 
   [HttpPut]
   [Route("update/{id}")]
-  [Authorize(Roles = "Bedrijf, Beheerder")]
+  [Authorize(Roles = "Bedrijf,Beheerder")]
   public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOnderzoekRequestDto request) {
     try {
       var bestaandOnderzoek = await _onderzoekRepository.GetByIdAsync(id);
@@ -85,7 +85,7 @@ public class OnderzoekController : ControllerBase {
 
   [HttpDelete]
   [Route("delete/{id}")]
-  [Authorize(Roles = "Bedrijf, Beheerder")]
+  [Authorize(Roles = "Bedrijf,Beheerder")]
   public async Task<IActionResult> Delete(Guid id) {
     var success = await _onderzoekRepository.DeleteAsync(id);
     if (!success) {

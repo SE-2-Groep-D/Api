@@ -46,7 +46,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpPost("create")]
-  [Authorize(Roles = "Bedrijf, Beheerder")]
+  [Authorize(Roles = "Bedrijf,Beheerder")]
   public async Task<IActionResult> CreateTrackingResearch([FromBody] CreateTrackingResearchDto request) {
     var created = await _repository.CreateTrackingResearch(request);
     if (!created) return NotFound();
@@ -54,7 +54,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpDelete("{id}")]
-  [Authorize(Roles = "Bedrijf, Beheerder")]
+  [Authorize(Roles = "Bedrijf,Beheerder")]
   public async Task<IActionResult> DeleteResearch(Guid id) {
     var resultaat = await _repository.DeleteTrackingResearch(id);
     if (!resultaat) return BadRequest();
