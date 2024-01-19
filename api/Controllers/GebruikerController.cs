@@ -38,10 +38,14 @@ public class GebruikerController : ControllerBase {
     if (email == null || role == null) {
       return BadRequest("Ongeldig token.");
     }
+
+
     
     var user = await _userService.GetUserByIdentification(id);
+    var userRoles = await _userManager.GetRolesAsync(user);
+    
     var claimedUser = await _userService.GetUserByIdentification(email);
-    if (role != "Beheerder" && role != "Bedrijf" && (claimedUser == null || claimedUser != user)) {
+    if (role != "Beheerder" && userRoles.Single() != "Bedrijf" && (claimedUser == null || claimedUser != user)) {
       return BadRequest("Ongeldig token.");
     }
 
