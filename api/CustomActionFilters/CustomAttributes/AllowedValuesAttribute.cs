@@ -9,7 +9,7 @@ namespace Api.CustomActionFilters.CustomAttributes {
     }
 
     protected override ValidationResult IsValid(object value, ValidationContext validationContext) {
-      if (_allowedValues.Contains(value.ToString())) {
+      if (value == null ||  _allowedValues.Contains(value.ToString())) {
         return ValidationResult.Success;
       }
       else {

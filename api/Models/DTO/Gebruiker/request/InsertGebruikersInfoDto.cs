@@ -23,7 +23,7 @@ public class InsertGebruikersInfoDto {
 
   // Ervaringsdeskundige
   public bool? ToestemmingBenadering { get; set; }
-  [AllowedValues("0 tot 10", "10 tot 18", "18 tot 35", "35 tot 50", "50 tot 65", "65 of ouder")]
+  [AllowedValues("0 tot 10", "10 tot 18", "18 tot 35", "35 tot 50", "50 tot 65", "65 of ouder", null)]
   public string? Leeftijdscategorie { get; set; }
   public List<string>? Benaderingen { get; set; }
   public List<string>? Hulpmiddelen { get; set; }

@@ -8,7 +8,7 @@ namespace Api.CustomActionFilters.CustomAttributes {
             var str = (string)value;
             if (str == null)
             {
-                return false;
+                return true;
             }
 
             // Check if the string starts with 4 numbers and ends with 2 letters
