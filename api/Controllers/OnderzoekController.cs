@@ -5,6 +5,7 @@ using Api.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.Controllers;
 [Route("[controller]")]
@@ -13,7 +14,6 @@ namespace Api.Controllers;
 public class OnderzoekController : ControllerBase {
 
   private readonly IMapper _mapper;
-
   private readonly IOnderzoekRepository _onderzoekRepository;
 
 
@@ -59,11 +59,19 @@ public class OnderzoekController : ControllerBase {
   [Route("update/{id}")]
   [Authorize(Roles = "Bedrijf,Beheerder")]
   public async Task<IActionResult> Update(Guid id, [FromBody] UpdateOnderzoekRequestDto request) {
+    var email = User?.FindFirstValue(ClaimTypes.Email);
+    var role = User?.FindFirstValue(ClaimTypes.Role);
     try {
       var bestaandOnderzoek = await _onderzoekRepository.GetByIdAsync(id);
 
       if (bestaandOnderzoek == null) {
         return NotFound($"Onderzoek met ID {id} is niet gevonden.");
+      }
+
+    
+      
+      if (bestaandOnderzoek.Bedrijf.Email != email && role != "Beheerder") {
+        return BadRequest("Geen toegang");
       }
 
       _mapper.Map(request, bestaandOnderzoek);

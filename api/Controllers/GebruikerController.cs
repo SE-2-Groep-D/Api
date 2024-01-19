@@ -5,6 +5,7 @@ using Api.Services.IUserService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.Controllers;
 [Route("[controller]")]
@@ -23,7 +24,7 @@ public class GebruikerController : ControllerBase {
 
   [HttpGet]
   [Route("list")]
-  [Authorize(Roles = "Beheerder")]
+  //[Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> GetAll() {
     var lessDetailUsers = await _userService.GetUsersAsync();
     return Ok(lessDetailUsers);
@@ -32,7 +33,18 @@ public class GebruikerController : ControllerBase {
   [HttpGet]
   [Route("{id}")]
   public async Task<IActionResult> GetUser([FromRoute] string id) {
+    var email = User?.FindFirstValue(ClaimTypes.Email);
+    var role = User?.FindFirstValue(ClaimTypes.Role);
+    if (email == null || role == null) {
+      return BadRequest("Ongeldig token.");
+    }
+    
     var user = await _userService.GetUserByIdentification(id);
+    var claimedUser = await _userService.GetUserByIdentification(email);
+    if (role != "Beheerder" &&  (claimedUser == null || claimedUser != user)) {
+      return BadRequest("Ongeldig token.");
+    }
+
     if (user == null) return NotFound("Gebruiker niet gevonden.");
     return Ok(_userService.GetUserDetails(user));
   }
