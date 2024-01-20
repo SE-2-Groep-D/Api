@@ -8,7 +8,7 @@ public class Ervaringsdeskundige : Gebruiker {
   public string Leeftijdscategorie { get; set; }
 
   public List<Voorkeurbenadering> Voorkeurbenaderingen { get; set; } = new();
-  public List<Hulpmiddel> Hulpmiddelen { get; set; } = new();
+  public List<Hulpmiddel> Hulpmiddelen { get; set; } = new List<Hulpmiddel>();
 
 
   public Guid? VoogdId { get; set; }
