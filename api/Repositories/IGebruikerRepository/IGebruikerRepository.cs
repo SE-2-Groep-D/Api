@@ -6,5 +6,6 @@ public interface IGebruikerRepository {
 
   public Task<List<Gebruiker>> GetAllAsync();
   public Task<RegisterResponseDto> VoegHulpmiddelenToe(string[] Hulpmiddelen, Guid GebruikerId);
+  public Task<RegisterResponseDto> VoegBenaderingToe(string[] Benaderingen, Guid GebruikerId);
 
 }

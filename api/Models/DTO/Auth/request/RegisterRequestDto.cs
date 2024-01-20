@@ -1,11 +1,16 @@
-﻿namespace Api.Models.DTO.Auth.request; 
-public class RegisterRequestDto {
+﻿using System.ComponentModel.DataAnnotations;
 
-  public string Voornaam { get; set; }
-  public string Achternaam { get; set; }
-  public bool? GoogleAccount { get; set; } = false;
-  public string Email { get; set; }
-  public string? Password { get; set; }
-  public string[]? Roles { get; set; }
+namespace Api.Models.DTO.Auth.request; 
+public class RegisterRequestDto {
+    [Required]
+    public string Voornaam { get; set; }
+    public string Achternaam { get; set; }
+    public bool? GoogleAccount { get; set; } = false;
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+    [DataType(DataType.Password)]
+    public string? Password { get; set; }
+    public string[]? Roles { get; set; }
 
 }

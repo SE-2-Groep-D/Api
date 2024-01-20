@@ -16,7 +16,7 @@ namespace Api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase {
 
-  private readonly IConfiguration configuration;
+
 
   private readonly UserManager<Gebruiker> gebruikerManager;
   private readonly IGebruikerRepository gebruikerRepository;
@@ -25,12 +25,11 @@ public class AuthController : ControllerBase {
   private readonly IUserService userService;
 
   public AuthController(UserManager<Gebruiker> gebruikerManager, IGebruikerRepository gebruikerRepository, IUserService userService,
-    ITokenService tokenService, IMapper mapper, IConfiguration configuration) {
+    ITokenService tokenService, IMapper mapper) {
     this.gebruikerManager = gebruikerManager;
     this.userService = userService;
     this.tokenService = tokenService;
     this.mapper = mapper;
-    this.configuration = configuration;
     this.gebruikerRepository = gebruikerRepository;
   }
 
@@ -66,6 +65,14 @@ public class AuthController : ControllerBase {
       }
     }
 
+    if (result.Succeeded && registerErvaringsdeskundigeRequestDto.NieuweVoorkeursbenaderingen != null && AangemaakteGebruiker != null) {
+      var resultBenadering =
+        await gebruikerRepository.VoegBenaderingToe(registerErvaringsdeskundigeRequestDto.NieuweVoorkeursbenaderingen, AangemaakteGebruiker.Id);
+      if (!resultBenadering.Succeeded) {
+        return Ok(resultBenadering.Message);
+      }
+    }
+
     return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
 
@@ -83,13 +90,11 @@ public class AuthController : ControllerBase {
   }
 
   [HttpPost]
-  [Route("RegisterMedwerker")]
+  [Route("RegisterMedewerker")]
   [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto) {
     var gebruiker = mapper.Map<Medewerker>(registerMedewerkerRequestDto);
-
     string[] Roles = { "Medewerker" };
-
     var result = await userService.Register(gebruiker, registerMedewerkerRequestDto.Password, Roles);
     return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }
@@ -112,7 +117,7 @@ public class AuthController : ControllerBase {
 
     var response = mapper.Map<LoginResponseDto>(gebruiker);
 
-    response.UserType = GetUserType(gebruiker);
+    response.UserType = await GetUserType(gebruiker);
 
     HttpContext.Response.Cookies.Append(
         "access_token",
@@ -143,7 +148,7 @@ public class AuthController : ControllerBase {
 
     var response = mapper.Map<LoginResponseDto>(gebruiker);
 
-    response.UserType = GetUserType(gebruiker);
+    response.UserType = await GetUserType(gebruiker);
 
     HttpContext.Response.Cookies.Append(
         "access_token",
@@ -179,8 +184,6 @@ public class AuthController : ControllerBase {
   public async Task<IActionResult> Authenticate([FromBody] GoogleRequestDto request) {
     var settings = new GoogleJsonWebSignature.ValidationSettings();
 
-    // Change this to your google client ID
-
     var clientId = "169633306915-is0h5dvfs7e6cu1ic8ee17qjpf787qmn.apps.googleusercontent.com";
     if (clientId == null) { return StatusCode(500); }
 
@@ -198,7 +201,7 @@ public class AuthController : ControllerBase {
       var jwtToken = tokenService.CreateJWTToken(gebruiker, roles.ToList());
 
       var response = mapper.Map<LoginResponseDto>(gebruiker);
-      response.UserType = GetUserType(gebruiker);
+      response.UserType = await GetUserType(gebruiker);
 
       HttpContext.Response.Cookies.Append(
           "access_token",
@@ -219,29 +222,11 @@ public class AuthController : ControllerBase {
   }
 
 
+  private async Task<string> GetUserType(Gebruiker gebruiker) {
+    var roles = await gebruikerManager.GetRolesAsync(gebruiker);
 
-  [HttpGet]
-  [Authorize]
-  public async Task<IActionResult> test() {
-    //var userName = User?.FindFirstValue(ClaimTypes.Email);
-
-    return Ok("yeye");
-  }
-
-  private string GetUserType(Gebruiker gebruiker) {
-    switch (gebruiker) {
-      case Bedrijf:
-        return "Bedrijf";
-
-      case Ervaringsdeskundige:
-        return "Ervaringsdeskundige";
-
-      case Medewerker:
-        return "Medewerker";
-
-      default:
-        return "Gebruiker";
-    }
+    var role = roles.Single();
+    return role;
   }
 
 }

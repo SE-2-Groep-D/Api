@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
+[Authorize]
 public class NieuwsbriefController : ControllerBase {
 
   private readonly AccessibilityDbContext _dbContext;
@@ -32,7 +33,7 @@ public class NieuwsbriefController : ControllerBase {
   }
 
   [HttpPost]
-  // [Authorize(Roles = "Medewerker")]
+  [Authorize(Roles = "Medewerker,Beheerder")]
   public async Task<IActionResult> CreateNieuwsBrief([FromBody] CreateNiewsbriefDto request) {
     try {
       var brief = _mapper.Map<Nieuwsbrief>(request);
@@ -45,8 +46,9 @@ public class NieuwsbriefController : ControllerBase {
     }
   }
 
-  // [Authorize(Roles = "Medewerker")]
+  
   [HttpPut("update/{id}")]
+  [Authorize(Roles = "Medewerker,Beheerder")]
   public async Task<IActionResult> UpdateNieuwsbrief([FromRoute] Guid id, [FromBody] UpdateNieuwsbriefDto request) {
     var nieuwsbrief = await _dbContext.Nieuws.FindAsync(id);
     if (nieuwsbrief == null) {
@@ -59,7 +61,7 @@ public class NieuwsbriefController : ControllerBase {
   }
 
   [HttpDelete("delete/{id}")]
-  // [Authorize(Roles = "Medewerker")]
+  [Authorize(Roles = "Medewerker,Beheerder")]
   public async Task<IActionResult> DeleteNieuwsbrief([FromRoute] Guid id) {
     var bericht = await _dbContext.Nieuws.FindAsync(id);
     if (bericht == null) return NotFound();

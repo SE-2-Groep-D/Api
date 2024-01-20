@@ -10,7 +10,7 @@ public class NieuwsBriefDto {
 }
 
 public class NieuwsbriefMedewerkerDto {
-  public Guid Id { get; set; } // Assuming you might want to expose the Id
+  public Guid Id { get; set; } 
   public string Voornaam { get; set; }
   public string Achternaam { get; set; }
 }

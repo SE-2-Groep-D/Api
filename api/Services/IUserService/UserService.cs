@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Api.Data;
+using Api.Models.Domain;
 using Api.Models.Domain.User;
 using Api.Models.DTO.Auth.response;
 using API.Models.DTO.Gebruiker;
@@ -15,12 +16,13 @@ public class UserService : IUserService {
 
   private readonly UserManager<Gebruiker> _gebruikerManager;
   private readonly IMapper _mapper;
+  private readonly AccessibilityDbContext _context;
 
-
-  public UserService(UserManager<Gebruiker> gebruikerManager, IMapper mapper, AccessibilityDbContext dbContext) {
+  public UserService(UserManager<Gebruiker> gebruikerManager, IMapper mapper, AccessibilityDbContext context) {
     _gebruikerManager = gebruikerManager;
 
     _mapper = mapper;
+    _context = context;
   }
 
   public LoginResponseDto CreateLoginResponse(Gebruiker gebruiker, string jwtToken) {
@@ -89,15 +91,17 @@ public class UserService : IUserService {
 
     switch (gebruiker) {
       case Ervaringsdeskundige er:
-        details = _mapper.Map<ErvaringsDeskundigeDetails>(gebruiker);
+        _context.Entry(er).Collection(h => h.Hulpmiddelen).Load();
+        _context.Entry(er).Collection(v => v.Voorkeurbenaderingen).Load();
+        details = _mapper.Map<ErvaringsDeskundigeDetails>(er);
         details.Type = "Ervaringsdeskundige";
         break;
-      
+
       case Bedrijf er:
         details = _mapper.Map<BedrijfsDetails>(gebruiker);
         details.Type = "Bedrijf";
         break;
-      
+
       case Medewerker er:
         details = _mapper.Map<MedewerkerDetails>(gebruiker);
         details.Type = "Medewerker";
@@ -129,10 +133,26 @@ public class UserService : IUserService {
 
   public async Task<UpdateGebruikerResponse> UpdateUserProperties(Gebruiker gebruiker, InsertGebruikersInfoDto request,
     Dictionary<string, Action> properties) {
-    var newUser = UpdateProperties(gebruiker, request, properties);
+    await UpdateHulpMiddelen(gebruiker, request);
+    var updatedGebruiker = await _context.Gebruikers.FirstOrDefaultAsync(g => g.Id.Equals(gebruiker.Id));
+    var newUser = UpdateProperties(updatedGebruiker, request, properties); 
     var updated = await _gebruikerManager.UpdateAsync(newUser);
     if (!updated.Succeeded) return new UpdateGebruikerResponse(false, "Could not update user.");
     return new UpdateGebruikerResponse(true, "Succesfully updated the user.");
+  }
+
+  private async Task UpdateHulpMiddelen(Gebruiker gebruiker, InsertGebruikersInfoDto dto) {
+    if (!(gebruiker is Ervaringsdeskundige) || dto.Hulpmiddelen == null) return;
+    Ervaringsdeskundige? ervaringsdeskundige = await _context.Ervaringsdeskundigen
+      .Include(e => e.Hulpmiddelen) // Include Hulpmiddelen to avoid lazy loading issues
+      .FirstOrDefaultAsync(e => e.Id == gebruiker.Id);
+
+    if (ervaringsdeskundige == null) {
+      return;
+    }
+    
+    ervaringsdeskundige.Hulpmiddelen = dto.Hulpmiddelen.Select(s => new Hulpmiddel {Naam = s}).ToList();
+    await _context.SaveChangesAsync();
   }
 
 
@@ -149,8 +169,10 @@ public class UserService : IUserService {
       }
 
       var userProp = userProps.FirstOrDefault(p => p.Name.Equals(cp.Name));
-      var newValue = cp.GetValue(request);
       if (userProp == null || cp.GetValue(request) == null) continue;
+      var newValue = cp.GetValue(request);
+      if (userProp.Name.Equals("Hulpmiddelen")) continue;
+
       userProp.SetValue(gebruiker, newValue);
     }
 
