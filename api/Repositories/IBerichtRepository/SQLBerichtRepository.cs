@@ -3,6 +3,7 @@ using Api.Models.Domain.Bericht;
 using Api.Models.DTO.Bericht;
 using Api.Models.DTO.Bericht;
 using Api.Services.IUserService;
+using API.Models.DTO.Gebruiker.response.GebruikerDetailsResponseDto;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -49,7 +50,8 @@ namespace Api.Repositories.IBerichtRepository {
 
 
       var gebruiker = await userService.GetUserByIdentification(userId);
-      var naam = gebruiker.Voornaam;
+      BedrijfsDetails bedrijf = (BedrijfsDetails)userService.GetUserDetails(gebruiker);
+      var naam = bedrijf.Bedrijfsnaam;
 
 
       return naam;
