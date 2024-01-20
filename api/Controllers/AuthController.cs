@@ -90,7 +90,7 @@ public class AuthController : ControllerBase {
   }
 
   [HttpPost]
-  [Route("RegisterMedwerker")]
+  [Route("RegisterMedewerker")]
   [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto) {
     var gebruiker = mapper.Map<Medewerker>(registerMedewerkerRequestDto);
