@@ -117,13 +117,15 @@ public class AutoMapperProfiles : Profile
 
     // CreateMap<Answer, ResponseAnswerDto>();
 
-
     // Tracking onderzoek
-    CreateMap<QuestionList, ResponseQuestionListDto>().ReverseMap();
     CreateMap<TrackingOnderzoek, ResponseTrackingDto>();
     CreateMap<CreateTrackingResearchDto, TrackingOnderzoek>().ReverseMap();
-    CreateMap<OnderzoekErvaringsdekundige, AddRegistrationDto>().ReverseMap();
+    CreateMap<SubmitTrackingResultsDto, TrackingResultaten>().ReverseMap();
+    CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>().ReverseMap();
 
+ 
+    CreateMap<QuestionList, ResponseQuestionListDto>().ReverseMap();
+    CreateMap<OnderzoekErvaringsdekundige, AddRegistrationDto>().ReverseMap();
     CreateMap<Bericht, BerichtDto>().ReverseMap();
   }
 
