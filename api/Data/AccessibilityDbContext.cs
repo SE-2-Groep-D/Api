@@ -69,12 +69,12 @@ public class AccessibilityDbContext : IdentityDbContext<Gebruiker, IdentityRole<
           .HasOne(pt => pt.Ervaringsdeskundige)
           .WithMany(t => t.OnderzoekErvaringsdekundigen)
           .HasForeignKey(pt => pt.ErvaringsdeskundigeId)
-          .OnDelete(DeleteBehavior.NoAction),
+          .OnDelete(DeleteBehavior.Restrict),
         j => j
           .HasOne(pt => pt.Onderzoek)
           .WithMany(p => p.OnderzoekErvaringsdekundigen)
           .HasForeignKey(pt => pt.OnderzoekId)
-          .OnDelete(DeleteBehavior.NoAction));
+          .OnDelete(DeleteBehavior.Cascade));
 
     builder.Entity<Question>()
       .HasMany(q => q.PossibleAnswers)
