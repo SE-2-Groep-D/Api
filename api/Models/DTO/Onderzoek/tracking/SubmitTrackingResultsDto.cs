@@ -13,7 +13,7 @@ public class SubmitTrackingResultsDto {
 
 public class ClickedItemDto {
 
-  public string? Id { get; set; }
+  public string? ItemId { get; set; }
   public string itemType { get; set; }
   public int TimeInSeconds { get; set; }
   public string Text { get; set; }
