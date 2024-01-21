@@ -122,6 +122,7 @@ public class AutoMapperProfiles : Profile
     CreateMap<CreateTrackingResearchDto, TrackingOnderzoek>().ReverseMap();
     CreateMap<SubmitTrackingResultsDto, TrackingResultaten>().ReverseMap();
     CreateMap<UpdateTrackingResearchDto, TrackingOnderzoek>().ReverseMap();
+    CreateMap<ClickedItemDto, ClickedItem>().ReverseMap();
 
  
     CreateMap<QuestionList, ResponseQuestionListDto>().ReverseMap();
