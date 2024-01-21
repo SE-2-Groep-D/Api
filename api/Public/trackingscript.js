@@ -43,7 +43,7 @@ async function sendData() {
         pagePercentage: pagePercentage,
         timeInSeconds: timeInSeconds,
         timeTillAction: timeTillAction,
-        clicks: clicks
+        clickedItems: clicks
     });
 
     console.log(data)
@@ -104,9 +104,10 @@ function getBrowserName() {
     }
 }
 
-
 buttons.forEach(button => button.addEventListener('click', addClick));
 links.forEach(button => button.addEventListener('click', addClick));
 document.addEventListener('scroll', updateScrollPercentage);
 window.addEventListener('beforeunload', sendData);
 document.getElementById("submit-tracking-data").addEventListener('click', sendData)
+
+
