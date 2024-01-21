@@ -2,6 +2,7 @@
 using Api.Repositories.ITrackingRepository;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -18,12 +19,14 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpGet]
+  [EnableCors("AllowAnyOrigin")]
   public IActionResult GetJavaScriptFile() {
     var jsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Public", "trackingscript.js");
     return PhysicalFile(jsFilePath, "text/javascript");
   }
 
   [HttpGet("script")]
+  [EnableCors("AllowAnyOrigin")]
   public IActionResult GetScriptTag() {
     var scriptUrl = Url.Action("GetJavaScriptFile", "Tracking", null, Request.Scheme);
     var scriptTag = $"<script id=\"tracking-script\" src=\"{scriptUrl}\" defer></script>";
@@ -39,6 +42,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpPost]
+  [EnableCors("AllowAnyOrigin")]
   public async Task<IActionResult> SubmitResults([FromBody] SubmitTrackingResultsDto request) {
     var submitted = await _repository.SubmitResults(request);
     if (!submitted) return BadRequest();
@@ -64,6 +68,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpPut("{id}")]
+  [Authorize(Roles = "Bedrijf,Beheerder")]
   [Authorize]
   public async Task<IActionResult> UpdateResearch(UpdateTrackingResearchDto request) {
     var resultaat = await _repository.UpdateTrackingResearch(request);

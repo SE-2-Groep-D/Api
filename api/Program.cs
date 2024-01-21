@@ -52,8 +52,15 @@ public class Program {
           .AllowAnyMethod()
           .AllowCredentials()
           .WithExposedHeaders("Set-Cookie"));
+      
+      options.AddPolicy("AllowAnyOrigin",
+        builder => builder.AllowAnyOrigin()
+          .AllowAnyHeader()
+          .AllowAnyMethod());
 
     });
+    
+    
 
 
     ConnectToDatabase(services, builder);
