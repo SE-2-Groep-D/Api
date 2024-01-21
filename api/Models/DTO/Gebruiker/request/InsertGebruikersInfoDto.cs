@@ -27,10 +27,10 @@ public class InsertGebruikersInfoDto {
   public string? Leeftijdscategorie { get; set; }
   public List<string>? Benaderingen { get; set; }
   public List<string>? Hulpmiddelen { get; set; }
-  public List<string>? TypeBeperkingen { get; set; }
+  // public List<string>? TypeBeperkingen { get; set; }
   public VoogdDto? Voogd { get; set; }
 
-  public ICollection<BeschikbaarheidDto>? Beschikbaarheden { get; set; }
+  // public ICollection<BeschikbaarheidDto>? Beschikbaarheden { get; set; }
 
   // Bedrijf
   public string? Bedrijfsnaam { get; set; }

@@ -52,7 +52,9 @@ public class Program {
           .AllowAnyMethod()
           .AllowCredentials()
           .WithExposedHeaders("Set-Cookie"));
+
     });
+
 
     ConnectToDatabase(services, builder);
 

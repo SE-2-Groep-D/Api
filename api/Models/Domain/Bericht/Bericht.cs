@@ -1,6 +1,6 @@
 ﻿using Api.Models.Domain.User;
 
-namespace Api.Models.Domain.Bericht {
+namespace Api.Models.Domain.Bericht;
   public class Bericht {
 
     public Guid Id { get; set; }
@@ -12,4 +12,4 @@ namespace Api.Models.Domain.Bericht {
     public Gebruiker Ontvanger {  get; set;} = null!;
 
   }
-}
+
