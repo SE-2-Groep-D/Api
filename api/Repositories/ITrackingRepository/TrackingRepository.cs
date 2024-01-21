@@ -30,7 +30,7 @@ public class TrackingRepository : ITrackingRepository {
   }
 
   public async Task<bool> SubmitResults(SubmitTrackingResultsDto results) {
-    var onderzoek = await _context.TrackingOnderzoeken.FirstOrDefaultAsync(trackingOnderzoek => new Uri(results.Domain).Host.ToLower().Equals(new Uri(trackingOnderzoek.Domain).Host.ToLower()));
+    var onderzoek = await _context.TrackingOnderzoeken.FirstOrDefaultAsync(trackingOnderzoek => new Uri(trackingOnderzoek.Domain).Host.ToLower().Equals(results.Domain.ToLower()));
     if (onderzoek == null) return false;
     var trackingResult = _mapper.Map<TrackingResultaten>(results);
     onderzoek.TrackingResultaten.Add(trackingResult);
