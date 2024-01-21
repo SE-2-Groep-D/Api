@@ -72,7 +72,7 @@ function addClick(e) {
     const type = target.tagName;
 
     let click = {
-        id: target.id,
+        itemId: target.id,
         itemType: 'button',
         timeInSeconds: timeInSeconds,
         text: target.innerText,
