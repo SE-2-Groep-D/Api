@@ -25,17 +25,6 @@ public class UserService : IUserService {
     _context = context;
   }
 
-  public LoginResponseDto CreateLoginResponse(Gebruiker gebruiker, string jwtToken) {
-
-    var response = new LoginResponseDto {
-      Id = gebruiker.Id,
-      Voornaam = gebruiker.Voornaam,
-      Achternaam = gebruiker.Achternaam
-    };
-
-    return response;
-  }
-
   public async Task<RegisterResponseDto> Register(Gebruiker gebruiker, string? password, string[] roles) {
     if (!roles.Any()) {
       return new RegisterResponseDto(false, "Geef rol aan");
