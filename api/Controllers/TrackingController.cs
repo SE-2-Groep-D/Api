@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers;
 [Route("[controller]")]
 [ApiController]
-[Authorize]
 public class TrackingController : ControllerBase {
 
   private readonly IMapper _mapper;
@@ -32,6 +31,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpGet("{id}")]
+  [Authorize]
   public async Task<IActionResult> GetResults(Guid id) {
     var resultaat = await _repository.GetById(id);
     if (resultaat == null) return NotFound();
@@ -46,6 +46,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpPost("create")]
+  [Authorize]
   [Authorize(Roles = "Bedrijf,Beheerder")]
   public async Task<IActionResult> CreateTrackingResearch([FromBody] CreateTrackingResearchDto request) {
     var created = await _repository.CreateTrackingResearch(request);
@@ -54,6 +55,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpDelete("{id}")]
+  [Authorize]
   [Authorize(Roles = "Bedrijf,Beheerder")]
   public async Task<IActionResult> DeleteResearch(Guid id) {
     var resultaat = await _repository.DeleteTrackingResearch(id);
@@ -62,6 +64,7 @@ public class TrackingController : ControllerBase {
   }
 
   [HttpPut("{id}")]
+  [Authorize]
   public async Task<IActionResult> UpdateResearch(UpdateTrackingResearchDto request) {
     var resultaat = await _repository.UpdateTrackingResearch(request);
     if (!resultaat) return BadRequest();

@@ -90,13 +90,11 @@ public class AuthController : ControllerBase {
   }
 
   [HttpPost]
-  [Route("RegisterMedwerker")]
+  [Route("RegisterMedewerker")]
   [Authorize(Roles = "Beheerder")]
   public async Task<IActionResult> RegisterMedewerker([FromBody] RegisterMedewerkerRequestDto registerMedewerkerRequestDto) {
     var gebruiker = mapper.Map<Medewerker>(registerMedewerkerRequestDto);
-
     string[] Roles = { "Medewerker" };
-
     var result = await userService.Register(gebruiker, registerMedewerkerRequestDto.Password, Roles);
     return result.Succeeded ? Ok(result.Message) : BadRequest(result.Message);
   }

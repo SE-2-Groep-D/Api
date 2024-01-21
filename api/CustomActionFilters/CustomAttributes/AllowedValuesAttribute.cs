@@ -8,7 +8,7 @@ namespace Api.CustomActionFilters.CustomAttributes {
       _allowedValues = allowedValues;
     }
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext) {
+    protected override ValidationResult IsValid(object? value, ValidationContext validationContext) {
       if (value == null ||  _allowedValues.Contains(value.ToString())) {
         return ValidationResult.Success;
       }
