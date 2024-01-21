@@ -30,6 +30,9 @@ public class TrackingRepository : ITrackingRepository {
   }
 
   public async Task<bool> SubmitResults(SubmitTrackingResultsDto results) {
+    Console.WriteLine("Website send: " + new Uri(results.Domain).Host.ToLower());
+
+    await _context.TrackingOnderzoeken.ForEachAsync(trackingOnderzoek => Console.WriteLine(new Uri(trackingOnderzoek.Domain).Host.ToLower()));
     
     var onderzoek = await _context.TrackingOnderzoeken.FirstOrDefaultAsync(trackingOnderzoek => new Uri(results.Domain).Host.ToLower().Equals(new Uri(trackingOnderzoek.Domain).Host.ToLower()));
     if (onderzoek == null) return false;

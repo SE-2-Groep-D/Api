@@ -45,7 +45,7 @@ public class TrackingController : ControllerBase {
   [EnableCors("AllowAnyOrigin")]
   public async Task<IActionResult> SubmitResults([FromBody] SubmitTrackingResultsDto request) {
     var submitted = await _repository.SubmitResults(request);
-    if (!submitted) return BadRequest();
+    if (!submitted) return NotFound();
     return Ok(request);
   }
 
