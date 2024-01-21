@@ -1,5 +1,6 @@
 ﻿using Api.Data;
 using Api.Models.Domain.Bericht;
+using Api.Models.Domain.User;
 using Api.Models.DTO.Bericht;
 using Api.Models.DTO.Bericht;
 using Api.Services.IUserService;
@@ -50,11 +51,32 @@ namespace Api.Repositories.IBerichtRepository {
 
 
       var gebruiker = await userService.GetUserByIdentification(userId);
-      BedrijfsDetails bedrijf = (BedrijfsDetails)userService.GetUserDetails(gebruiker);
-      var naam = bedrijf.Bedrijfsnaam;
+      if(GetUserType(gebruiker).Equals("Bedrijf")) {
+        BedrijfsDetails bedrijf = (BedrijfsDetails)userService.GetUserDetails(gebruiker);
+        var naamBedrijf = bedrijf.Bedrijfsnaam;
+        return naamBedrijf;
+      }
+      
+      var naam = gebruiker.Voornaam;
 
 
       return naam;
+    }
+
+    private string GetUserType(Gebruiker gebruiker) {
+      switch (gebruiker) {
+        case Bedrijf:
+          return "Bedrijf";
+
+        case Ervaringsdeskundige:
+          return "Ervaringsdeskundige";
+
+        case Medewerker:
+          return "Medewerker";
+
+        default:
+          return "Gebruiker";
+      }
     }
 
 
