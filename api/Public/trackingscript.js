@@ -15,7 +15,7 @@ const browser = getBrowserName();
 let pagePercentage = 0;
 let timeInSeconds = 0;
 let timeTillAction = 0;
-let clicks = [];
+let clickedItems = [];
 
 // Start een timer om de begin tijd te meten.
 setInterval(() => {
@@ -43,7 +43,7 @@ async function sendData() {
         pagePercentage: pagePercentage,
         timeInSeconds: timeInSeconds,
         timeTillAction: timeTillAction,
-        clickedItems: clicks
+        clickedItems: clickedItems
     });
 
     console.log(data)
@@ -83,7 +83,7 @@ function addClick(e) {
         click.type = 'link';
     }
 
-    clicks.push(click);
+    clickedItems.push(click);
 }
 
 function getBrowserName() {
